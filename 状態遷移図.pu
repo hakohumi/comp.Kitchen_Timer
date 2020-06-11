@@ -1,0 +1,12 @@
+@startuml Kitchen_Timer_State
+
+state "カウント時間 設定なし" as NonSetTime
+state "カウント時間 設定済み" as SetTime
+
+[*] --> NonSetTime
+
+NonSetTime --> SetTime
+
+
+
+@enduml
