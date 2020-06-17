@@ -1,14 +1,26 @@
 @startuml Kitchen_Timer_State
 
-state "カウント時間 設定モード" as SettingTime
-state "カウントダウン中" as CountDown
-state "カウントダウン ストップ中" as StopCountDown
-state "カウントダウン 終了" as EndCountDown
+state "Kitchen Timer 状態遷移図" as Kitchen_Timer_State{
 
-[*] --> NonSetTime
+    state "カウント時間設定" as SettingTime
+    state "カウントダウン中" as CountDown
+    state "カウントダウン 一時停止" as StopCountDown
+    state "カウントダウン 終了" as EndCountDown
 
-NonSetTime --> SetTime
+    [*] --> SettingTime
 
 
+    SettingTime --> CountDown
+
+    CountDown --> StopCountDown
+    StopCountDown --> CountDown
+    StopCountDown --> SettingTime : リセット動作
+
+    CountDown --> EndCountDown : カウント時間 経過
+
+    EndCountDown --> SettingTime : 10秒経過またはスタートストップボタン押下
+
+    SettingTime ---> [*]
+}
 
 @enduml
