@@ -1,0 +1,39 @@
+@startuml Kitchen_Timer_State
+
+legend right
+※スタートストップボタンは、S/Sボタンと表記する
+end legend
+
+state "Kitchen Timer 状態遷移図" as Kitchen_Timer_State{
+    state "カウント時間設定" as SettingTime
+    SettingTime : a
+
+    [*] -> SettingTime : 電源ON
+
+    SettingTime --> CountDown : S/Sボタン押下
+
+    state "カウントダウン" as CountDown {
+        [*] ---> RunningCountDown
+
+        state "カウントダウン中" as RunningCountDown
+        RunningCountDown --> StopCountDown : S/Sボタン 押下
+        RunningCountDown ---> EndCountDown : カウント時間 経過
+        RunningCountDown --> [*] : リセット動作
+
+        state "カウントダウン 一時停止" as StopCountDown
+        StopCountDown --> RunningCountDown : S/Sボタン 押下
+        StopCountDown -> [*] : リセット動作
+
+        state "カウントダウン 終了" as EndCountDown
+        EndCountDown --> [*] : 10秒 経過\nまたは\nS/Sボタン 押下
+
+    }
+
+    CountDown --> SettingTime
+
+    SettingTime -> [*]
+
+}
+
+
+@enduml
