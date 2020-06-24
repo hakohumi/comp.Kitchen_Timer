@@ -12,22 +12,27 @@
 #pragma config FOSC = INTOSC, WDTE = OFF, PWRTE = ON, MCLRE = ON
 #pragma config CP = OFF, CPD = OFF, BOREN = ON, LVP = OFF
 
-#define LED1 LATB0
-#define LED2 LATB1
+#define LED1 LATB1
+#define LED2 LATB6
 
 void initOsc(void);
 void initPort(void);
 void initIntTMR0(void);
 void initIntTMR1(void);
 void initIntCCP1(void);
+void initIntExternal(void);
 
 void main(void) {
 
     initOsc();
     initPort();
-    initIntTMR0();
+    //    initIntTMR0();
     initIntTMR1();
     initIntCCP1();
+    initIntExternal();
+
+    // 周辺機器割り込みの許可
+    INTCONbits.PEIE = 1;
 
     // 全体の割り込み許可
     INTCONbits.GIE = 1;
@@ -51,7 +56,11 @@ void initPort(void) {
 
     // 入出力設定 0 = OUT, 1 = INPUT
     // 使わないポートは、出力
-    TRISB = 0x00;
+
+    // PORTB RB0:外部割込み
+
+
+    TRISB = 0x01; // RB0 入力
     TRISA = 0x21; // RA1 を入力、RA5は入力専用
 
     // 入力ポート、アナログ・デジタル設定
@@ -74,8 +83,14 @@ void initIntTMR0(void) {
     // プリスケーラ設定 1:256
     OPTION_REGbits.PS = 0b111;
 
+    // TMR0 レジスタのクリア
+    TMR0 = 0x00;
+
+    // Timer0 割り込みフラグ クリア
+    INTCONbits.TMR0IF = 0;
+
     // Timer0 オーバーフロー割込み 許可
-    INTCONbits.TMR0IE = 1;
+    INTCONbits.TMR0IE = 0;
 
 }
 
@@ -99,6 +114,12 @@ Crystal oscillator on T1OSI/T1OSO pins
     // 5. クロック源を内部クロックに設定
     T1CONbits.TMR1CS = 0b01;
 
+    /*
+     11 = 1:8 Prescale value
+10 = 1:4 Prescale value
+01 = 1:2 Prescale value
+00 = 1:1 Prescale value
+     */
     // 6. プリスケーラ設定
     T1CONbits.T1CKPS = 0b11;
 
@@ -130,6 +151,7 @@ Crystal oscillator on T1OSI/T1OSO pins
 void initIntCCP1(void) {
     // 1. CCPのモード設定
     // コンペアモード Special Event Trigger
+    // Special Event Triggerを使用する場合、CCP4(RA4)Pinを使用
     CCP1CONbits.CCP1M = 0b1011;
 
     // 2. CCPR1レジスタ(16bit)に比較する値を代入
@@ -144,6 +166,20 @@ void initIntCCP1(void) {
 
 }
 
+void initIntExternal(void) {
+
+    // 1. RB0を入力端子に設定
+
+    // 2. 入力エッジを立ち下がりエッジに設定
+    OPTION_REGbits.INTEDG = 0;
+
+    // 3. 外部割込みフラグをクリア
+    INTCONbits.INTF = 0;
+    // 4. 外部割込みの許可
+    INTCONbits.INTE = 1;
+
+}
+
 void __interrupt() ISR(void) {
 
     // TMR0 割り込み
@@ -154,8 +190,15 @@ void __interrupt() ISR(void) {
 
     // CCP1 割込み
     if (PIR1bits.CCP1IF == 1) {
-        LED2 ^= 1;
+        LED1 ^= 1;
         PIR1bits.CCP1IF = 0;
+    }
+
+    // 外部割込みルーチン
+    if (INTCONbits.INTF == 1) {
+        LED2 ^= 1;
+        // 外部割込みフラグをクリア
+        INTCONbits.INTF = 0;
     }
 
 }

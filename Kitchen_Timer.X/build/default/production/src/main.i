@@ -4350,14 +4350,19 @@ void initPort(void);
 void initIntTMR0(void);
 void initIntTMR1(void);
 void initIntCCP1(void);
+void initIntExternal(void);
 
 void main(void) {
 
     initOsc();
     initPort();
-    initIntTMR0();
+
     initIntTMR1();
     initIntCCP1();
+    initIntExternal();
+
+
+    INTCONbits.PEIE = 1;
 
 
     INTCONbits.GIE = 1;
@@ -4381,7 +4386,11 @@ void initPort(void) {
 
 
 
-    TRISB = 0x00;
+
+
+
+
+    TRISB = 0x01;
     TRISA = 0x21;
 
 
@@ -4405,7 +4414,13 @@ void initIntTMR0(void) {
     OPTION_REGbits.PS = 0b111;
 
 
-    INTCONbits.TMR0IE = 1;
+    TMR0 = 0x00;
+
+
+    INTCONbits.TMR0IF = 0;
+
+
+    INTCONbits.TMR0IE = 0;
 
 }
 
@@ -4413,10 +4428,9 @@ void initIntTMR0(void) {
 
 
 void initIntTMR1(void) {
-# 100 "src/main.c"
+# 115 "src/main.c"
     T1CONbits.TMR1CS = 0b01;
-
-
+# 124 "src/main.c"
     T1CONbits.T1CKPS = 0b11;
 
 
@@ -4427,8 +4441,9 @@ void initIntTMR1(void) {
     T1CONbits.TMR1ON = 1;
 
 }
-# 130 "src/main.c"
+# 151 "src/main.c"
 void initIntCCP1(void) {
+
 
 
     CCP1CONbits.CCP1M = 0b1011;
@@ -4445,10 +4460,25 @@ void initIntCCP1(void) {
 
 }
 
+void initIntExternal(void) {
+
+
+
+
+    OPTION_REGbits.INTEDG = 0;
+
+
+    INTCONbits.INTF = 0;
+
+    INTCONbits.INTE = 1;
+
+}
+
 void __attribute__((picinterrupt(("")))) ISR(void) {
 
+
     if (INTCONbits.TMR0IF == 1) {
-        LATB0 ^= 1;
+        LATB1 ^= 1;
         INTCONbits.TMR0IF = 0;
     }
 
@@ -4456,6 +4486,13 @@ void __attribute__((picinterrupt(("")))) ISR(void) {
     if (PIR1bits.CCP1IF == 1) {
         LATB1 ^= 1;
         PIR1bits.CCP1IF = 0;
+    }
+
+
+    if (INTCONbits.INTF == 1) {
+        LATB6 ^= 1;
+
+        INTCONbits.INTF = 0;
     }
 
 }
