@@ -15,6 +15,7 @@
 #define LED1 LATB1
 #define LED2 LATB6
 
+void initIntrrupt(void);
 void initOsc(void);
 void initPort(void);
 void initIntTMR0(void);
@@ -22,7 +23,39 @@ void initIntTMR1(void);
 void initIntCCP1(void);
 void initIntExternal(void);
 
+enum {
+    SET_COUNTTIME_STATE,
+    RUNNING_COUNTDOWN_STATE,
+    STOP_COUNTDOWN_STATE,
+    FINISH_COUNTDOWN_STATE
+};
+
 void main(void) {
+
+    // 状態遷移用フラグ
+    uint8_t State;
+
+    State = 0;
+
+    initIntrrupt();
+
+    while (true) {
+
+        switch (State) {
+            case SET_COUNTTIME_STATE:
+                break;
+            case RUNNING_COUNTDOWN_STATE:
+                break;
+            case STOP_COUNTDOWN_STATE:
+                break;
+            case FINISH_COUNTDOWN_STATE:
+                break;
+        }
+    }
+    return;
+}
+
+void initIntrrupt(void) {
 
     initOsc();
     initPort();
@@ -37,10 +70,6 @@ void main(void) {
     // 全体の割り込み許可
     INTCONbits.GIE = 1;
 
-    while (true) {
-
-    }
-    return;
 }
 
 void initOsc(void) {
