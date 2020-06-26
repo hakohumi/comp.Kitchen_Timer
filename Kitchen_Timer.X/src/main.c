@@ -8,6 +8,7 @@
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "SW.h"
 
 #pragma config FOSC = INTOSC, WDTE = OFF, PWRTE = ON, MCLRE = ON
 #pragma config CP = OFF, CPD = OFF, BOREN = ON, LVP = OFF
@@ -35,14 +36,23 @@ void main(void) {
     // 状態遷移用フラグ
     uint8_t State;
 
-    State = 0;
+    // 初期状態 = カウント時間設定
+    State = SET_COUNTTIME_STATE;
 
+    // 割込み初期化
     initIntrrupt();
 
     while (true) {
+        // 入力 更新
+        UpdateSWState();
 
         switch (State) {
             case SET_COUNTTIME_STATE:
+                // もし、分ボタンが押されていたら、
+                // LEDをつける
+                if (IsPushedMinuteSW()){
+                    
+                }
                 break;
             case RUNNING_COUNTDOWN_STATE:
                 break;

@@ -1,4 +1,4 @@
-# 1 "src/main.c"
+# 1 "src/SW.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 288 "<built-in>" 3
@@ -6,14 +6,9 @@
 # 1 "<built-in>" 2
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
-# 1 "src/main.c" 2
-
-
-
-
-
-
-
+# 1 "src/SW.c" 2
+# 1 "header\\SW.h" 1
+# 34 "header\\SW.h"
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\xc.h" 3
 extern const char __xc8_OPTIM_SPEED;
@@ -4248,7 +4243,7 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 27 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\xc.h" 2 3
-# 8 "src/main.c" 2
+# 34 "header\\SW.h" 2
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\c99\\stdint.h" 1 3
 # 22 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\c99\\stdint.h" 3
@@ -4333,13 +4328,12 @@ typedef int32_t int_fast32_t;
 typedef uint32_t uint_fast16_t;
 typedef uint32_t uint_fast32_t;
 # 155 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\c99\\stdint.h" 2 3
-# 9 "src/main.c" 2
+# 35 "header\\SW.h" 2
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\c99\\stdbool.h" 1 3
-# 10 "src/main.c" 2
+# 36 "header\\SW.h" 2
 
-# 1 "header\\SW.h" 1
-# 38 "header\\SW.h"
+
 void UpdateSWState(void);
 _Bool IsPushedMinuteSW(void);
 _Bool IsPushedSecondSW(void);
@@ -4364,201 +4358,220 @@ enum {
     ONGOING_STATE,
     FALLING_STATE
 };
-# 11 "src/main.c" 2
+# 1 "src/SW.c" 2
 
 
-#pragma config FOSC = INTOSC, WDTE = OFF, PWRTE = ON, MCLRE = ON
-#pragma config CP = OFF, CPD = OFF, BOREN = ON, LVP = OFF
+SWState_t MinuteSWState;
+SWState_t SecondSWState;
+SWState_t ResetSWState;
+SWState_t StartStopSWState;
+
+static SWState_t oldMinuteSWState;
+static SWState_t oldSecondSWState;
+static SWState_t oldoResetSWState;
+static SWState_t oldStartStopSWState;
+
+static void updateAllSWState(SWState_t *i_SWState, SWState_t *i_oldSWState);
+static void updateMinuteSWState();
+static void updateSecondSWState();
+static void updateResetSWState();
+static void updateStartStopSWState();
+
+static uint8_t detectEdge(_Bool i_currentState, _Bool i_oldState);
+static void updateEdgeState(SWState_t *i_SWState, SWState_t *i_oldSWState);
 
 
 
 
-void initIntrrupt(void);
-void initOsc(void);
-void initPort(void);
-void initIntTMR0(void);
-void initIntTMR1(void);
-void initIntCCP1(void);
-void initIntExternal(void);
-
-enum {
-    SET_COUNTTIME_STATE,
-    RUNNING_COUNTDOWN_STATE,
-    STOP_COUNTDOWN_STATE,
-    FINISH_COUNTDOWN_STATE
-};
-
-void main(void) {
 
 
-    uint8_t State;
+void UpdateSWState() {
 
 
-    State = SET_COUNTTIME_STATE;
+    updateMinuteSWState();
 
 
-    initIntrrupt();
-
-    while (1) {
-
-        UpdateSWState();
-
-        switch (State) {
-            case SET_COUNTTIME_STATE:
+    updateSecondSWState();
 
 
-                if (IsPushedMinuteSW()){
+    updateResetSWState();
 
-                }
-                break;
-            case RUNNING_COUNTDOWN_STATE:
-                break;
-            case STOP_COUNTDOWN_STATE:
-                break;
-            case FINISH_COUNTDOWN_STATE:
-                break;
+
+    updateStartStopSWState();
+
+
+
+
+
+
+
+}
+
+static void updateAllSWState(SWState_t *i_SWState, SWState_t *i_oldSWState) {
+
+
+    switch (detectEdge(i_SWState->PushedFlag, i_oldSWState->PushedFlag)) {
+        case OFF_STATE:
+
+            i_SWState->PushedState = 0;
+
+            break;
+
+        case RISING_STATE:
+
+            i_SWState->PushedState = 1;
+
+            break;
+
+        case ONGOING_STATE:
+
+            i_SWState->PushedState = 1;
+
+            break;
+
+
+        case FALLING_STATE:
+
+            i_SWState->PushedState = 0;
+
+            break;
+    }
+
+
+    updateEdgeState(i_SWState, i_oldSWState);
+}
+
+
+
+
+
+
+static void updateMinuteSWState() {
+
+    if (MinuteSWState.PushedFlag) {
+
+        MinuteSWState.PushedState = MinuteSWState.PushedFlag;
+
+        MinuteSWState.PushedFlag = 0;
+    } else {
+
+
+        MinuteSWState.PushedState = 0;
+    }
+}
+
+
+
+static void updateSecondSWState() {
+
+    if (SecondSWState.PushedFlag) {
+
+        SecondSWState.PushedState = SecondSWState.PushedFlag;
+
+        SecondSWState.PushedFlag = 0;
+    } else {
+
+
+        SecondSWState.PushedState = 0;
+    }
+
+}
+
+
+
+static void updateResetSWState() {
+
+    if (MinuteSWState.PushedState & SecondSWState.PushedState) {
+
+        MinuteSWState.PushedState = 0;
+        SecondSWState.PushedState = 0;
+
+
+        ResetSWState.PushedState = 1;
+    } else {
+
+
+        ResetSWState.PushedState = 0;
+    }
+}
+
+
+
+static void updateStartStopSWState() {
+
+
+    StartStopSWState.PushedState = StartStopSWState.PushedFlag;
+
+    StartStopSWState.PushedFlag = 0;
+}
+
+_Bool IsPushedMinuteSW(void) {
+
+    return MinuteSWState.PushedState;
+}
+
+_Bool IsPushedSecondSW(void) {
+
+    return SecondSWState.PushedState;
+}
+
+_Bool IsPushedResetSW(void) {
+
+    return ResetSWState.PushedState;
+}
+
+_Bool IsPushedStartStopSW(void) {
+
+    return StartStopSWState.PushedState;
+}
+
+
+
+
+
+
+static uint8_t detectEdge(_Bool i_currentState, _Bool i_oldState) {
+
+    uint8_t l_ret = 0;
+
+
+    if (i_oldState) {
+
+
+        if (i_currentState) {
+
+
+
+            l_ret = ONGOING_STATE;
+        } else {
+
+
+
+            l_ret = FALLING_STATE;
+        }
+    } else {
+
+
+        if (i_currentState) {
+
+
+
+            l_ret = RISING_STATE;
+        } else {
+
+
+
+
+            l_ret = OFF_STATE;
         }
     }
-    return;
-}
 
-void initIntrrupt(void) {
-
-    initOsc();
-    initPort();
-
-    initIntTMR1();
-    initIntCCP1();
-    initIntExternal();
-
-
-    INTCONbits.PEIE = 1;
-
-
-    INTCONbits.GIE = 1;
+    return l_ret;
 
 }
 
-void initOsc(void) {
-
-    OSCCONbits.SCS = 0x00;
-
-}
-
-void initPort(void) {
-
-    PORTB = 0xFF;
-    PORTA = 0xFF;
-
-
-
-
-
-
-
-    TRISB = 0x01;
-    TRISA = 0x21;
-
-
-    ANSELB = 0x00;
-    ANSELA = 0x00;
-
-
-
-    APFCON0bits.CCP1SEL = 0;
-
-}
-
-void initIntTMR0(void) {
-
-
-    OPTION_REGbits.TMR0CS = 0;
-
-
-    OPTION_REGbits.PSA = 0;
-
-    OPTION_REGbits.PS = 0b111;
-
-
-    TMR0 = 0x00;
-
-
-    INTCONbits.TMR0IF = 0;
-
-
-    INTCONbits.TMR0IE = 0;
-
-}
-
-
-
-
-void initIntTMR1(void) {
-# 154 "src/main.c"
-    T1CONbits.TMR1CS = 0b01;
-# 163 "src/main.c"
-    T1CONbits.T1CKPS = 0b11;
-
-
-    TMR1H = 0x00;
-    TMR1L = 0x00;
-
-
-    T1CONbits.TMR1ON = 1;
-
-}
-# 190 "src/main.c"
-void initIntCCP1(void) {
-
-
-
-    CCP1CONbits.CCP1M = 0b1011;
-
-
-    CCPR1H = 0xF4;
-    CCPR1L = 0x24;
-
-
-    PIR1bits.CCP1IF = 0;
-
-
-    PIE1bits.CCP1IE = 1;
-
-}
-
-void initIntExternal(void) {
-
-
-
-
-    OPTION_REGbits.INTEDG = 0;
-
-
-    INTCONbits.INTF = 0;
-
-    INTCONbits.INTE = 1;
-
-}
-
-void __attribute__((picinterrupt(("")))) ISR(void) {
-
-
-    if (INTCONbits.TMR0IF == 1) {
-        LATB1 ^= 1;
-        INTCONbits.TMR0IF = 0;
-    }
-
-
-    if (PIR1bits.CCP1IF == 1) {
-        LATB1 ^= 1;
-        PIR1bits.CCP1IF = 0;
-    }
-
-
-    if (INTCONbits.INTF == 1) {
-        LATB6 ^= 1;
-
-        INTCONbits.INTF = 0;
-    }
-
+static void updateEdgeState(SWState_t *i_SWState, SWState_t *i_oldSWState) {
+    i_oldSWState->LongPushedState = i_SWState->LongPushedState;
+    i_oldSWState->PushedFlag = i_SWState->PushedFlag;
+    i_oldSWState->PushedState = i_SWState->PushedState;
 }
