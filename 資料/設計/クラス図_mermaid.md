@@ -4,16 +4,33 @@
 
 classDiagram
 
-class Main
+class Kitchen_Timer{
+    no
+}
 
-class Count{
-    <<interface>>
+
+class InputPackage{
+    no
+}
+class ControlSW{
+    no
+}
+class LCDClass{
+    no
+}
+class LCD{
+    no
+}
+
+class CountClass{
     +uint8_t MinuteCount
     +uint8_t SecondCount
 
-    +SetCount()
+    +SetMinuteCount()
+    +SetSecondCount()
     +Carry()
 }
+
 
 class CountDown{
     +StartCountDown()
@@ -25,7 +42,7 @@ class SWState{
     <<interface>>
     +IsPushedSWState
     +IsLongPushedSWState
-    
+
     +UpdateSWState()
 }
 
@@ -34,31 +51,57 @@ class SWFlag{
     +SWflag
 }
 
-Main --> Count
 
-CountDown <-- Count
+Kitchen_Timer --> InputPackage
+Kitchen_Timer --> CountClass
 
-SWState <|-- MinuteSW
-SWState <|-- SecondSW
-SWState <|-- ResetSW
-SWState "1" *-- "1" SWFlag
-SWState <|-- StartStopSW
+
+
+InputPackage "1" *-- "...*"SWState
+InputPackage *-- ControlSW
+
+ControlSW ..|> SWState : 実装
+
+
+class SW{
+    +state
+}
+
+
+
+SW1 <|-- SW : 継承
+SW2 <|-- SW : 継承
+SW3 <|-- SW : 継承
+
+MinuteSW ..> SW1 : 依存
+ResetSW ..> SW1 : 依存
+ResetSW ..> SW2 : 依存
+SecondSW ..> SW2 : 依存
+StartStopSW ..> SW3 : 依存
+
+MinuteSW <|-- ControlSW
+SecondSW <|-- ControlSW
+ResetSW <|-- ControlSW
+StartStopSW <|-- ControlSW
+
+CountClass <-- MinuteSW : 分セット
+CountClass <-- SecondSW : 秒セット
+CountClass <-- ResetSW : リセット動作
+
+CountClass <-- CountDown
 
 CountDown <-- StartStopSW : スタート・ストップ
 
-SWFlag <|-- SW1
-SWFlag <|-- SW2
-SWFlag <|-- SW3
 
-ResetSW <.. SW1
-ResetSW <.. SW2
 
-MinuteSW <.. SW1
-SecondSW <.. SW2
-StartStopSW <.. SW3
 
-Count <-- MinuteSW : 分セット
-Count <-- SecondSW : 秒セット
-Count <-- ResetSW : リセット動作
+SWState "1" *-- "1" SWFlag
+SW <|.. SWFlag : 実装
+
+Kitchen_Timer --> LCDClass
+LCDClass "1" *-- "1" LCD
+
+LCDClass <-- CountClass
+
 
 ```
