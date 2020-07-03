@@ -9,18 +9,21 @@ class Kitchen_Timer{
 }
 
 
-class InputPackage{
-    no
+class InputManager{
+    + UpdateSWState()
 }
 class ControlSW{
-    no
+    + bool IsPushedFlag
+    + bool Is LongPushedFlag
+
+    + UpdatePushedSWState()
+    + UpdateLongPushedSWState()
 }
-class LCDClass{
-    no
+
+class ResetSW{
+    + UpdatePushedSWState()
 }
-class LCD{
-    no
-}
+
 
 class CountClass{
     +uint8_t MinuteCount
@@ -40,8 +43,6 @@ class CountDown{
 
 class SWState{
     <<interface>>
-    +IsPushedSWState
-    +IsLongPushedSWState
 
     +UpdateSWState()
 }
@@ -51,57 +52,75 @@ class SWFlag{
     +SWflag
 }
 
-
-Kitchen_Timer --> InputPackage
-Kitchen_Timer --> CountClass
-
-
-
-InputPackage "1" *-- "...*"SWState
-InputPackage *-- ControlSW
-
-ControlSW ..|> SWState : 実装
-
-
 class SW{
     +state
 }
 
+class LCDClass{
+    no
+}
+class LCD{
+    no
+}
+
+class BuzzerClass{
+    no
+}
+
+class Buzzer{
+    no
+}
 
 
-SW1 <|-- SW : 継承
-SW2 <|-- SW : 継承
-SW3 <|-- SW : 継承
+Kitchen_Timer --> InputManager
+InputManager *-- ControlSW
+
+
+
+ControlSW --|> MinuteSW : 継承
+ControlSW --|> SecondSW : 継承
+ControlSW --|> ResetSW : 継承
+ControlSW --|> StartStopSW : 継承
+
+ControlSW ..|> SWState : 実装
 
 MinuteSW ..> SW1 : 依存
+SecondSW ..> SW2 : 依存
 ResetSW ..> SW1 : 依存
 ResetSW ..> SW2 : 依存
-SecondSW ..> SW2 : 依存
 StartStopSW ..> SW3 : 依存
 
-MinuteSW <|-- ControlSW
-SecondSW <|-- ControlSW
-ResetSW <|-- ControlSW
-StartStopSW <|-- ControlSW
+SW ..|> SWFlag : 実装
 
+SW1 --|> SW : 継承
+SW2 --|> SW : 継承
+SW3 --|> SW : 継承
+
+%%MinuteSW --|> ControlSW : 継承
+%%SecondSW --|> ControlSW : 継承
+%%ResetSW --|> ControlSW : 継承
+%%StartStopSW --|> ControlSW : 継承
+
+
+
+Kitchen_Timer --> CountClass
+
+CountClass <-- CountDown
 CountClass <-- MinuteSW : 分セット
 CountClass <-- SecondSW : 秒セット
 CountClass <-- ResetSW : リセット動作
-
-CountClass <-- CountDown
 
 CountDown <-- StartStopSW : スタート・ストップ
 
 
 
-
-SWState "1" *-- "1" SWFlag
-SW <|.. SWFlag : 実装
-
 Kitchen_Timer --> LCDClass
+
 LCDClass "1" *-- "1" LCD
 
-LCDClass <-- CountClass
+
+Kitchen_Timer --> BuzzerClass
+BuzzerClass *-- "1" Buzzer
 
 
 ```
