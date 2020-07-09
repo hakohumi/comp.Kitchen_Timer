@@ -12,7 +12,6 @@ endgraph(["end"])
 if{"終了するまで"}
 
 
-
 start --> if
 if --> input
 input --> processing
