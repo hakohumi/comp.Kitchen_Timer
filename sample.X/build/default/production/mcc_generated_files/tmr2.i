@@ -4690,6 +4690,229 @@ void TMR2_DefaultInterruptHandler(void) {
                 }
                 break;
         }
-# 313 "mcc_generated_files/tmr2.c"
+    }
+
+
+    if (SW2.IntFlg == 1) {
+
+
+        SW2.ReadValue = ~(PORTBbits.RB1);
+
+
+        switch (SW2.ChattaState) {
+
+            case RISING:
+
+
+
+
+                if (SW2.CheckCount >= 3) {
+
+                    if (SW2.RiseCompareFlg == 1) {
+
+                        SW2.ChattaState = ONGOING;
+
+                        SW2.State = 1;
+
+                        SW2.CheckCount = 0;
+                    } else {
+
+                        SW2.CheckCount = 0;
+
+                        SW2.RiseCompareFlg = 1;
+
+
+
+
+
+
+                        SW2.State = 0;
+
+                        SW2.IntFlg = 0;
+
+                    }
+
+                } else {
+
+                    SW2.RiseCompareFlg &= SW2.ReadValue;
+
+
+                    SW2.CheckCount++;
+                }
+                break;
+
+            case ONGOING:
+
+
+                SW2.SWCount++;
+
+                if (SW2.ReadValue == 0) {
+
+                    SW2.ChattaState = FALLING;
+                }
+                break;
+
+
+
+
+            case FALLING:
+
+
+                SW2.SWCount++;
+
+                if (SW2.CheckCount >= 3) {
+
+                    if (SW2.FallCompareFlg == 0) {
+
+
+
+
+                        SW2.ChattaState = RISING;
+
+                        SW2.CheckCount = 0;
+
+
+
+
+                        SW2.SWCount = 0;
+
+                        SW2.State = 0;
+
+                        SW2.IntFlg = 0;
+
+                    } else {
+
+
+
+
+                        SW2.ChattaState = ONGOING;
+
+                        SW2.CheckCount = 0;
+
+                        SW2.FallCompareFlg = 0;
+                    }
+                } else {
+
+
+
+
+                    SW2.FallCompareFlg |= SW2.ReadValue;
+
+                    SW2.CheckCount++;
+                }
+                break;
+        }
+    }
+
+
+    if (SW3.IntFlg == 1) {
+
+
+        SW3.ReadValue = ~(PORTBbits.RB2);
+
+
+        switch (SW3.ChattaState) {
+
+            case RISING:
+
+
+
+
+                if (SW3.CheckCount >= 3) {
+
+                    if (SW3.RiseCompareFlg == 1) {
+
+                        SW3.ChattaState = ONGOING;
+
+                        SW3.State = 1;
+
+                        SW3.CheckCount = 0;
+                    } else {
+
+                        SW3.CheckCount = 0;
+
+                        SW3.RiseCompareFlg = 1;
+
+
+
+
+
+
+                        SW3.State = 0;
+
+                        SW3.IntFlg = 0;
+
+                    }
+
+                } else {
+
+                    SW3.RiseCompareFlg &= SW3.ReadValue;
+
+
+                    SW3.CheckCount++;
+                }
+                break;
+
+            case ONGOING:
+
+
+                SW3.SWCount++;
+
+                if (SW3.ReadValue == 0) {
+
+                    SW3.ChattaState = FALLING;
+                }
+                break;
+
+
+
+
+            case FALLING:
+
+
+                SW3.SWCount++;
+
+                if (SW3.CheckCount >= 3) {
+
+                    if (SW3.FallCompareFlg == 0) {
+
+
+
+
+                        SW3.ChattaState = RISING;
+
+                        SW3.CheckCount = 0;
+
+
+
+
+                        SW3.SWCount = 0;
+
+                        SW3.State = 0;
+
+                        SW3.IntFlg = 0;
+
+                    } else {
+
+
+
+
+                        SW3.ChattaState = ONGOING;
+
+                        SW3.CheckCount = 0;
+
+                        SW3.FallCompareFlg = 0;
+                    }
+                } else {
+
+
+
+
+                    SW3.FallCompareFlg |= SW3.ReadValue;
+
+                    SW3.CheckCount++;
+                }
+                break;
+        }
     }
 }

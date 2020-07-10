@@ -201,9 +201,9 @@ void IOCBF1_DefaultInterruptHandler(void) {
     // add your IOCBF1 interrupt custom code
     // or set custom function using IOCBF1_SetInterruptHandler()
 
-    // SW2 処理
+    // SW2の処理 立ち下がり
     // スイッチフラグを立てる
-    SW2.IntFlg = 1;
+    SW2.IntFlg = true;
 
 }
 
@@ -234,11 +234,10 @@ void IOCBF2_SetInterruptHandler(void (* InterruptHandler)(void)) {
 void IOCBF2_DefaultInterruptHandler(void) {
     // add your IOCBF2 interrupt custom code
     // or set custom function using IOCBF2_SetInterruptHandler()
-
-    // SW3 割り込み
-    // SWフラグを立てる
-
-    SW3.IntFlg = 1;
+    
+    // SW3の処理 立ち下がり
+    // スイッチフラグを立てる
+    SW3.IntFlg = true;
 
 }
 

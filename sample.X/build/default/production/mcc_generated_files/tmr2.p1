@@ -81,6 +81,12 @@ Version 4.0 HI-TECH Software Intermediate Code
 "508
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic16f1827.h: 508: extern volatile PORTBbits_t PORTBbits __attribute__((address(0x00D)));
 [v _PORTBbits `VS35 ~T0 @X0 0 e@13 ]
+"63 mcc_generated_files/tmr2.c
+[; ;mcc_generated_files/tmr2.c: 63: extern SWState_t SW2;
+[v _SW2 `S354 ~T0 @X0 0 e ]
+"64
+[; ;mcc_generated_files/tmr2.c: 64: extern SWState_t SW3;
+[v _SW3 `S354 ~T0 @X0 0 e ]
 "54 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic16f1827.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic16f1827.h: 54: __asm("INDF0 equ 00h");
 [; <" INDF0 equ 00h ;# ">
@@ -886,11 +892,357 @@ Version 4.0 HI-TECH Software Intermediate Code
  , $ -> . `E2526 2 `ui 376
  367 ]
 [e :U 367 ]
-"313
-[; ;mcc_generated_files/tmr2.c: 313:     }
+"256
+[; ;mcc_generated_files/tmr2.c: 256:     }
 }
 [e :U 366 ]
+"259
+[; ;mcc_generated_files/tmr2.c: 259:     if (SW2.IntFlg == 1) {
+[e $ ! == -> . _SW2 0 `i -> 1 `i 381  ]
+{
+"262
+[; ;mcc_generated_files/tmr2.c: 262:         SW2.ReadValue = ~(PORTBbits.RB1);
+[e = . _SW2 1 -> ~ -> . . _PORTBbits 0 1 `i `uc ]
+"265
+[; ;mcc_generated_files/tmr2.c: 265:         switch (SW2.ChattaState) {
+[e $U 383  ]
+{
+"267
+[; ;mcc_generated_files/tmr2.c: 267:             case RISING:
+[e :U 384 ]
+"272
+[; ;mcc_generated_files/tmr2.c: 272:                 if (SW2.CheckCount >= 3) {
+[e $ ! >= -> . _SW2 3 `i -> 3 `i 385  ]
+{
+"274
+[; ;mcc_generated_files/tmr2.c: 274:                     if (SW2.RiseCompareFlg == 1) {
+[e $ ! == -> . _SW2 4 `i -> 1 `i 386  ]
+{
+"276
+[; ;mcc_generated_files/tmr2.c: 276:                         SW2.ChattaState = ONGOING;
+[e = . _SW2 2 . `E2526 1 ]
+"278
+[; ;mcc_generated_files/tmr2.c: 278:                         SW2.State = 1;
+[e = . _SW2 6 -> -> 1 `i `a ]
+"280
+[; ;mcc_generated_files/tmr2.c: 280:                         SW2.CheckCount = 0;
+[e = . _SW2 3 -> -> 0 `i `uc ]
+"281
+[; ;mcc_generated_files/tmr2.c: 281:                     } else {
+}
+[e $U 387  ]
+[e :U 386 ]
+{
+"283
+[; ;mcc_generated_files/tmr2.c: 283:                         SW2.CheckCount = 0;
+[e = . _SW2 3 -> -> 0 `i `uc ]
+"285
+[; ;mcc_generated_files/tmr2.c: 285:                         SW2.RiseCompareFlg = 1;
+[e = . _SW2 4 -> -> 1 `i `a ]
+"292
+[; ;mcc_generated_files/tmr2.c: 292:                         SW2.State = 0;
+[e = . _SW2 6 -> -> 0 `i `a ]
+"294
+[; ;mcc_generated_files/tmr2.c: 294:                         SW2.IntFlg = 0;
+[e = . _SW2 0 -> -> 0 `i `a ]
+"296
+[; ;mcc_generated_files/tmr2.c: 296:                     }
+}
+[e :U 387 ]
+"298
+[; ;mcc_generated_files/tmr2.c: 298:                 } else {
+}
+[e $U 388  ]
+[e :U 385 ]
+{
+"300
+[; ;mcc_generated_files/tmr2.c: 300:                     SW2.RiseCompareFlg &= SW2.ReadValue;
+[e =& . _SW2 4 -> . _SW2 1 `i ]
+"303
+[; ;mcc_generated_files/tmr2.c: 303:                     SW2.CheckCount++;
+[e ++ . _SW2 3 -> -> 1 `i `uc ]
+"304
+[; ;mcc_generated_files/tmr2.c: 304:                 }
+}
+[e :U 388 ]
+"305
+[; ;mcc_generated_files/tmr2.c: 305:                 break;
+[e $U 382  ]
+"307
+[; ;mcc_generated_files/tmr2.c: 307:             case ONGOING:
+[e :U 389 ]
+"310
+[; ;mcc_generated_files/tmr2.c: 310:                 SW2.SWCount++;
+[e ++ . _SW2 7 -> -> 1 `i `uc ]
+"312
+[; ;mcc_generated_files/tmr2.c: 312:                 if (SW2.ReadValue == 0) {
+[e $ ! == -> . _SW2 1 `i -> 0 `i 390  ]
+{
 "314
-[; ;mcc_generated_files/tmr2.c: 314: }
+[; ;mcc_generated_files/tmr2.c: 314:                     SW2.ChattaState = FALLING;
+[e = . _SW2 2 . `E2526 2 ]
+"315
+[; ;mcc_generated_files/tmr2.c: 315:                 }
+}
+[e :U 390 ]
+"316
+[; ;mcc_generated_files/tmr2.c: 316:                 break;
+[e $U 382  ]
+"321
+[; ;mcc_generated_files/tmr2.c: 321:             case FALLING:
+[e :U 391 ]
+"324
+[; ;mcc_generated_files/tmr2.c: 324:                 SW2.SWCount++;
+[e ++ . _SW2 7 -> -> 1 `i `uc ]
+"326
+[; ;mcc_generated_files/tmr2.c: 326:                 if (SW2.CheckCount >= 3) {
+[e $ ! >= -> . _SW2 3 `i -> 3 `i 392  ]
+{
+"328
+[; ;mcc_generated_files/tmr2.c: 328:                     if (SW2.FallCompareFlg == 0) {
+[e $ ! == -> . _SW2 5 `i -> 0 `i 393  ]
+{
+"333
+[; ;mcc_generated_files/tmr2.c: 333:                         SW2.ChattaState = RISING;
+[e = . _SW2 2 . `E2526 0 ]
+"335
+[; ;mcc_generated_files/tmr2.c: 335:                         SW2.CheckCount = 0;
+[e = . _SW2 3 -> -> 0 `i `uc ]
+"340
+[; ;mcc_generated_files/tmr2.c: 340:                         SW2.SWCount = 0;
+[e = . _SW2 7 -> -> 0 `i `uc ]
+"342
+[; ;mcc_generated_files/tmr2.c: 342:                         SW2.State = 0;
+[e = . _SW2 6 -> -> 0 `i `a ]
+"344
+[; ;mcc_generated_files/tmr2.c: 344:                         SW2.IntFlg = 0;
+[e = . _SW2 0 -> -> 0 `i `a ]
+"346
+[; ;mcc_generated_files/tmr2.c: 346:                     } else {
+}
+[e $U 394  ]
+[e :U 393 ]
+{
+"351
+[; ;mcc_generated_files/tmr2.c: 351:                         SW2.ChattaState = ONGOING;
+[e = . _SW2 2 . `E2526 1 ]
+"353
+[; ;mcc_generated_files/tmr2.c: 353:                         SW2.CheckCount = 0;
+[e = . _SW2 3 -> -> 0 `i `uc ]
+"355
+[; ;mcc_generated_files/tmr2.c: 355:                         SW2.FallCompareFlg = 0;
+[e = . _SW2 5 -> -> 0 `i `a ]
+"356
+[; ;mcc_generated_files/tmr2.c: 356:                     }
+}
+[e :U 394 ]
+"357
+[; ;mcc_generated_files/tmr2.c: 357:                 } else {
+}
+[e $U 395  ]
+[e :U 392 ]
+{
+"362
+[; ;mcc_generated_files/tmr2.c: 362:                     SW2.FallCompareFlg |= SW2.ReadValue;
+[e =| . _SW2 5 -> . _SW2 1 `i ]
+"364
+[; ;mcc_generated_files/tmr2.c: 364:                     SW2.CheckCount++;
+[e ++ . _SW2 3 -> -> 1 `i `uc ]
+"365
+[; ;mcc_generated_files/tmr2.c: 365:                 }
+}
+[e :U 395 ]
+"366
+[; ;mcc_generated_files/tmr2.c: 366:                 break;
+[e $U 382  ]
+"367
+[; ;mcc_generated_files/tmr2.c: 367:         }
+}
+[e $U 382  ]
+[e :U 383 ]
+[e [\ -> . _SW2 2 `ui , $ -> . `E2526 0 `ui 384
+ , $ -> . `E2526 1 `ui 389
+ , $ -> . `E2526 2 `ui 391
+ 382 ]
+[e :U 382 ]
+"368
+[; ;mcc_generated_files/tmr2.c: 368:     }
+}
+[e :U 381 ]
+"371
+[; ;mcc_generated_files/tmr2.c: 371:     if (SW3.IntFlg == 1) {
+[e $ ! == -> . _SW3 0 `i -> 1 `i 396  ]
+{
+"374
+[; ;mcc_generated_files/tmr2.c: 374:         SW3.ReadValue = ~(PORTBbits.RB2);
+[e = . _SW3 1 -> ~ -> . . _PORTBbits 0 2 `i `uc ]
+"377
+[; ;mcc_generated_files/tmr2.c: 377:         switch (SW3.ChattaState) {
+[e $U 398  ]
+{
+"379
+[; ;mcc_generated_files/tmr2.c: 379:             case RISING:
+[e :U 399 ]
+"384
+[; ;mcc_generated_files/tmr2.c: 384:                 if (SW3.CheckCount >= 3) {
+[e $ ! >= -> . _SW3 3 `i -> 3 `i 400  ]
+{
+"386
+[; ;mcc_generated_files/tmr2.c: 386:                     if (SW3.RiseCompareFlg == 1) {
+[e $ ! == -> . _SW3 4 `i -> 1 `i 401  ]
+{
+"388
+[; ;mcc_generated_files/tmr2.c: 388:                         SW3.ChattaState = ONGOING;
+[e = . _SW3 2 . `E2526 1 ]
+"390
+[; ;mcc_generated_files/tmr2.c: 390:                         SW3.State = 1;
+[e = . _SW3 6 -> -> 1 `i `a ]
+"392
+[; ;mcc_generated_files/tmr2.c: 392:                         SW3.CheckCount = 0;
+[e = . _SW3 3 -> -> 0 `i `uc ]
+"393
+[; ;mcc_generated_files/tmr2.c: 393:                     } else {
+}
+[e $U 402  ]
+[e :U 401 ]
+{
+"395
+[; ;mcc_generated_files/tmr2.c: 395:                         SW3.CheckCount = 0;
+[e = . _SW3 3 -> -> 0 `i `uc ]
+"397
+[; ;mcc_generated_files/tmr2.c: 397:                         SW3.RiseCompareFlg = 1;
+[e = . _SW3 4 -> -> 1 `i `a ]
+"404
+[; ;mcc_generated_files/tmr2.c: 404:                         SW3.State = 0;
+[e = . _SW3 6 -> -> 0 `i `a ]
+"406
+[; ;mcc_generated_files/tmr2.c: 406:                         SW3.IntFlg = 0;
+[e = . _SW3 0 -> -> 0 `i `a ]
+"408
+[; ;mcc_generated_files/tmr2.c: 408:                     }
+}
+[e :U 402 ]
+"410
+[; ;mcc_generated_files/tmr2.c: 410:                 } else {
+}
+[e $U 403  ]
+[e :U 400 ]
+{
+"412
+[; ;mcc_generated_files/tmr2.c: 412:                     SW3.RiseCompareFlg &= SW3.ReadValue;
+[e =& . _SW3 4 -> . _SW3 1 `i ]
+"415
+[; ;mcc_generated_files/tmr2.c: 415:                     SW3.CheckCount++;
+[e ++ . _SW3 3 -> -> 1 `i `uc ]
+"416
+[; ;mcc_generated_files/tmr2.c: 416:                 }
+}
+[e :U 403 ]
+"417
+[; ;mcc_generated_files/tmr2.c: 417:                 break;
+[e $U 397  ]
+"419
+[; ;mcc_generated_files/tmr2.c: 419:             case ONGOING:
+[e :U 404 ]
+"422
+[; ;mcc_generated_files/tmr2.c: 422:                 SW3.SWCount++;
+[e ++ . _SW3 7 -> -> 1 `i `uc ]
+"424
+[; ;mcc_generated_files/tmr2.c: 424:                 if (SW3.ReadValue == 0) {
+[e $ ! == -> . _SW3 1 `i -> 0 `i 405  ]
+{
+"426
+[; ;mcc_generated_files/tmr2.c: 426:                     SW3.ChattaState = FALLING;
+[e = . _SW3 2 . `E2526 2 ]
+"427
+[; ;mcc_generated_files/tmr2.c: 427:                 }
+}
+[e :U 405 ]
+"428
+[; ;mcc_generated_files/tmr2.c: 428:                 break;
+[e $U 397  ]
+"433
+[; ;mcc_generated_files/tmr2.c: 433:             case FALLING:
+[e :U 406 ]
+"436
+[; ;mcc_generated_files/tmr2.c: 436:                 SW3.SWCount++;
+[e ++ . _SW3 7 -> -> 1 `i `uc ]
+"438
+[; ;mcc_generated_files/tmr2.c: 438:                 if (SW3.CheckCount >= 3) {
+[e $ ! >= -> . _SW3 3 `i -> 3 `i 407  ]
+{
+"440
+[; ;mcc_generated_files/tmr2.c: 440:                     if (SW3.FallCompareFlg == 0) {
+[e $ ! == -> . _SW3 5 `i -> 0 `i 408  ]
+{
+"445
+[; ;mcc_generated_files/tmr2.c: 445:                         SW3.ChattaState = RISING;
+[e = . _SW3 2 . `E2526 0 ]
+"447
+[; ;mcc_generated_files/tmr2.c: 447:                         SW3.CheckCount = 0;
+[e = . _SW3 3 -> -> 0 `i `uc ]
+"452
+[; ;mcc_generated_files/tmr2.c: 452:                         SW3.SWCount = 0;
+[e = . _SW3 7 -> -> 0 `i `uc ]
+"454
+[; ;mcc_generated_files/tmr2.c: 454:                         SW3.State = 0;
+[e = . _SW3 6 -> -> 0 `i `a ]
+"456
+[; ;mcc_generated_files/tmr2.c: 456:                         SW3.IntFlg = 0;
+[e = . _SW3 0 -> -> 0 `i `a ]
+"458
+[; ;mcc_generated_files/tmr2.c: 458:                     } else {
+}
+[e $U 409  ]
+[e :U 408 ]
+{
+"463
+[; ;mcc_generated_files/tmr2.c: 463:                         SW3.ChattaState = ONGOING;
+[e = . _SW3 2 . `E2526 1 ]
+"465
+[; ;mcc_generated_files/tmr2.c: 465:                         SW3.CheckCount = 0;
+[e = . _SW3 3 -> -> 0 `i `uc ]
+"467
+[; ;mcc_generated_files/tmr2.c: 467:                         SW3.FallCompareFlg = 0;
+[e = . _SW3 5 -> -> 0 `i `a ]
+"468
+[; ;mcc_generated_files/tmr2.c: 468:                     }
+}
+[e :U 409 ]
+"469
+[; ;mcc_generated_files/tmr2.c: 469:                 } else {
+}
+[e $U 410  ]
+[e :U 407 ]
+{
+"474
+[; ;mcc_generated_files/tmr2.c: 474:                     SW3.FallCompareFlg |= SW3.ReadValue;
+[e =| . _SW3 5 -> . _SW3 1 `i ]
+"476
+[; ;mcc_generated_files/tmr2.c: 476:                     SW3.CheckCount++;
+[e ++ . _SW3 3 -> -> 1 `i `uc ]
+"477
+[; ;mcc_generated_files/tmr2.c: 477:                 }
+}
+[e :U 410 ]
+"478
+[; ;mcc_generated_files/tmr2.c: 478:                 break;
+[e $U 397  ]
+"479
+[; ;mcc_generated_files/tmr2.c: 479:         }
+}
+[e $U 397  ]
+[e :U 398 ]
+[e [\ -> . _SW3 2 `ui , $ -> . `E2526 0 `ui 399
+ , $ -> . `E2526 1 `ui 404
+ , $ -> . `E2526 2 `ui 406
+ 397 ]
+[e :U 397 ]
+"480
+[; ;mcc_generated_files/tmr2.c: 480:     }
+}
+[e :U 396 ]
+"481
+[; ;mcc_generated_files/tmr2.c: 481: }
 [e :UE 365 ]
 }

@@ -4559,27 +4559,24 @@ void main(void) {
 
 void InputProcess() {
     if (SW1.State == 1 && SW2.State == 1) {
-        SW1.State = 0;
-        SW2.State = 0;
         LATAbits.LATA2 = 0;
     } else {
         LATAbits.LATA2 = 1;
+
+
+        if (SW1.State == 1) {
+
+            LATAbits.LATA0 = 0;
+        } else {
+            LATAbits.LATA0 = 1;
+        }
+
+        if (SW2.State == 1) {
+            LATAbits.LATA1 = 0;
+        } else {
+            LATAbits.LATA1 = 1;
+        }
     }
-
-    if (SW1.State == 1) {
-
-        LATAbits.LATA0 = 0;
-    } else {
-        LATAbits.LATA0 = 1;
-    }
-
-    if (SW2.State == 1) {
-        LATAbits.LATA1 = 0;
-        SW2.State = 0;
-    } else {
-        LATAbits.LATA1 = 1;
-    }
-
 }
 
 void OutputProcess() {

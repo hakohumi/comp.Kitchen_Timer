@@ -124,27 +124,24 @@ void main(void) {
 
 void InputProcess() {
     if (SW1.State == 1 && SW2.State == 1) {
-        SW1.State = 0;
-        SW2.State = 0;
         LED3 = LED_ON;
     } else {
         LED3 = LED_OFF;
-    }
 
-    if (SW1.State == 1) {
-        //LED1_Toggle();
-        LED1 = LED_ON;
-    } else {
-        LED1 = LED_OFF;
-    }
 
-    if (SW2.State == 1) {
-        LED2 = LED_ON;
-        SW2.State = 0;
-    } else {
-        LED2 = LED_OFF;
-    }
+        if (SW1.State == 1) {
+            //LED1_Toggle();
+            LED1 = LED_ON;
+        } else {
+            LED1 = LED_OFF;
+        }
 
+        if (SW2.State == 1) {
+            LED2 = LED_ON;
+        } else {
+            LED2 = LED_OFF;
+        }
+    }
 }
 
 void OutputProcess() {
