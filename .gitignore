@@ -56,7 +56,4 @@ dkms.conf
 *.i
 *.p1
 
-*.production.cmf
-*.production.lst
-*.production.rlf
-*.production.sym
+*.production.*
