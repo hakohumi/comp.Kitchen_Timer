@@ -19,7 +19,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.20 and above
         MPLAB 	          :  MPLAB X 5.40	
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -42,14 +42,14 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #ifndef PIN_MANAGER_H
 #define PIN_MANAGER_H
 
 /**
   Section: Included Files
-*/
+ */
 
 #include <xc.h>
 
@@ -67,6 +67,16 @@
 
 #define LED_ON 0
 #define LED_OFF 1
+
+
+// SW割込みの許可・禁止
+#define IOC_INT_SW1_ENABLE()          do { IOCBNbits.IOCBN2 = 1;} while(0)
+#define IOC_INT_SW2_ENABLE()          do { IOCBNbits.IOCBN5 = 1;} while(0)
+#define IOC_INT_SW3_ENABLE()          do { IOCBNbits.IOCBN0 = 1;} while(0)
+
+#define IOC_INT_SW1_DISABLE()          do { IOCBNbits.IOCBN2 = 0;} while(0)
+#define IOC_INT_SW2_DISABLE()          do { IOCBNbits.IOCBN5 = 0;} while(0)
+#define IOC_INT_SW3_DISABLE()          do { IOCBNbits.IOCBN0 = 0;} while(0)
 
 // get/set IO_RA0 aliases
 #define IO_RA0_TRIS                 TRISAbits.TRISA0
@@ -110,19 +120,15 @@
 #define IO_RA2_SetAnalogMode()      do { ANSELAbits.ANSA2 = 1; } while(0)
 #define IO_RA2_SetDigitalMode()     do { ANSELAbits.ANSA2 = 0; } while(0)
 
-// get/set IO_RA3 aliases
-#define IO_RA3_TRIS                 TRISAbits.TRISA3
-#define IO_RA3_LAT                  LATAbits.LATA3
-#define IO_RA3_PORT                 PORTAbits.RA3
-#define IO_RA3_ANS                  ANSELAbits.ANSA3
-#define IO_RA3_SetHigh()            do { LATAbits.LATA3 = 1; } while(0)
-#define IO_RA3_SetLow()             do { LATAbits.LATA3 = 0; } while(0)
-#define IO_RA3_Toggle()             do { LATAbits.LATA3 = ~LATAbits.LATA3; } while(0)
-#define IO_RA3_GetValue()           PORTAbits.RA3
-#define IO_RA3_SetDigitalInput()    do { TRISAbits.TRISA3 = 1; } while(0)
-#define IO_RA3_SetDigitalOutput()   do { TRISAbits.TRISA3 = 0; } while(0)
-#define IO_RA3_SetAnalogMode()      do { ANSELAbits.ANSA3 = 1; } while(0)
-#define IO_RA3_SetDigitalMode()     do { ANSELAbits.ANSA3 = 0; } while(0)
+// get/set RA3 procedures
+#define RA3_SetHigh()            do { LATAbits.LATA3 = 1; } while(0)
+#define RA3_SetLow()             do { LATAbits.LATA3 = 0; } while(0)
+#define RA3_Toggle()             do { LATAbits.LATA3 = ~LATAbits.LATA3; } while(0)
+#define RA3_GetValue()              PORTAbits.RA3
+#define RA3_SetDigitalInput()    do { TRISAbits.TRISA3 = 1; } while(0)
+#define RA3_SetDigitalOutput()   do { TRISAbits.TRISA3 = 0; } while(0)
+#define RA3_SetAnalogMode()         do { ANSELAbits.ANSA3 = 1; } while(0)
+#define RA3_SetDigitalMode()        do { ANSELAbits.ANSA3 = 0; } while(0)
 
 // get/set IO_RA4 aliases
 #define IO_RA4_TRIS                 TRISAbits.TRISA4
@@ -174,22 +180,17 @@
 #define IO_RB0_SetPullup()          do { WPUBbits.WPUB0 = 1; } while(0)
 #define IO_RB0_ResetPullup()        do { WPUBbits.WPUB0 = 0; } while(0)
 
-// get/set IO_RB1 aliases
-#define IO_RB1_TRIS                 TRISBbits.TRISB1
-#define IO_RB1_LAT                  LATBbits.LATB1
-#define IO_RB1_PORT                 PORTBbits.RB1
-#define IO_RB1_WPU                  WPUBbits.WPUB1
-#define IO_RB1_ANS                  ANSELBbits.ANSB1
-#define IO_RB1_SetHigh()            do { LATBbits.LATB1 = 1; } while(0)
-#define IO_RB1_SetLow()             do { LATBbits.LATB1 = 0; } while(0)
-#define IO_RB1_Toggle()             do { LATBbits.LATB1 = ~LATBbits.LATB1; } while(0)
-#define IO_RB1_GetValue()           PORTBbits.RB1
-#define IO_RB1_SetDigitalInput()    do { TRISBbits.TRISB1 = 1; } while(0)
-#define IO_RB1_SetDigitalOutput()   do { TRISBbits.TRISB1 = 0; } while(0)
-#define IO_RB1_SetPullup()          do { WPUBbits.WPUB1 = 1; } while(0)
-#define IO_RB1_ResetPullup()        do { WPUBbits.WPUB1 = 0; } while(0)
-#define IO_RB1_SetAnalogMode()      do { ANSELBbits.ANSB1 = 1; } while(0)
-#define IO_RB1_SetDigitalMode()     do { ANSELBbits.ANSB1 = 0; } while(0)
+// get/set RB1 procedures
+#define RB1_SetHigh()            do { LATBbits.LATB1 = 1; } while(0)
+#define RB1_SetLow()             do { LATBbits.LATB1 = 0; } while(0)
+#define RB1_Toggle()             do { LATBbits.LATB1 = ~LATBbits.LATB1; } while(0)
+#define RB1_GetValue()              PORTBbits.RB1
+#define RB1_SetDigitalInput()    do { TRISBbits.TRISB1 = 1; } while(0)
+#define RB1_SetDigitalOutput()   do { TRISBbits.TRISB1 = 0; } while(0)
+#define RB1_SetPullup()             do { WPUBbits.WPUB1 = 1; } while(0)
+#define RB1_ResetPullup()           do { WPUBbits.WPUB1 = 0; } while(0)
+#define RB1_SetAnalogMode()         do { ANSELBbits.ANSB1 = 1; } while(0)
+#define RB1_SetDigitalMode()        do { ANSELBbits.ANSB1 = 0; } while(0)
 
 // get/set IO_RB2 aliases
 #define IO_RB2_TRIS                 TRISBbits.TRISB2
@@ -225,22 +226,17 @@
 #define IO_RB3_SetAnalogMode()      do { ANSELBbits.ANSB3 = 1; } while(0)
 #define IO_RB3_SetDigitalMode()     do { ANSELBbits.ANSB3 = 0; } while(0)
 
-// get/set IO_RB4 aliases
-#define IO_RB4_TRIS                 TRISBbits.TRISB4
-#define IO_RB4_LAT                  LATBbits.LATB4
-#define IO_RB4_PORT                 PORTBbits.RB4
-#define IO_RB4_WPU                  WPUBbits.WPUB4
-#define IO_RB4_ANS                  ANSELBbits.ANSB4
-#define IO_RB4_SetHigh()            do { LATBbits.LATB4 = 1; } while(0)
-#define IO_RB4_SetLow()             do { LATBbits.LATB4 = 0; } while(0)
-#define IO_RB4_Toggle()             do { LATBbits.LATB4 = ~LATBbits.LATB4; } while(0)
-#define IO_RB4_GetValue()           PORTBbits.RB4
-#define IO_RB4_SetDigitalInput()    do { TRISBbits.TRISB4 = 1; } while(0)
-#define IO_RB4_SetDigitalOutput()   do { TRISBbits.TRISB4 = 0; } while(0)
-#define IO_RB4_SetPullup()          do { WPUBbits.WPUB4 = 1; } while(0)
-#define IO_RB4_ResetPullup()        do { WPUBbits.WPUB4 = 0; } while(0)
-#define IO_RB4_SetAnalogMode()      do { ANSELBbits.ANSB4 = 1; } while(0)
-#define IO_RB4_SetDigitalMode()     do { ANSELBbits.ANSB4 = 0; } while(0)
+// get/set RB4 procedures
+#define RB4_SetHigh()            do { LATBbits.LATB4 = 1; } while(0)
+#define RB4_SetLow()             do { LATBbits.LATB4 = 0; } while(0)
+#define RB4_Toggle()             do { LATBbits.LATB4 = ~LATBbits.LATB4; } while(0)
+#define RB4_GetValue()              PORTBbits.RB4
+#define RB4_SetDigitalInput()    do { TRISBbits.TRISB4 = 1; } while(0)
+#define RB4_SetDigitalOutput()   do { TRISBbits.TRISB4 = 0; } while(0)
+#define RB4_SetPullup()             do { WPUBbits.WPUB4 = 1; } while(0)
+#define RB4_ResetPullup()           do { WPUBbits.WPUB4 = 0; } while(0)
+#define RB4_SetAnalogMode()         do { ANSELBbits.ANSB4 = 1; } while(0)
+#define RB4_SetDigitalMode()        do { ANSELBbits.ANSB4 = 0; } while(0)
 
 // get/set IO_RB5 aliases
 #define IO_RB5_TRIS                 TRISBbits.TRISB5
@@ -303,7 +299,7 @@
    @Example
     PIN_MANAGER_Initialize();
  */
-void PIN_MANAGER_Initialize (void);
+void PIN_MANAGER_Initialize(void);
 
 /**
  * @Param
@@ -350,7 +346,7 @@ void IOCBF0_ISR(void);
     PIN_MANAGER_Initialize();
     IOCBF0_SetInterruptHandler(MyInterruptHandler);
 
-*/
+ */
 void IOCBF0_SetInterruptHandler(void (* InterruptHandler)(void));
 
 /**
@@ -374,7 +370,7 @@ void IOCBF0_SetInterruptHandler(void (* InterruptHandler)(void));
     PIN_MANAGER_Initialize();
     IOCBF0_SetInterruptHandler(IOCBF0_InterruptHandler);
 
-*/
+ */
 extern void (*IOCBF0_InterruptHandler)(void);
 
 /**
@@ -398,92 +394,8 @@ extern void (*IOCBF0_InterruptHandler)(void);
     PIN_MANAGER_Initialize();
     IOCBF0_SetInterruptHandler(IOCBF0_DefaultInterruptHandler);
 
-*/
-void IOCBF0_DefaultInterruptHandler(void);
-
-
-/**
- * @Param
-    none
- * @Returns
-    none
- * @Description
-    Interrupt on Change Handler for the IOCBF1 pin functionality
- * @Example
-    IOCBF1_ISR();
  */
-void IOCBF1_ISR(void);
-
-/**
-  @Summary
-    Interrupt Handler Setter for IOCBF1 pin interrupt-on-change functionality
-
-  @Description
-    Allows selecting an interrupt handler for IOCBF1 at application runtime
-    
-  @Preconditions
-    Pin Manager intializer called
-
-  @Returns
-    None.
-
-  @Param
-    InterruptHandler function pointer.
-
-  @Example
-    PIN_MANAGER_Initialize();
-    IOCBF1_SetInterruptHandler(MyInterruptHandler);
-
-*/
-void IOCBF1_SetInterruptHandler(void (* InterruptHandler)(void));
-
-/**
-  @Summary
-    Dynamic Interrupt Handler for IOCBF1 pin
-
-  @Description
-    This is a dynamic interrupt handler to be used together with the IOCBF1_SetInterruptHandler() method.
-    This handler is called every time the IOCBF1 ISR is executed and allows any function to be registered at runtime.
-    
-  @Preconditions
-    Pin Manager intializer called
-
-  @Returns
-    None.
-
-  @Param
-    None.
-
-  @Example
-    PIN_MANAGER_Initialize();
-    IOCBF1_SetInterruptHandler(IOCBF1_InterruptHandler);
-
-*/
-extern void (*IOCBF1_InterruptHandler)(void);
-
-/**
-  @Summary
-    Default Interrupt Handler for IOCBF1 pin
-
-  @Description
-    This is a predefined interrupt handler to be used together with the IOCBF1_SetInterruptHandler() method.
-    This handler is called every time the IOCBF1 ISR is executed. 
-    
-  @Preconditions
-    Pin Manager intializer called
-
-  @Returns
-    None.
-
-  @Param
-    None.
-
-  @Example
-    PIN_MANAGER_Initialize();
-    IOCBF1_SetInterruptHandler(IOCBF1_DefaultInterruptHandler);
-
-*/
-void IOCBF1_DefaultInterruptHandler(void);
+void IOCBF0_DefaultInterruptHandler(void);
 
 
 /**
@@ -518,7 +430,7 @@ void IOCBF2_ISR(void);
     PIN_MANAGER_Initialize();
     IOCBF2_SetInterruptHandler(MyInterruptHandler);
 
-*/
+ */
 void IOCBF2_SetInterruptHandler(void (* InterruptHandler)(void));
 
 /**
@@ -542,7 +454,7 @@ void IOCBF2_SetInterruptHandler(void (* InterruptHandler)(void));
     PIN_MANAGER_Initialize();
     IOCBF2_SetInterruptHandler(IOCBF2_InterruptHandler);
 
-*/
+ */
 extern void (*IOCBF2_InterruptHandler)(void);
 
 /**
@@ -566,12 +478,96 @@ extern void (*IOCBF2_InterruptHandler)(void);
     PIN_MANAGER_Initialize();
     IOCBF2_SetInterruptHandler(IOCBF2_DefaultInterruptHandler);
 
-*/
+ */
 void IOCBF2_DefaultInterruptHandler(void);
+
+
+/**
+ * @Param
+    none
+ * @Returns
+    none
+ * @Description
+    Interrupt on Change Handler for the IOCBF5 pin functionality
+ * @Example
+    IOCBF5_ISR();
+ */
+void IOCBF5_ISR(void);
+
+/**
+  @Summary
+    Interrupt Handler Setter for IOCBF5 pin interrupt-on-change functionality
+
+  @Description
+    Allows selecting an interrupt handler for IOCBF5 at application runtime
+    
+  @Preconditions
+    Pin Manager intializer called
+
+  @Returns
+    None.
+
+  @Param
+    InterruptHandler function pointer.
+
+  @Example
+    PIN_MANAGER_Initialize();
+    IOCBF5_SetInterruptHandler(MyInterruptHandler);
+
+ */
+void IOCBF5_SetInterruptHandler(void (* InterruptHandler)(void));
+
+/**
+  @Summary
+    Dynamic Interrupt Handler for IOCBF5 pin
+
+  @Description
+    This is a dynamic interrupt handler to be used together with the IOCBF5_SetInterruptHandler() method.
+    This handler is called every time the IOCBF5 ISR is executed and allows any function to be registered at runtime.
+    
+  @Preconditions
+    Pin Manager intializer called
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    PIN_MANAGER_Initialize();
+    IOCBF5_SetInterruptHandler(IOCBF5_InterruptHandler);
+
+ */
+extern void (*IOCBF5_InterruptHandler)(void);
+
+/**
+  @Summary
+    Default Interrupt Handler for IOCBF5 pin
+
+  @Description
+    This is a predefined interrupt handler to be used together with the IOCBF5_SetInterruptHandler() method.
+    This handler is called every time the IOCBF5 ISR is executed. 
+    
+  @Preconditions
+    Pin Manager intializer called
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    PIN_MANAGER_Initialize();
+    IOCBF5_SetInterruptHandler(IOCBF5_DefaultInterruptHandler);
+
+ */
+void IOCBF5_DefaultInterruptHandler(void);
 
 
 
 #endif // PIN_MANAGER_H
 /**
  End of File
-*/
+ */

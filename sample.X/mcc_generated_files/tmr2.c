@@ -144,7 +144,7 @@ void TMR2_DefaultInterruptHandler(void) {
     // or set custom function using TMR2_SetInterruptHandler()
 
     // SW1が押されて状態変化割込みでフラグが立ったら
-    if (SW1.IntFlg == true) {
+    if (SW1.ChattaFlg == true) {
 
         // SW1のポートの値を読み取る
         SW1.ReadValue = ~(SW1_Value);
@@ -179,7 +179,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SW1の状態をOFF
                         SW1.State = OFF;
                         // SW1の割り込みフラグをクリア
-                        SW1.IntFlg = 0;
+                        SW1.ChattaFlg = 0;
                         // ------------------------------------------------------------
                     }
 
@@ -229,7 +229,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SW1の状態をOFF
                         SW1.State = OFF;
                         // SW1の割り込みフラグをクリア
-                        SW1.IntFlg = 0;
+                        SW1.ChattaFlg = 0;
                         // ------------------------------------------------------------
                     } else {
                         // ------------------------------------------------------------
@@ -256,7 +256,7 @@ void TMR2_DefaultInterruptHandler(void) {
     }
     
     // SW2が押されて状態変化割込みでフラグが立ったら
-    if (SW2.IntFlg == true) {
+    if (SW2.ChattaFlg == true) {
 
         // SW2のポートの値を読み取る
         SW2.ReadValue = ~(SW2_Value);
@@ -291,7 +291,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SW2の状態をOFF
                         SW2.State = OFF;
                         // SW2の割り込みフラグをクリア
-                        SW2.IntFlg = 0;
+                        SW2.ChattaFlg = 0;
                         // ------------------------------------------------------------
                     }
 
@@ -341,7 +341,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SW2の状態をOFF
                         SW2.State = OFF;
                         // SW2の割り込みフラグをクリア
-                        SW2.IntFlg = 0;
+                        SW2.ChattaFlg = 0;
                         // ------------------------------------------------------------
                     } else {
                         // ------------------------------------------------------------
@@ -368,7 +368,7 @@ void TMR2_DefaultInterruptHandler(void) {
     }
     
     // SW3が押されて状態変化割込みでフラグが立ったら
-    if (SW3.IntFlg == true) {
+    if (SW3.ChattaFlg == true) {
 
         // SW3のポートの値を読み取る
         SW3.ReadValue = ~(SW3_Value);
@@ -403,7 +403,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SW3の状態をOFF
                         SW3.State = OFF;
                         // SW3の割り込みフラグをクリア
-                        SW3.IntFlg = 0;
+                        SW3.ChattaFlg = 0;
                         // ------------------------------------------------------------
                     }
 
@@ -453,7 +453,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SW3の状態をOFF
                         SW3.State = OFF;
                         // SW3の割り込みフラグをクリア
-                        SW3.IntFlg = 0;
+                        SW3.ChattaFlg = 0;
                         // ------------------------------------------------------------
                     } else {
                         // ------------------------------------------------------------

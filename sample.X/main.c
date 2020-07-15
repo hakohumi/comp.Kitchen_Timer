@@ -51,7 +51,7 @@ bool Timer500msFlag;
 bool Timer10msFlag;
 
 SWState_t SW1 = {
-    OFF, // IntFlg
+    OFF, // ChattaFlg
     LOW, // ReadValue
     RISING, // ChattaState
     0, // CheckCount
@@ -61,7 +61,7 @@ SWState_t SW1 = {
     0, // SWCount
 };
 SWState_t SW2 = {
-    OFF, // IntFlg
+    OFF, // ChattaFlg
     LOW, // ReadValue
     RISING, // ChattaState
     0, // CheckCount
@@ -71,7 +71,7 @@ SWState_t SW2 = {
     0, // SWCount
 };
 SWState_t SW3 = {
-    OFF, // IntFlg
+    OFF, // ChattaFlg
     LOW, // ReadValue
     RISING, // ChattaState
     0, // CheckCount

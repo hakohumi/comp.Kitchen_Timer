@@ -49,13 +49,15 @@
 #include "pin_manager.h"
 #include "mcc.h"
 
-extern SWState_t SW1;
-extern SWState_t SW2;
-extern SWState_t SW3;
+extern SWState_t SW1; // RB2
+extern SWState_t SW2; // RB5
+extern SWState_t SW3; // RB0
+
+
 
 void (*IOCBF0_InterruptHandler)(void);
-void (*IOCBF1_InterruptHandler)(void);
 void (*IOCBF2_InterruptHandler)(void);
+void (*IOCBF5_InterruptHandler)(void);
 
 void PIN_MANAGER_Initialize(void) {
     /**
@@ -68,7 +70,7 @@ void PIN_MANAGER_Initialize(void) {
     TRISx registers
      */
     TRISA = 0x20;
-    TRISB = 0x07;
+    TRISB = 0x37;
 
     /**
     ANSELx registers
@@ -96,28 +98,28 @@ void PIN_MANAGER_Initialize(void) {
     //interrupt on change for group IOCBF - flag
     IOCBFbits.IOCBF0 = 0;
     //interrupt on change for group IOCBF - flag
-    IOCBFbits.IOCBF1 = 0;
-    //interrupt on change for group IOCBF - flag
     IOCBFbits.IOCBF2 = 0;
+    //interrupt on change for group IOCBF - flag
+    IOCBFbits.IOCBF5 = 0;
     //interrupt on change for group IOCBN - negative
     IOCBNbits.IOCBN0 = 1;
     //interrupt on change for group IOCBN - negative
-    IOCBNbits.IOCBN1 = 1;
-    //interrupt on change for group IOCBN - negative
     IOCBNbits.IOCBN2 = 1;
+    //interrupt on change for group IOCBN - negative
+    IOCBNbits.IOCBN5 = 1;
     //interrupt on change for group IOCBP - positive
     IOCBPbits.IOCBP0 = 0;
     //interrupt on change for group IOCBP - positive
-    IOCBPbits.IOCBP1 = 0;
-    //interrupt on change for group IOCBP - positive
     IOCBPbits.IOCBP2 = 0;
+    //interrupt on change for group IOCBP - positive
+    IOCBPbits.IOCBP5 = 0;
 
 
 
     // register default IOC callback functions at runtime; use these methods to register a custom function
     IOCBF0_SetInterruptHandler(IOCBF0_DefaultInterruptHandler);
-    IOCBF1_SetInterruptHandler(IOCBF1_DefaultInterruptHandler);
     IOCBF2_SetInterruptHandler(IOCBF2_DefaultInterruptHandler);
+    IOCBF5_SetInterruptHandler(IOCBF5_DefaultInterruptHandler);
 
     // Enable IOCI interrupt 
     INTCONbits.IOCIE = 1;
@@ -129,13 +131,13 @@ void PIN_MANAGER_IOC(void) {
     if (IOCBFbits.IOCBF0 == 1) {
         IOCBF0_ISR();
     }
-    // interrupt on change for pin IOCBF1
-    if (IOCBFbits.IOCBF1 == 1) {
-        IOCBF1_ISR();
-    }
     // interrupt on change for pin IOCBF2
     if (IOCBFbits.IOCBF2 == 1) {
         IOCBF2_ISR();
+    }
+    // interrupt on change for pin IOCBF5
+    if (IOCBFbits.IOCBF5 == 1) {
+        IOCBF5_ISR();
     }
 }
 
@@ -167,43 +169,12 @@ void IOCBF0_DefaultInterruptHandler(void) {
     // add your IOCBF0 interrupt custom code
     // or set custom function using IOCBF0_SetInterruptHandler()
 
-    // SW1の処理 立ち下がり
+    // SW3の処理 立ち下がり
     // スイッチフラグを立てる
-    SW1.IntFlg = true;
+    SW3.ChattaFlg = true;
 
-}
-
-/**
-   IOCBF1 Interrupt Service Routine
- */
-void IOCBF1_ISR(void) {
-
-    // Add custom IOCBF1 code
-
-    // Call the interrupt handler for the callback registered at runtime
-    if (IOCBF1_InterruptHandler) {
-        IOCBF1_InterruptHandler();
-    }
-    IOCBFbits.IOCBF1 = 0;
-}
-
-/**
-  Allows selecting an interrupt handler for IOCBF1 at application runtime
- */
-void IOCBF1_SetInterruptHandler(void (* InterruptHandler)(void)) {
-    IOCBF1_InterruptHandler = InterruptHandler;
-}
-
-/**
-  Default interrupt handler for IOCBF1
- */
-void IOCBF1_DefaultInterruptHandler(void) {
-    // add your IOCBF1 interrupt custom code
-    // or set custom function using IOCBF1_SetInterruptHandler()
-
-    // SW2の処理 立ち下がり
-    // スイッチフラグを立てる
-    SW2.IntFlg = true;
+    // SW3の割り込み禁止
+    IOC_INT_SW3_DISABLE();
 
 }
 
@@ -234,10 +205,49 @@ void IOCBF2_SetInterruptHandler(void (* InterruptHandler)(void)) {
 void IOCBF2_DefaultInterruptHandler(void) {
     // add your IOCBF2 interrupt custom code
     // or set custom function using IOCBF2_SetInterruptHandler()
-    
-    // SW3の処理 立ち下がり
+
+    // SW1の処理 立ち下がり
     // スイッチフラグを立てる
-    SW3.IntFlg = true;
+    SW1.ChattaFlg = true;
+
+    // SW1の割り込み禁止
+    IOC_INT_SW1_DISABLE();
+}
+
+/**
+   IOCBF5 Interrupt Service Routine
+ */
+void IOCBF5_ISR(void) {
+
+    // Add custom IOCBF5 code
+
+    // Call the interrupt handler for the callback registered at runtime
+    if (IOCBF5_InterruptHandler) {
+        IOCBF5_InterruptHandler();
+    }
+    IOCBFbits.IOCBF5 = 0;
+}
+
+/**
+  Allows selecting an interrupt handler for IOCBF5 at application runtime
+ */
+void IOCBF5_SetInterruptHandler(void (* InterruptHandler)(void)) {
+    IOCBF5_InterruptHandler = InterruptHandler;
+}
+
+/**
+  Default interrupt handler for IOCBF5
+ */
+void IOCBF5_DefaultInterruptHandler(void) {
+    // add your IOCBF5 interrupt custom code
+    // or set custom function using IOCBF5_SetInterruptHandler()
+
+    // SW2の処理 立ち下がり
+    // スイッチフラグを立てる
+    SW2.ChattaFlg = true;
+
+    // SW2の割り込み禁止
+    IOC_INT_SW2_DISABLE();
 
 }
 

@@ -46,6 +46,7 @@
 
 #ifndef MCC_H
 #define	MCC_H
+
 #include <xc.h>
 #include "device_config.h"
 #include "pin_manager.h"
@@ -53,6 +54,7 @@
 #include <stdbool.h>
 #include <conio.h>
 #include "interrupt_manager.h"
+#include "i2c1_master.h"
 #include "pwm3.h"
 #include "tmr4.h"
 #include "tmr1.h"
@@ -75,7 +77,7 @@
 #define LED4_Toggle() IO_RA3_Toggle()
 
 //typedef struct {
-//    uint8_t IntFlg;
+//    uint8_t ChattaFlg;
 //    uint8_t ReadValue;
 //    uint8_t BufRiseFlg;
 //    uint8_t BufFallFlg;
@@ -89,7 +91,7 @@ typedef enum {
 } CHATTA_STATE_E;
 
 typedef struct {
-    bool IntFlg;
+    bool ChattaFlg;
     uint8_t ReadValue;
     CHATTA_STATE_E ChattaState;
     uint8_t CheckCount;
