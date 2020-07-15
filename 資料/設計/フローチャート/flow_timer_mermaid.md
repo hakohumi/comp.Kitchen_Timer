@@ -6,6 +6,7 @@ stateDiagram-v2
 
 risechatta : 立ち上がり時チャタチェック
 risechatta : entry / チェックカウントをクリア
+risechatta : entry / SWのIOC割込みを禁止
 risechatta : do / SWをリードする
 risechatta : do / チェックカウントを1増加
 risechatta : do / SWが3回ONかチェックする
@@ -25,11 +26,12 @@ fallchatta : do / SWが3回OFFかチェックする
 fallstate : 立ち下がり状態
 fallstate : entry / SWカウントをクリア
 fallstate : entry / SWの状態をOFF
-fallstate : entry / SWの割り込みフラグをクリア
+fallstate : entry / SWのチャタフラグをクリア
+fallstate : entry / SWのIOC割込みの許可
 
 
 
-[*] --> risechatta : SW1の割込みフラグが立った時
+[*] --> risechatta : SW1のチャタフラグが立った時
 risechatta --> ongoing : SW1の値が3回<br>ONの時
 risechatta --> fallstate : SW1の値が3回<br>ONではない時
 
