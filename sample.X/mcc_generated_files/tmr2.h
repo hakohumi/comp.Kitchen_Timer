@@ -19,7 +19,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.20 and above
         MPLAB 	          :  MPLAB X 5.40
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -42,352 +42,352 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #ifndef TMR2_H
 #define TMR2_H
 
 /**
   Section: Included Files
-*/
+ */
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "mcc.h"
+#include "common.h"
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-    extern "C" {
+extern "C" {
 
 #endif
 
 
-/**
-  Section: Macro Declarations
-*/
+    /**
+      Section: Macro Declarations
+     */
 
-/**
-  Section: TMR2 APIs
-*/
+    /**
+      Section: TMR2 APIs
+     */
 
-/**
-  @Summary
-    Initializes the TMR2 module.
+    /**
+      @Summary
+        Initializes the TMR2 module.
 
-  @Description
-    This function initializes the TMR2 Registers.
-    This function must be called before any other TMR2 function is called.
+      @Description
+        This function initializes the TMR2 Registers.
+        This function must be called before any other TMR2 function is called.
 
-  @Preconditions
-    None
+      @Preconditions
+        None
 
-  @Param
-    None
+      @Param
+        None
 
-  @Returns
-    None
+      @Returns
+        None
 
-  @Comment
+      @Comment
     
 
-  @Example
-    <code>
-    main()
-    {
+      @Example
+        <code>
+        main()
+        {
+            // Initialize TMR2 module
+            TMR2_Initialize();
+
+            // Do something else...
+        }
+        </code>
+     */
+    void TMR2_Initialize(void);
+
+    /**
+      @Summary
+        This function starts the TMR2.
+
+      @Description
+        This function starts the TMR2 operation.
+        This function must be called after the initialization of TMR2.
+
+      @Preconditions
+        Initialize  the TMR2 before calling this function.
+
+      @Param
+        None
+
+      @Returns
+        None
+
+      @Example
+        <code>
         // Initialize TMR2 module
-        TMR2_Initialize();
+
+        // Start TMR2
+        TMR2_StartTimer();
 
         // Do something else...
-    }
-    </code>
-*/
-void TMR2_Initialize(void);
+        </code>
+     */
+    void TMR2_StartTimer(void);
 
-/**
-  @Summary
-    This function starts the TMR2.
+    /**
+      @Summary
+        This function stops the TMR2.
 
-  @Description
-    This function starts the TMR2 operation.
-    This function must be called after the initialization of TMR2.
+      @Description
+        This function stops the TMR2 operation.
+        This function must be called after the start of TMR2.
 
-  @Preconditions
-    Initialize  the TMR2 before calling this function.
+      @Preconditions
+        Initialize  the TMR2 before calling this function.
 
-  @Param
-    None
+      @Param
+        None
 
-  @Returns
-    None
+      @Returns
+        None
 
-  @Example
-    <code>
-    // Initialize TMR2 module
+      @Example
+        <code>
+        // Initialize TMR2 module
 
-    // Start TMR2
-    TMR2_StartTimer();
+        // Start TMR2
+        TMR2_StartTimer();
 
-    // Do something else...
-    </code>
-*/
-void TMR2_StartTimer(void);
-
-/**
-  @Summary
-    This function stops the TMR2.
-
-  @Description
-    This function stops the TMR2 operation.
-    This function must be called after the start of TMR2.
-
-  @Preconditions
-    Initialize  the TMR2 before calling this function.
-
-  @Param
-    None
-
-  @Returns
-    None
-
-  @Example
-    <code>
-    // Initialize TMR2 module
-
-    // Start TMR2
-    TMR2_StartTimer();
-
-    // Do something else...
-
-    // Stop TMR2;
-    TMR2_StopTimer();
-    </code>
-*/
-void TMR2_StopTimer(void);
-
-/**
-  @Summary
-    Reads the TMR2 register.
-
-  @Description
-    This function reads the TMR2 register value and return it.
-
-  @Preconditions
-    Initialize  the TMR2 before calling this function.
-
-  @Param
-    None
-
-  @Returns
-    This function returns the current value of TMR2 register.
-
-  @Example
-    <code>
-    // Initialize TMR2 module
-
-    // Start TMR2
-    TMR2_StartTimer();
-
-    // Read the current value of TMR2
-    if(0 == TMR2_ReadTimer())
-    {
         // Do something else...
 
-        // Reload the TMR value
-        TMR2_Reload();
-    }
-    </code>
-*/
-uint8_t TMR2_ReadTimer(void);
+        // Stop TMR2;
+        TMR2_StopTimer();
+        </code>
+     */
+    void TMR2_StopTimer(void);
 
-/**
-  @Summary
-    Writes the TMR2 register.
+    /**
+      @Summary
+        Reads the TMR2 register.
 
-  @Description
-    This function writes the TMR2 register.
-    This function must be called after the initialization of TMR2.
+      @Description
+        This function reads the TMR2 register value and return it.
 
-  @Preconditions
-    Initialize  the TMR2 before calling this function.
+      @Preconditions
+        Initialize  the TMR2 before calling this function.
 
-  @Param
-    timerVal - Value to write into TMR2 register.
+      @Param
+        None
 
-  @Returns
-    None
+      @Returns
+        This function returns the current value of TMR2 register.
 
-  @Example
-    <code>
-    #define PERIOD 0x80
-    #define ZERO   0x00
+      @Example
+        <code>
+        // Initialize TMR2 module
 
-    while(1)
-    {
-        // Read the TMR2 register
-        if(ZERO == TMR2_ReadTimer())
+        // Start TMR2
+        TMR2_StartTimer();
+
+        // Read the current value of TMR2
+        if(0 == TMR2_ReadTimer())
         {
             // Do something else...
 
-            // Write the TMR2 register
-            TMR2_WriteTimer(PERIOD);
+            // Reload the TMR value
+            TMR2_Reload();
         }
+        </code>
+     */
+    uint8_t TMR2_ReadTimer(void);
 
-        // Do something else...
-    }
-    </code>
-*/
-void TMR2_WriteTimer(uint8_t timerVal);
+    /**
+      @Summary
+        Writes the TMR2 register.
 
-/**
-  @Summary
-    Load value to Period Register.
+      @Description
+        This function writes the TMR2 register.
+        This function must be called after the initialization of TMR2.
 
-  @Description
-    This function writes the value to PR2 register.
-    This function must be called after the initialization of TMR2.
+      @Preconditions
+        Initialize  the TMR2 before calling this function.
 
-  @Preconditions
-    Initialize  the TMR2 before calling this function.
+      @Param
+        timerVal - Value to write into TMR2 register.
 
-  @Param
-    periodVal - Value to load into TMR2 register.
+      @Returns
+        None
 
-  @Returns
-    None
+      @Example
+        <code>
+        #define PERIOD 0x80
+        #define ZERO   0x00
 
-  @Example
-    <code>
-    #define PERIOD1 0x80
-    #define PERIOD2 0x40
-    #define ZERO    0x00
-
-    while(1)
-    {
-        // Read the TMR2 register
-        if(ZERO == TMR2_ReadTimer())
+        while(1)
         {
+            // Read the TMR2 register
+            if(ZERO == TMR2_ReadTimer())
+            {
+                // Do something else...
+
+                // Write the TMR2 register
+                TMR2_WriteTimer(PERIOD);
+            }
+
             // Do something else...
-
-            if(flag)
-            {
-                flag = 0;
-
-                // Load Period 1 value
-                TMR2_LoadPeriodRegister(PERIOD1);
-            }
-            else
-            {
-                 flag = 1;
-
-                // Load Period 2 value
-                TMR2_LoadPeriodRegister(PERIOD2);
-            }
         }
+        </code>
+     */
+    void TMR2_WriteTimer(uint8_t timerVal);
 
-        // Do something else...
-    }
-    </code>
-*/
-void TMR2_LoadPeriodRegister(uint8_t periodVal);
+    /**
+      @Summary
+        Load value to Period Register.
 
-/**
-  @Summary
-    Timer Interrupt Service Routine
+      @Description
+        This function writes the value to PR2 register.
+        This function must be called after the initialization of TMR2.
 
-  @Description
-    Timer Interrupt Service Routine is called by the Interrupt Manager.
+      @Preconditions
+        Initialize  the TMR2 before calling this function.
 
-  @Preconditions
-    Initialize  the TMR2 module with interrupt before calling this isr.
+      @Param
+        periodVal - Value to load into TMR2 register.
 
-  @Param
-    None
+      @Returns
+        None
 
-  @Returns
-    None
-*/
-void TMR2_ISR(void);
+      @Example
+        <code>
+        #define PERIOD1 0x80
+        #define PERIOD2 0x40
+        #define ZERO    0x00
 
-/**
-  @Summary
-    CallBack function
+        while(1)
+        {
+            // Read the TMR2 register
+            if(ZERO == TMR2_ReadTimer())
+            {
+                // Do something else...
 
-  @Description
-    This function is called from the timer ISR. User can write your code in this function.
+                if(flag)
+                {
+                    flag = 0;
 
-  @Preconditions
-    Initialize  the TMR2 module with interrupt before calling this function.
+                    // Load Period 1 value
+                    TMR2_LoadPeriodRegister(PERIOD1);
+                }
+                else
+                {
+                     flag = 1;
 
-  @Param
-    None
+                    // Load Period 2 value
+                    TMR2_LoadPeriodRegister(PERIOD2);
+                }
+            }
 
-  @Returns
-    None
-*/
- void TMR2_CallBack(void);
-/**
-  @Summary
-    Set Timer Interrupt Handler
+            // Do something else...
+        }
+        </code>
+     */
+    void TMR2_LoadPeriodRegister(uint8_t periodVal);
 
-  @Description
-    This sets the function to be called during the ISR
+    /**
+      @Summary
+        Timer Interrupt Service Routine
 
-  @Preconditions
-    Initialize  the TMR2 module with interrupt before calling this.
+      @Description
+        Timer Interrupt Service Routine is called by the Interrupt Manager.
 
-  @Param
-    Address of function to be set
+      @Preconditions
+        Initialize  the TMR2 module with interrupt before calling this isr.
 
-  @Returns
-    None
-*/
- void TMR2_SetInterruptHandler(void (* InterruptHandler)(void));
+      @Param
+        None
 
-/**
-  @Summary
-    Timer Interrupt Handler
+      @Returns
+        None
+     */
+    void TMR2_ISR(void);
 
-  @Description
-    This is a function pointer to the function that will be called during the ISR
+    /**
+      @Summary
+        CallBack function
 
-  @Preconditions
-    Initialize  the TMR2 module with interrupt before calling this isr.
+      @Description
+        This function is called from the timer ISR. User can write your code in this function.
 
-  @Param
-    None
+      @Preconditions
+        Initialize  the TMR2 module with interrupt before calling this function.
 
-  @Returns
-    None
-*/
-extern void (*TMR2_InterruptHandler)(void);
+      @Param
+        None
 
-/**
-  @Summary
-    Default Timer Interrupt Handler
+      @Returns
+        None
+     */
+    void TMR2_CallBack(void);
+    /**
+      @Summary
+        Set Timer Interrupt Handler
 
-  @Description
-    This is the default Interrupt Handler function
+      @Description
+        This sets the function to be called during the ISR
 
-  @Preconditions
-    Initialize  the TMR2 module with interrupt before calling this isr.
+      @Preconditions
+        Initialize  the TMR2 module with interrupt before calling this.
 
-  @Param
-    None
+      @Param
+        Address of function to be set
 
-  @Returns
-    None
-*/
-void TMR2_DefaultInterruptHandler(void);
+      @Returns
+        None
+     */
+    void TMR2_SetInterruptHandler(void (* InterruptHandler)(void));
+
+    /**
+      @Summary
+        Timer Interrupt Handler
+
+      @Description
+        This is a function pointer to the function that will be called during the ISR
+
+      @Preconditions
+        Initialize  the TMR2 module with interrupt before calling this isr.
+
+      @Param
+        None
+
+      @Returns
+        None
+     */
+    extern void (*TMR2_InterruptHandler)(void);
+
+    /**
+      @Summary
+        Default Timer Interrupt Handler
+
+      @Description
+        This is the default Interrupt Handler function
+
+      @Preconditions
+        Initialize  the TMR2 module with interrupt before calling this isr.
+
+      @Param
+        None
+
+      @Returns
+        None
+     */
+    void TMR2_DefaultInterruptHandler(void);
 
 
- #ifdef __cplusplus  // Provide C++ Compatibility
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-    }
+}
 
 #endif
 
 #endif // TMR2_H
 /**
  End of File
-*/
+ */
 

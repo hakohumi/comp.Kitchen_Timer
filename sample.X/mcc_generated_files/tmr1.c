@@ -1,3 +1,5 @@
+// 500msタイマ
+
 /**
   TMR1 Generated Driver File
 
@@ -50,6 +52,8 @@
 
 #include <xc.h>
 #include "tmr1.h"
+#include "CountClass.h"
+#include "common.h"
 
 /**
   Section: Global Variables Definitions
@@ -57,7 +61,15 @@
 volatile uint16_t timer1ReloadVal;
 void (*TMR1_InterruptHandler)(void);
 
+// 1秒フラグ
+bool Is1sFlg = OFF;
+
 extern bool Timer500msFlag;
+extern KITCHEN_TIMER_STATE_E KitchenTimerState;
+// カウントダウン終了カウント CountClass.c
+extern uint8_t CountDownEndCount;
+//LCDUpdateフラグ
+extern bool IsUpdateLCDFlg;
 
 /**
   Section: TMR1 APIs
@@ -171,7 +183,27 @@ void TMR1_DefaultInterruptHandler(void) {
     // add your TMR1 interrupt custom code
     // or set custom function using TMR1_SetInterruptHandler()
 
-    Timer500msFlag = 1;
+    // 1秒フラグ
+    if (Is1sFlg == ON) {
+        // カウント時間を1秒減少させる
+
+        //キッチンタイマー状態がカウントダウン終了か？
+        if (KitchenTimerState == COUNTDOWN_END_STATE) {
+            // カウントダウン終了カウントを1増加
+            CountDownEndCount++;
+        }
+
+        // 1秒フラグをOFF
+        Is1sFlg = OFF;
+    } else {
+        // 1秒フラグがOFFの時
+
+        // 1秒フラグをONへ
+        Is1sFlg = ON;
+    }
+
+    // UpdateLCDフラグをON
+    IsUpdateLCDFlg = ON;
 
 }
 

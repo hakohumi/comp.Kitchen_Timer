@@ -46,6 +46,7 @@
 
 #ifndef MCC_H
 #define	MCC_H
+
 #include <xc.h>
 #include "device_config.h"
 #include "pin_manager.h"
@@ -53,55 +54,11 @@
 #include <stdbool.h>
 #include <conio.h>
 #include "interrupt_manager.h"
+#include "i2c1_master.h"
 #include "pwm3.h"
 #include "tmr4.h"
 #include "tmr1.h"
 #include "tmr2.h"
-
-// スイッチからの入力
-#define SW1_Value IO_RB0_PORT
-#define SW2_Value IO_RB1_PORT
-#define SW3_Value IO_RB2_PORT
-#define SW4_Value IO_RB3_PORT
-
-#define LED1 IO_RA0_LAT
-#define LED2 IO_RA1_LAT
-#define LED3 IO_RA2_LAT
-#define LED4 IO_RA3_LAT
-
-#define LED1_Toggle() IO_RA0_Toggle()
-#define LED2_Toggle() IO_RA1_Toggle()
-#define LED3_Toggle() IO_RA2_Toggle()
-#define LED4_Toggle() IO_RA3_Toggle()
-
-//typedef struct {
-//    uint8_t IntFlg;
-//    uint8_t ReadValue;
-//    uint8_t BufRiseFlg;
-//    uint8_t BufFallFlg;
-//    uint8_t State;
-//} SWState_t;
-
-typedef enum {
-    RISING,
-    ONGOING,
-    FALLING
-} CHATTA_STATE_E;
-
-typedef struct {
-    bool IntFlg;
-    uint8_t ReadValue;
-    CHATTA_STATE_E ChattaState;
-    uint8_t CheckCount;
-    bool RiseCompareFlg; // 初期値は1
-    bool FallCompareFlg;
-    bool State;
-    uint8_t SWCount;
-} SWState_t;
-
-#define ON true
-#define OFF false
-
 
 /**
  * @Param

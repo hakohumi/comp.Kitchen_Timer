@@ -42,6 +42,8 @@
  */
 
 #include "mcc_generated_files/mcc.h"
+#include "common.h"
+#include "tmr1.h"
 
 /*
                          Main application
@@ -51,38 +53,35 @@ bool Timer500msFlag;
 bool Timer10msFlag;
 
 SWState_t SW1 = {
-    OFF, // IntFlg
-    LOW, // ReadValue
+    OFF, // ChattaFlg
+    OFF, // ReadValue
     RISING, // ChattaState
     0, // CheckCount
-    ON, // RiseCompareFlg
-    OFF, // FallCompareFlg
-    OFF, // State
-    0, // SWCount
-};
-SWState_t SW2 = {
-    OFF, // IntFlg
-    LOW, // ReadValue
-    RISING, // ChattaState
-    0, // CheckCount
-    ON, // RiseCompareFlg
-    OFF, // FallCompareFlg
-    OFF, // State
-    0, // SWCount
-};
-SWState_t SW3 = {
-    OFF, // IntFlg
-    LOW, // ReadValue
-    RISING, // ChattaState
-    0, // CheckCount
-    ON, // RiseCompareFlg
-    OFF, // FallCompareFlg
     OFF, // State
     0, // SWCount
 };
 
+SWState_t SW2 = {
+    OFF, // ChattaFlg
+    OFF, // ReadValue
+    RISING, // ChattaState
+    0, // CheckCount
+    OFF, // State
+    0, // SWCount
+};
+SWState_t SW3 = {
+    OFF, // ChattaFlg
+    OFF, // ReadValue
+    RISING, // ChattaState
+    0, // CheckCount
+    OFF, // State
+    0, // SWCount
+};
+
+// キッチンタイマー状態 初期値:リセット状態
+KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
+
 void InputProcess(void);
-void Chata(void);
 void OutputProcess(void);
 
 void main(void) {
@@ -109,7 +108,6 @@ void main(void) {
 
     while (1) {
         InputProcess();
-        Chata();
         OutputProcess();
 
     }
@@ -121,38 +119,37 @@ void main(void) {
  End of File
  */
 
+// デバッグ用
+// SWの状態で、LEDを点灯させる
+// LED3 は SW1 と SW2 の 同時押し
 
 void InputProcess() {
-    if (SW1.State == 1 && SW2.State == 1) {
-        LED3 = LED_ON;
+
+    //    if (SW1.State == 1 && SW2.State == 1) {
+    //        LED3 = LED_ON;
+    //    } else {
+    //        LED3 = LED_OFF;
+
+    if (SW1.State == 1) {
+        //LED1_Toggle();
+        LED1 = LED_ON;
     } else {
-        LED3 = LED_OFF;
+        LED1 = LED_OFF;
+    }
 
-
-        if (SW1.State == 1) {
-            //LED1_Toggle();
-            LED1 = LED_ON;
-        } else {
-            LED1 = LED_OFF;
-        }
-
-        if (SW2.State == 1) {
-            LED2 = LED_ON;
-        } else {
-            LED2 = LED_OFF;
-        }
+    if (SW2.State == 1) {
+        LED2 = LED_ON;
+    } else {
+        LED2 = LED_OFF;
     }
 }
+
+//}
 
 void OutputProcess() {
-    if (Timer500msFlag == 1) {
-        Timer500msFlag = 0;
-        LED4_Toggle();
+    if (Is1sFlg == ON) {
+        LED4 = LED_ON;
+    } else {
+        LED4 = LED_OFF;
     }
-}
-
-void Chata() {
-    static uint8_t ChatterCount = 0;
-
-
 }
