@@ -56,7 +56,8 @@ void __interrupt() INTERRUPT_InterruptManager (void)
     {
         PIN_MANAGER_IOC();
     }
-    else if(INTCONbits.PEIE == 1)
+    
+    if(INTCONbits.PEIE == 1)
     {
         if(PIE1bits.TMR2IE == 1 && PIR1bits.TMR2IF == 1)
         {
@@ -66,15 +67,7 @@ void __interrupt() INTERRUPT_InterruptManager (void)
         {
             TMR1_ISR();
         } 
-        else
-        {
-            //Unhandled Interrupt
-        }
     }      
-    else
-    {
-        //Unhandled Interrupt
-    }
 }
 /**
  End of File

@@ -47,7 +47,8 @@
  */
 
 #include "pin_manager.h"
-#include "mcc.h"
+#include <stdbool.h>
+#include "common.h"
 
 extern SWState_t SW1; // RB2
 extern SWState_t SW2; // RB5
