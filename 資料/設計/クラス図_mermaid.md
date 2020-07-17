@@ -5,9 +5,8 @@
 classDiagram
 
 class Kitchen_Timer{
-    no
+    +KITCHEN_TIMER_STATE_E KitchenTimerState
 }
-
 
 class InputManager{
     + UpdateSWState()
@@ -26,8 +25,9 @@ class ResetSW{
 
 
 class CountClass{
-    +uint8_t MinuteCount
-    +uint8_t SecondCount
+    +uint8_t MinuteCountTime
+    +uint8_t SecondCountTime
+    +uint8_t CountDownEndCount
 
     +SetMinuteCount()
     +SetSecondCount()
@@ -53,11 +53,16 @@ class SWFlag{
 }
 
 class SW{
-    +state
+    + bool ChattaFlg
+    + bool ReadValue
+    + CHATTA_STATE_E ChattaState
+    + uint8_t CheckCount
+    + bool State
+    + uint8_t SWCount
 }
 
 class LCDClass{
-    no
+    + bool IsUpdateLCDflg
 }
 class LCD{
     no
@@ -71,7 +76,11 @@ class Buzzer{
     no
 }
 
+class 500msTimer{
+    +bool is1sFlg
+}
 
+Kitchen_Timer --> 500msTimer
 Kitchen_Timer --> InputManager
 InputManager *-- ControlSW
 
