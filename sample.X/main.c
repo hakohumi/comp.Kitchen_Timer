@@ -40,14 +40,17 @@
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
  */
-
 #include "mcc_generated_files/mcc.h"
 #include "common.h"
 #include "tmr1.h"
+#include "LCDClass.h"
 
 /*
                          Main application
  */
+
+
+
 
 bool Timer500msFlag;
 bool Timer10msFlag;
@@ -81,8 +84,11 @@ SWState_t SW3 = {
 // キッチンタイマー状態 初期値:リセット状態
 KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
 
+
 void InputProcess(void);
 void OutputProcess(void);
+void outLED(void);
+void outLCD(void);
 
 void main(void) {
 
@@ -104,12 +110,13 @@ void main(void) {
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
 
+    // LCDの初期化
+    InitLCD();
 
 
     while (1) {
         InputProcess();
         OutputProcess();
-
     }
     // Add your application code
 
@@ -123,7 +130,7 @@ void main(void) {
 // SWの状態で、LEDを点灯させる
 // LED3 は SW1 と SW2 の 同時押し
 
-void InputProcess() {
+void InputProcess(void) {
 
     //    if (SW1.State == 1 && SW2.State == 1) {
     //        LED3 = LED_ON;
@@ -146,10 +153,21 @@ void InputProcess() {
 
 //}
 
-void OutputProcess() {
+void OutputProcess(void) {
+    outLED();
+    outLCD();
+}
+
+void outLED(void) {
     if (Is1sFlg == ON) {
         LED4 = LED_ON;
     } else {
         LED4 = LED_OFF;
     }
 }
+
+void outLCD(void) {
+
+}
+
+
