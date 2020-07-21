@@ -13,6 +13,8 @@ extern "C" {
 #endif
 
 #include "pin_manager.h"
+#include "stdint.h"
+#include "stdbool.h"
 
 
     // -------------------------------------
