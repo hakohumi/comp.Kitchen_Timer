@@ -15,7 +15,7 @@ extern "C" {
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
-
+#include "common.h"
 
 #ifdef	__cplusplus
 }

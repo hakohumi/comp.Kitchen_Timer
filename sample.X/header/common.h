@@ -34,30 +34,30 @@ typedef enum {
 #define LED_OFF 1
 
 // SW割込みの許可・禁止
-#define IOC_INT_SW1_ENABLE()  \
-    do {                      \
-        IOCBNbits.IOCBN2 = 1; \
+#define SW1_IOCInterruptEnable() \
+    do {                          \
+        IOCBNbits.IOCBN2 = 1;     \
     } while (0)
-#define IOC_INT_SW2_ENABLE()  \
-    do {                      \
-        IOCBNbits.IOCBN5 = 1; \
+#define SW2_IOCIntrruptEnable() \
+    do {                         \
+        IOCBNbits.IOCBN5 = 1;    \
     } while (0)
-#define IOC_INT_SW3_ENABLE()  \
-    do {                      \
-        IOCBNbits.IOCBN0 = 1; \
+#define SW3_IOCInterruptEnable() \
+    do {                          \
+        IOCBNbits.IOCBN0 = 1;     \
     } while (0)
 
-#define IOC_INT_SW1_DISABLE() \
-    do {                      \
-        IOCBNbits.IOCBN2 = 0; \
+#define SW1_IOCInterruptDisable() \
+    do {                           \
+        IOCBNbits.IOCBN2 = 0;      \
     } while (0)
-#define IOC_INT_SW2_DISABLE() \
-    do {                      \
-        IOCBNbits.IOCBN5 = 0; \
+#define Sw2_IOCInterruptDisable() \
+    do {                           \
+        IOCBNbits.IOCBN5 = 0;      \
     } while (0)
-#define IOC_INT_SW3_DISABLE() \
-    do {                      \
-        IOCBNbits.IOCBN0 = 0; \
+#define SW3_IOCInterruptDisable() \
+    do {                           \
+        IOCBNbits.IOCBN0 = 0;      \
     } while (0)
 
 // スイッチからの入力
@@ -76,6 +76,8 @@ typedef enum {
 #define LED2 IO_RA1_LAT
 #define LED3 IO_RA2_LAT
 #define LED4 IO_RA4_LAT
+
+extern KITCHEN_TIMER_STATE_E KitchenTimerState;
 
 #ifdef __cplusplus
 }

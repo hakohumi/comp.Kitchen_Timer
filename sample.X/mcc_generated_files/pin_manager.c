@@ -51,9 +51,7 @@
 #include "common.h"
 #include "InputClass.h"
 
-extern SWState_t SW1; // RB2
-extern SWState_t SW2; // RB5
-extern SWState_t SW3; // RB0
+
 
 
 
@@ -178,10 +176,10 @@ void IOCBF0_DefaultInterruptHandler(void) {
 
     // SW3の処理 立ち下がり
     // スイッチフラグを立てる
-    SW3.ChattaFlg = true;
+    StartStopSW.ChattaFlg = true;
 
     // SW3の割り込み禁止
-    IOC_INT_SW3_DISABLE();
+    SW3_IOCInterruptDisable();
 
 }
 
@@ -213,12 +211,12 @@ void IOCBF2_DefaultInterruptHandler(void) {
     // add your IOCBF2 interrupt custom code
     // or set custom function using IOCBF2_SetInterruptHandler()
 
-    // SW1の処理 立ち下がり
+    // MinuteSWの処理 立ち下がり
     // スイッチフラグを立てる
-    SW1.ChattaFlg = true;
+    MinuteSW.ChattaFlg = true;
 
-    // SW1の割り込み禁止
-    IOC_INT_SW1_DISABLE();
+    // MinuteSWの割り込み禁止
+    SW1_IOCInterruptDisable();
 }
 
 /**
@@ -251,10 +249,10 @@ void IOCBF5_DefaultInterruptHandler(void) {
 
     // SW2の処理 立ち下がり
     // スイッチフラグを立てる
-    SW2.ChattaFlg = true;
+    SecondSW.ChattaFlg = true;
 
     // SW2の割り込み禁止
-    IOC_INT_SW2_DISABLE();
+    SW2_IOCIntrruptEnable();
 
 }
 

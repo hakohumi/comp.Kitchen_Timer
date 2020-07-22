@@ -40,11 +40,11 @@
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
  */
-#include "mcc_generated_files/mcc.h"
+#include "InputClass.h"
 #include "LCDClass.h"
 #include "common.h"
+#include "mcc_generated_files/mcc.h"
 #include "tmr1.h"
-#include "InputClass.h"
 
 /*
                          Main application
@@ -52,32 +52,6 @@
 
 bool Timer500msFlag;
 bool Timer10msFlag;
-
-SWState_t SW1 = {
-    OFF,           // ChattaFlg
-    OFF,           // ReadValue
-    RISING_STATE,  // ChattaState
-    0,             // CheckCount
-    OFF,           // PushState
-    0,             // SWCount
-};
-
-SWState_t SW2 = {
-    OFF,           // ChattaFlg
-    OFF,           // ReadValue
-    RISING_STATE,  // ChattaState
-    0,             // CheckCount
-    OFF,           // PushState
-    0,             // SWCount
-};
-SWState_t SW3 = {
-    OFF,           // ChattaFlg
-    OFF,           // ReadValue
-    RISING_STATE,  // ChattaState
-    0,             // CheckCount
-    OFF,           // PushState
-    0,             // SWCount
-};
 
 // キッチンタイマー状態 初期値:リセット状態
 KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
@@ -114,13 +88,6 @@ void main(void) {
         OutputProcess();
     }
 }
-
-/*
-状態遷移処理
-CoutClass
-*/
-
-void StateTransferProcess(void) {}
 
 /*
 LCD更新
