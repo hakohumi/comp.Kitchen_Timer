@@ -57,7 +57,8 @@ class SW{
     + bool ReadValue
     + CHATTA_STATE_E ChattaState
     + uint8_t CheckCount
-    + bool State
+    + bool PushState
+    + bool LongPushState
     + uint8_t SWCount
 }
 

@@ -23,6 +23,7 @@
       <itemPath>header/common.h</itemPath>
       <itemPath>header/CountClass.h</itemPath>
       <itemPath>header/LCDClass.h</itemPath>
+      <itemPath>header/InputClass.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -50,6 +51,7 @@
       <itemPath>main.c</itemPath>
       <itemPath>CountClass.c</itemPath>
       <itemPath>LCDClass.c</itemPath>
+      <itemPath>InputClass.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -59,7 +61,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>header</Elem>
+    <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

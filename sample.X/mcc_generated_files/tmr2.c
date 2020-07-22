@@ -52,6 +52,7 @@
 
 #include <xc.h>
 #include "tmr2.h"
+#include "InputClass.h"
 
 /**
   Section: Global Variables Definitions
@@ -148,12 +149,12 @@ void TMR2_DefaultInterruptHandler(void) {
     if (SW1.ChattaFlg == ON) {
 
         // SW1のポートの値を読み取る
-        SW1.ReadValue = ~((bool)SW1_Value);
+        SW1.ReadValue = ~((bool) SW1_Value);
 
         // チャタ状態は？
         switch (SW1.ChattaState) {
 
-            case RISING:
+            case RISING_STATE:
                 // ------------------------------------------------------------
                 // 立ち上がりチェック状態
                 // ------------------------------------------------------------
@@ -165,9 +166,9 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントは3以上か
                     if (SW1.CheckCount >= 3) {
                         // チャタ状態を継続状態へ
-                        SW1.ChattaState = ONGOING;
+                        SW1.ChattaState = ONGOING_STATE;
                         // SW1の状態をONへ
-                        SW1.State = ON;
+                        SW1.PushState = ON;
                         // チェックカウントをクリア
                         SW1.CheckCount = 0;
                     }
@@ -189,7 +190,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 }
                 break;
 
-            case ONGOING:
+            case ONGOING_STATE:
 
                 // SWカウントは250未満か
                 if (SW1.SWCount < 250) {
@@ -200,7 +201,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 // SW1のポート値は？
                 if (SW1.ReadValue == OFF) {
                     // チャタ状態を立ち下がりチャタチェック状態へ
-                    SW1.ChattaState = FALLING;
+                    SW1.ChattaState = FALLING_STATE;
                     SW1.CheckCount++;
                 }
                 break;
@@ -208,7 +209,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 // ------------------------------------------------------------
                 // 立ち下がり時チャタチェック
                 // ------------------------------------------------------------
-            case FALLING:
+            case FALLING_STATE:
 
                 // SWカウントは250未満か
                 if (SW1.SWCount < 250) {
@@ -223,11 +224,11 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントは3以上か
                     if (SW1.CheckCount >= 3) {
                         // チャタ状態を立ち上がり時チャタチェック状態へ
-                        SW1.ChattaState = RISING;
+                        SW1.ChattaState = RISING_STATE;
                         // チェックカウントをクリア
                         SW1.CheckCount = 0;
                         // SW1の状態をOFF
-                        SW1.State = OFF;
+                        SW1.PushState = OFF;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
@@ -243,7 +244,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 } else {
 
                     // チャタ状態を継続状態へ
-                    SW1.ChattaState = ONGOING;
+                    SW1.ChattaState = ONGOING_STATE;
                     // チェックカウントをクリア
                     SW1.CheckCount = 0;
 
@@ -256,12 +257,12 @@ void TMR2_DefaultInterruptHandler(void) {
     if (SW2.ChattaFlg == ON) {
 
         // SW2のポートの値を読み取る
-        SW2.ReadValue = ~((bool)SW2_Value);
+        SW2.ReadValue = ~((bool) SW2_Value);
 
         // チャタ状態は？
         switch (SW2.ChattaState) {
 
-            case RISING:
+            case RISING_STATE:
                 // ------------------------------------------------------------
                 // 立ち上がりチェック状態
                 // ------------------------------------------------------------
@@ -273,9 +274,9 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントは3以上か
                     if (SW2.CheckCount >= 3) {
                         // チャタ状態を継続状態へ
-                        SW2.ChattaState = ONGOING;
+                        SW2.ChattaState = ONGOING_STATE;
                         // SW2の状態をONへ
-                        SW2.State = ON;
+                        SW2.PushState = ON;
                         // チェックカウントをクリア
                         SW2.CheckCount = 0;
                     }
@@ -297,7 +298,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 }
                 break;
 
-            case ONGOING:
+            case ONGOING_STATE:
 
                 // SWカウントは250未満か
                 if (SW2.SWCount < 250) {
@@ -308,7 +309,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 // SW2のポート値は？
                 if (SW2.ReadValue == OFF) {
                     // チャタ状態を立ち下がりチャタチェック状態へ
-                    SW2.ChattaState = FALLING;
+                    SW2.ChattaState = FALLING_STATE;
                     SW2.CheckCount++;
                 }
                 break;
@@ -316,7 +317,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 // ------------------------------------------------------------
                 // 立ち下がり時チャタチェック
                 // ------------------------------------------------------------
-            case FALLING:
+            case FALLING_STATE:
 
                 // SWカウントは250未満か
                 if (SW2.SWCount < 250) {
@@ -331,11 +332,11 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントは3以上か
                     if (SW2.CheckCount >= 3) {
                         // チャタ状態を立ち上がり時チャタチェック状態へ
-                        SW2.ChattaState = RISING;
+                        SW2.ChattaState = RISING_STATE;
                         // チェックカウントをクリア
                         SW2.CheckCount = 0;
                         // SW2の状態をOFF
-                        SW2.State = OFF;
+                        SW2.PushState = OFF;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
@@ -351,7 +352,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 } else {
 
                     // チャタ状態を継続状態へ
-                    SW2.ChattaState = ONGOING;
+                    SW2.ChattaState = ONGOING_STATE;
                     // チェックカウントをクリア
                     SW2.CheckCount = 0;
 
@@ -364,12 +365,12 @@ void TMR2_DefaultInterruptHandler(void) {
     if (SW3.ChattaFlg == ON) {
 
         // SW3のポートの値を読み取る
-        SW3.ReadValue = ~((bool)SW3_Value);
+        SW3.ReadValue = ~((bool) SW3_Value);
 
         // チャタ状態は？
         switch (SW3.ChattaState) {
 
-            case RISING:
+            case RISING_STATE:
                 // ------------------------------------------------------------
                 // 立ち上がりチェック状態
                 // ------------------------------------------------------------
@@ -381,9 +382,9 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントは3以上か
                     if (SW3.CheckCount >= 3) {
                         // チャタ状態を継続状態へ
-                        SW3.ChattaState = ONGOING;
+                        SW3.ChattaState = ONGOING_STATE;
                         // SW3の状態をONへ
-                        SW3.State = ON;
+                        SW3.PushState = ON;
                         // チェックカウントをクリア
                         SW3.CheckCount = 0;
                     }
@@ -405,7 +406,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 }
                 break;
 
-            case ONGOING:
+            case ONGOING_STATE:
 
                 // SWカウントは250未満か
                 if (SW3.SWCount < 250) {
@@ -416,7 +417,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 // SW3のポート値は？
                 if (SW3.ReadValue == OFF) {
                     // チャタ状態を立ち下がりチャタチェック状態へ
-                    SW3.ChattaState = FALLING;
+                    SW3.ChattaState = FALLING_STATE;
                     SW3.CheckCount++;
                 }
                 break;
@@ -424,7 +425,7 @@ void TMR2_DefaultInterruptHandler(void) {
                 // ------------------------------------------------------------
                 // 立ち下がり時チャタチェック
                 // ------------------------------------------------------------
-            case FALLING:
+            case FALLING_STATE:
 
                 // SWカウントは250未満か
                 if (SW3.SWCount < 250) {
@@ -439,11 +440,11 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントは3以上か
                     if (SW3.CheckCount >= 3) {
                         // チャタ状態を立ち上がり時チャタチェック状態へ
-                        SW3.ChattaState = RISING;
+                        SW3.ChattaState = RISING_STATE;
                         // チェックカウントをクリア
                         SW3.CheckCount = 0;
                         // SW3の状態をOFF
-                        SW3.State = OFF;
+                        SW3.PushState = OFF;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
@@ -459,13 +460,20 @@ void TMR2_DefaultInterruptHandler(void) {
                 } else {
 
                     // チャタ状態を継続状態へ
-                    SW3.ChattaState = ONGOING;
+                    SW3.ChattaState = ONGOING_STATE;
                     // チェックカウントをクリア
                     SW3.CheckCount = 0;
                 }
                 break;
         }
     }
+
+    /* -------------------------------------------------- */
+    /* 分SWカウントタイミング処理                         */
+    /* -------------------------------------------------- */
+
+    //    if ()
+
 }
 
 /**
