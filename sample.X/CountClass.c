@@ -8,9 +8,6 @@ uint8_t MinuteCountTime = 0;
 uint8_t SecondCountTime = 0;
 
 // カウントダウン終了カウント
-<<<<<<< Updated upstream
-uint8_t CountDownEndCount = 0;
-=======
 uint8_t CountDownEndCount = 0;
 
 // カウント時間設定
@@ -44,4 +41,3 @@ void detectSWState(SWState_t *i_SW) {
             if (i_SW->LongPushState ==) }
     }
 }
->>>>>>> Stashed changes
