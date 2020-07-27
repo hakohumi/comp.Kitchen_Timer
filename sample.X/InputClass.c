@@ -6,29 +6,9 @@ bool IsPushedResetSW = false;
 extern SWState_t SW1;
 extern SWState_t SW2;
 
-<<<<<<< Updated upstream
-/*
-スイッチ状態検知
- */
-void InputProcess(void) {
-    // リセットスイッチ同時押し検知
-    detectResetSW();
-
-    // リセットスイッチの状態
-    // OFF の場合
-    if (!IsPushedResetSW) {
-        // 分スイッチ長押し検知
-        detectLongPushedSW(&SW1);
-        // 秒スイッチ長押し検知
-        detectLongPushedSW(&SW2);
-    }
-}
-
-=======
->>>>>>> Stashed changes
 // リセットスイッチ同時押し検知
 
-void detectResetSW() {
+void DetectResetSW() {
     if (SW1.PushState == ON && SW2.PushState == ON) {
         // リセットの状態をON
         IsPushedResetSW = ON;
@@ -41,7 +21,7 @@ void detectResetSW() {
 // 長押し検知
 // 入力：分、秒スイッチ
 
-void detectLongPushedSW(SWState_t *i_SW) {
+void DetectLongPushedSW(SWState_t *i_SW) {
     if (i_SW->SWCount < 100) {
         // 1秒(100)未満
         // 長押し状態をOFF

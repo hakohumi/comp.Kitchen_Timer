@@ -3,8 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}",
-                "sample.X/header"
+                "${workspaceFolder}/sample.X/**",
+                "${workspaceFolder}/sample.X/header"
             ],
             "defines": [
                 "_DEBUG",

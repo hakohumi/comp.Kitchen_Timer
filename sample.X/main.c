@@ -40,11 +40,11 @@
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
  */
-#include "mcc_generated_files/mcc.h"
+#include "InputClass.h"
 #include "LCDClass.h"
 #include "common.h"
+#include "mcc_generated_files/mcc.h"
 #include "tmr1.h"
-#include "InputClass.h"
 
 /*
                          Main application
@@ -116,33 +116,27 @@ void main(void) {
 }
 
 /*
-<<<<<<< Updated upstream
-=======
 スイッチ状態検知
  */
 void InputProcess(void) {
     // リセットスイッチ同時押し検知
-    detectResetSW();
+    DetectResetSW();
 
     // リセットスイッチの状態
     // OFF の場合
     if (!IsPushedResetSW) {
         // 分スイッチ長押し検知
-        detectLongPushedSW(&MinuteSW);
+        DetectLongPushedSW(&MinuteSW);
         // 秒スイッチ長押し検知
-        detectLongPushedSW(&SecondSW);
+        DetectLongPushedSW(&SecondSW);
     }
 }
 
 /*
->>>>>>> Stashed changes
 状態遷移処理
 CoutClass
 */
 
-<<<<<<< Updated upstream
-void StateTransferProcess(void) {}
-=======
 void StateTransferProcess(void) {
     switch (KitchenTimerState) {
         case COUNTTIME_SETTING_STATE:
@@ -155,7 +149,6 @@ void StateTransferProcess(void) {
             break;
     }
 }
->>>>>>> Stashed changes
 
 /*
 LCD更新

@@ -35,11 +35,11 @@ typedef struct {
 } ResetSWState_t;
 
 // 同時押し検知
-void detectResetSW(void);
+void DetectResetSW(void);
 
 // 長押し検知
 // 分、秒
-void detectLongPushedSW(SWState_t *i_SW);
+void DetectLongPushedSW(SWState_t *i_SW);
 
 extern SWState_t MinuteSW;     // RB2
 extern SWState_t SecondSW;     // RB5
