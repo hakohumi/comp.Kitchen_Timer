@@ -12,9 +12,10 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #include "pin_manager.h"
-#include "stdbool.h"
-#include "stdint.h"
 
 // -------------------------------------
 
@@ -34,30 +35,30 @@ typedef enum {
 #define LED_OFF 1
 
 // SW割込みの許可・禁止
-#define IOC_INT_SW1_ENABLE()  \
-    do {                      \
-        IOCBNbits.IOCBN2 = 1; \
+#define SW1_IOCInterruptEnable() \
+    do {                         \
+        IOCBNbits.IOCBN2 = 1;    \
     } while (0)
-#define IOC_INT_SW2_ENABLE()  \
-    do {                      \
-        IOCBNbits.IOCBN5 = 1; \
+#define SW2_IOCInterruptEnable() \
+    do {                         \
+        IOCBNbits.IOCBN5 = 1;    \
     } while (0)
-#define IOC_INT_SW3_ENABLE()  \
-    do {                      \
-        IOCBNbits.IOCBN0 = 1; \
+#define SW3_IOCInterruptEnable() \
+    do {                         \
+        IOCBNbits.IOCBN0 = 1;    \
     } while (0)
 
-#define IOC_INT_SW1_DISABLE() \
-    do {                      \
-        IOCBNbits.IOCBN2 = 0; \
+#define SW1_IOCInterruptDisable() \
+    do {                          \
+        IOCBNbits.IOCBN2 = 0;     \
     } while (0)
-#define IOC_INT_SW2_DISABLE() \
-    do {                      \
-        IOCBNbits.IOCBN5 = 0; \
+#define SW2_IOCInterruptDisable() \
+    do {                          \
+        IOCBNbits.IOCBN5 = 0;     \
     } while (0)
-#define IOC_INT_SW3_DISABLE() \
-    do {                      \
-        IOCBNbits.IOCBN0 = 0; \
+#define SW3_IOCInterruptDisable() \
+    do {                          \
+        IOCBNbits.IOCBN0 = 0;     \
     } while (0)
 
 // スイッチからの入力
@@ -76,6 +77,17 @@ typedef enum {
 #define LED2 IO_RA1_LAT
 #define LED3 IO_RA2_LAT
 #define LED4 IO_RA4_LAT
+
+extern KITCHEN_TIMER_STATE_E KitchenTimerState;
+
+// キッチンタイマー状態をリセットへ変更
+void SetKitchenTimerStateToReset(void);
+// キッチンタイマー状態をカウント設定状態へ変更
+void SetKitchenTimerStateToSetting(void);
+// キッチンタイマー状態をカウントダウン中へ変更
+void SetKitchenTimerStateToGoing(void);
+// キッチンタイマー状態をカウントダウン終了へ変更
+void SetKitchenTimerStateToEnd(void);
 
 #ifdef __cplusplus
 }

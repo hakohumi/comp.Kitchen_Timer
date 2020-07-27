@@ -10,7 +10,8 @@
     tmr2.c
 
   @Summary
-    This is the generated driver implementation file for the TMR2 driver using PIC10 / PIC12 / PIC16 / PIC18 MCUs
+    This is the generated driver implementation file for the TMR2 driver using
+  PIC10 / PIC12 / PIC16 / PIC18 MCUs
 
   @Description
     This source file provides APIs for TMR2.
@@ -24,25 +25,26 @@
  */
 
 /*
-    (c) 2018 Microchip Technology Inc. and its subsidiaries. 
-    
-    Subject to your compliance with these terms, you may use Microchip software and any 
-    derivatives exclusively with Microchip products. It is your responsibility to comply with third party 
-    license terms applicable to your use of third party software (including open source software) that 
-    may accompany Microchip software.
-    
-    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
-    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY 
-    IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS 
+    (c) 2018 Microchip Technology Inc. and its subsidiaries.
+
+    Subject to your compliance with these terms, you may use Microchip software
+   and any derivatives exclusively with Microchip products. It is your
+   responsibility to comply with third party license terms applicable to your
+   use of third party software (including open source software) that may
+   accompany Microchip software.
+
+    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY
+    IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS
     FOR A PARTICULAR PURPOSE.
-    
-    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
-    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP 
-    HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO 
-    THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL 
-    CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
-    OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
+
+    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP
+    HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO
+    THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL
+    CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT
+    OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
  */
 
@@ -50,9 +52,12 @@
   Section: Included Files
  */
 
-#include <xc.h>
 #include "tmr2.h"
+
+#include <xc.h>
+
 #include "InputClass.h"
+#include "common.h"
 
 /**
   Section: Global Variables Definitions
@@ -61,9 +66,6 @@
 void (*TMR2_InterruptHandler)(void);
 
 extern bool Timer10msFlag;
-extern SWState_t SW1;
-extern SWState_t SW2;
-extern SWState_t SW3;
 
 /**
   Section: TMR2 APIs
@@ -72,10 +74,10 @@ extern SWState_t SW3;
 void TMR2_Initialize(void) {
     // Set TMR2 to the options selected in the User Interface
 
-    // PR2 249; 
+    // PR2 249;
     PR2 = 0xF9;
 
-    // TMR2 0; 
+    // TMR2 0;
     TMR2 = 0x00;
 
     // Clearing IF flag before enabling the interrupt.
@@ -87,7 +89,7 @@ void TMR2_Initialize(void) {
     // Set Default Interrupt Handler
     TMR2_SetInterruptHandler(TMR2_DefaultInterruptHandler);
 
-    // T2CKPS 1:1; T2OUTPS 1:5; TMR2ON on; 
+    // T2CKPS 1:1; T2OUTPS 1:5; TMR2ON on;
     T2CON = 0x24;
 }
 
@@ -114,12 +116,9 @@ void TMR2_WriteTimer(uint8_t timerVal) {
     TMR2 = timerVal;
 }
 
-void TMR2_LoadPeriodRegister(uint8_t periodVal) {
-    PR2 = periodVal;
-}
+void TMR2_LoadPeriodRegister(uint8_t periodVal) { PR2 = periodVal; }
 
 void TMR2_ISR(void) {
-
     // clear the TMR2 interrupt flag
     PIR1bits.TMR2IF = 0;
 
@@ -136,56 +135,53 @@ void TMR2_CallBack(void) {
     }
 }
 
-void TMR2_SetInterruptHandler(void (* InterruptHandler)(void)) {
+void TMR2_SetInterruptHandler(void (*InterruptHandler)(void)) {
     TMR2_InterruptHandler = InterruptHandler;
 }
 
 void TMR2_DefaultInterruptHandler(void) {
-
     // add your TMR2 interrupt custom code
     // or set custom function using TMR2_SetInterruptHandler()
 
-    // SW1が押されてチャタフラグが立ったら
-    if (SW1.ChattaFlg == ON) {
-
-        // SW1のポートの値を読み取る
-        SW1.ReadValue = ~((bool) SW1_Value);
+    // MinuteSWが押されてチャタフラグが立ったら
+    if (MinuteSW.ChattaFlg == ON) {
+        // MinuteSWのポートの値を読み取る
+        MinuteSW.ReadValue = ~((bool)SW1_Value);
 
         // チャタ状態は？
-        switch (SW1.ChattaState) {
-
+        switch (MinuteSW.ChattaState) {
             case RISING_STATE:
                 // ------------------------------------------------------------
                 // 立ち上がりチェック状態
                 // ------------------------------------------------------------
                 // SWのポート値はONか？
-                if (SW1.ReadValue == ON) {
+                if (MinuteSW.ReadValue == ON) {
                     // チェックカウントを1増加
-                    SW1.CheckCount++;
+                    MinuteSW.CheckCount++;
 
                     // チェックカウントは3以上か
-                    if (SW1.CheckCount >= 3) {
+                    if (MinuteSW.CheckCount >= 3) {
                         // チャタ状態を継続状態へ
-                        SW1.ChattaState = ONGOING_STATE;
-                        // SW1の状態をONへ
-                        SW1.PushState = ON;
+                        MinuteSW.ChattaState = ONGOING_STATE;
+                        // MinuteSWの状態をONへ
+                        MinuteSW.PushState = ON;
                         // チェックカウントをクリア
-                        SW1.CheckCount = 0;
+                        MinuteSW.CheckCount = 0;
                     }
 
                 } else {
                     // SWのポート値がOFFの場合
                     // チェックカウントをクリア
-                    SW1.CheckCount = 0;
+                    MinuteSW.CheckCount = 0;
                     // ------------------------------------------------------------
                     // 立ち下がり処理
                     // ------------------------------------------------------------
                     // SWカウントをクリア
-                    //                        SW1.SWCount = 0;
-                    // SW1のチャタフラグをクリア
-                    SW1.ChattaFlg = 0;
-                    // SW1のIOC割込みフラグをON
-                    IOC_INT_SW1_ENABLE();
+                    //                        MinuteSW.SWCount = 0;
+                    // MinuteSWのチャタフラグをクリア
+                    MinuteSW.ChattaFlg = 0;
+                    // MinuteSWのIOC割込みフラグをON
+                    SW1_IOCInterruptEnable();
                     // ------------------------------------------------------------
                 }
                 break;
@@ -193,16 +189,16 @@ void TMR2_DefaultInterruptHandler(void) {
             case ONGOING_STATE:
 
                 // SWカウントは250未満か
-                if (SW1.SWCount < 250) {
+                if (MinuteSW.SWCount < 250) {
                     // SWカウントを1増やす
-                    SW1.SWCount++;
+                    MinuteSW.SWCount++;
                 }
 
-                // SW1のポート値は？
-                if (SW1.ReadValue == OFF) {
+                // MinuteSWのポート値は？
+                if (MinuteSW.ReadValue == OFF) {
                     // チャタ状態を立ち下がりチャタチェック状態へ
-                    SW1.ChattaState = FALLING_STATE;
-                    SW1.CheckCount++;
+                    MinuteSW.ChattaState = FALLING_STATE;
+                    MinuteSW.CheckCount++;
                 }
                 break;
 
@@ -212,88 +208,84 @@ void TMR2_DefaultInterruptHandler(void) {
             case FALLING_STATE:
 
                 // SWカウントは250未満か
-                if (SW1.SWCount < 250) {
+                if (MinuteSW.SWCount < 250) {
                     // SWカウントを1増やす
-                    SW1.SWCount++;
+                    MinuteSW.SWCount++;
                 }
 
-                // SW1のポート値はOFFか
-                if (SW1.ReadValue == OFF) {
-                    SW1.CheckCount++;
+                // MinuteSWのポート値はOFFか
+                if (MinuteSW.ReadValue == OFF) {
+                    MinuteSW.CheckCount++;
 
                     // チェックカウントは3以上か
-                    if (SW1.CheckCount >= 3) {
+                    if (MinuteSW.CheckCount >= 3) {
                         // チャタ状態を立ち上がり時チャタチェック状態へ
-                        SW1.ChattaState = RISING_STATE;
+                        MinuteSW.ChattaState = RISING_STATE;
                         // チェックカウントをクリア
-                        SW1.CheckCount = 0;
-                        // SW1の状態をOFF
-                        SW1.PushState = OFF;
+                        MinuteSW.CheckCount = 0;
+                        // MinuteSWの状態をOFF
+                        MinuteSW.PushState = OFF;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
                         // ------------------------------------------------------------
                         // SWカウントをクリア
-                        SW1.SWCount = 0;
-                        // SW1のチャタフラグをクリア
-                        SW1.ChattaFlg = 0;
-                        // SW1のIOC割込みフラグをON
-                        IOC_INT_SW1_ENABLE();
+                        MinuteSW.SWCount = 0;
+                        // MinuteSWのチャタフラグをクリア
+                        MinuteSW.ChattaFlg = 0;
+                        // MinuteSWのIOC割込みフラグをON
+                        SW1_IOCInterruptEnable();
                         // ------------------------------------------------------------
                     }
                 } else {
-
                     // チャタ状態を継続状態へ
-                    SW1.ChattaState = ONGOING_STATE;
+                    MinuteSW.ChattaState = ONGOING_STATE;
                     // チェックカウントをクリア
-                    SW1.CheckCount = 0;
-
+                    MinuteSW.CheckCount = 0;
                 }
                 break;
         }
     }
 
     // SW2が押されてチャタフラグが立ったら
-    if (SW2.ChattaFlg == ON) {
-
+    if (SecondSW.ChattaFlg == ON) {
         // SW2のポートの値を読み取る
-        SW2.ReadValue = ~((bool) SW2_Value);
+        SecondSW.ReadValue = ~((bool)SW2_Value);
 
         // チャタ状態は？
-        switch (SW2.ChattaState) {
-
+        switch (SecondSW.ChattaState) {
             case RISING_STATE:
                 // ------------------------------------------------------------
                 // 立ち上がりチェック状態
                 // ------------------------------------------------------------
                 // SWのポート値はONか？
-                if (SW2.ReadValue == ON) {
+                if (SecondSW.ReadValue == ON) {
                     // チェックカウントを1増加
-                    SW2.CheckCount++;
+                    SecondSW.CheckCount++;
 
                     // チェックカウントは3以上か
-                    if (SW2.CheckCount >= 3) {
+                    if (SecondSW.CheckCount >= 3) {
                         // チャタ状態を継続状態へ
-                        SW2.ChattaState = ONGOING_STATE;
+                        SecondSW.ChattaState = ONGOING_STATE;
                         // SW2の状態をONへ
-                        SW2.PushState = ON;
+                        SecondSW.PushState = ON;
                         // チェックカウントをクリア
-                        SW2.CheckCount = 0;
+                        SecondSW.CheckCount = 0;
                     }
 
                 } else {
                     // SWのポート値がOFFの場合
                     // チェックカウントをクリア
-                    SW2.CheckCount = 0;
+                    SecondSW.CheckCount = 0;
                     // ------------------------------------------------------------
                     // 立ち下がり処理
                     // ------------------------------------------------------------
                     // SWカウントをクリア
-                    //                        SW2.SWCount = 0;
+                    //                        SecondSW.SWCount = 0;
                     // SW2のチャタフラグをクリア
-                    SW2.ChattaFlg = 0;
+                    SecondSW.ChattaFlg = 0;
                     // SW2のIOC割込みフラグをON
-                    IOC_INT_SW2_ENABLE();
+                    SW2_IOCInterruptEnable();
                     // ------------------------------------------------------------
                 }
                 break;
@@ -301,16 +293,16 @@ void TMR2_DefaultInterruptHandler(void) {
             case ONGOING_STATE:
 
                 // SWカウントは250未満か
-                if (SW2.SWCount < 250) {
+                if (SecondSW.SWCount < 250) {
                     // SWカウントを1増やす
-                    SW2.SWCount++;
+                    SecondSW.SWCount++;
                 }
 
                 // SW2のポート値は？
-                if (SW2.ReadValue == OFF) {
+                if (SecondSW.ReadValue == OFF) {
                     // チャタ状態を立ち下がりチャタチェック状態へ
-                    SW2.ChattaState = FALLING_STATE;
-                    SW2.CheckCount++;
+                    SecondSW.ChattaState = FALLING_STATE;
+                    SecondSW.CheckCount++;
                 }
                 break;
 
@@ -320,88 +312,84 @@ void TMR2_DefaultInterruptHandler(void) {
             case FALLING_STATE:
 
                 // SWカウントは250未満か
-                if (SW2.SWCount < 250) {
+                if (SecondSW.SWCount < 250) {
                     // SWカウントを1増やす
-                    SW2.SWCount++;
+                    SecondSW.SWCount++;
                 }
 
                 // SW2のポート値はOFFか
-                if (SW2.ReadValue == OFF) {
-                    SW2.CheckCount++;
+                if (SecondSW.ReadValue == OFF) {
+                    SecondSW.CheckCount++;
 
                     // チェックカウントは3以上か
-                    if (SW2.CheckCount >= 3) {
+                    if (SecondSW.CheckCount >= 3) {
                         // チャタ状態を立ち上がり時チャタチェック状態へ
-                        SW2.ChattaState = RISING_STATE;
+                        SecondSW.ChattaState = RISING_STATE;
                         // チェックカウントをクリア
-                        SW2.CheckCount = 0;
+                        SecondSW.CheckCount = 0;
                         // SW2の状態をOFF
-                        SW2.PushState = OFF;
+                        SecondSW.PushState = OFF;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
                         // ------------------------------------------------------------
                         // SWカウントをクリア
-                        SW2.SWCount = 0;
+                        SecondSW.SWCount = 0;
                         // SW2のチャタフラグをクリア
-                        SW2.ChattaFlg = 0;
+                        SecondSW.ChattaFlg = 0;
                         // SW2のIOC割込みフラグをON
-                        IOC_INT_SW2_ENABLE();
+                        SW2_IOCInterruptEnable();
                         // ------------------------------------------------------------
                     }
                 } else {
-
                     // チャタ状態を継続状態へ
-                    SW2.ChattaState = ONGOING_STATE;
+                    SecondSW.ChattaState = ONGOING_STATE;
                     // チェックカウントをクリア
-                    SW2.CheckCount = 0;
-
+                    SecondSW.CheckCount = 0;
                 }
                 break;
         }
     }
 
     // SW3が押されてチャタフラグが立ったら
-    if (SW3.ChattaFlg == ON) {
-
+    if (StartStopSW.ChattaFlg == ON) {
         // SW3のポートの値を読み取る
-        SW3.ReadValue = ~((bool) SW3_Value);
+        StartStopSW.ReadValue = ~((bool)SW3_Value);
 
         // チャタ状態は？
-        switch (SW3.ChattaState) {
-
+        switch (StartStopSW.ChattaState) {
             case RISING_STATE:
                 // ------------------------------------------------------------
                 // 立ち上がりチェック状態
                 // ------------------------------------------------------------
                 // SWのポート値はONか？
-                if (SW3.ReadValue == ON) {
+                if (StartStopSW.ReadValue == ON) {
                     // チェックカウントを1増加
-                    SW3.CheckCount++;
+                    StartStopSW.CheckCount++;
 
                     // チェックカウントは3以上か
-                    if (SW3.CheckCount >= 3) {
+                    if (StartStopSW.CheckCount >= 3) {
                         // チャタ状態を継続状態へ
-                        SW3.ChattaState = ONGOING_STATE;
+                        StartStopSW.ChattaState = ONGOING_STATE;
                         // SW3の状態をONへ
-                        SW3.PushState = ON;
+                        StartStopSW.PushState = ON;
                         // チェックカウントをクリア
-                        SW3.CheckCount = 0;
+                        StartStopSW.CheckCount = 0;
                     }
 
                 } else {
                     // SWのポート値がOFFの場合
                     // チェックカウントをクリア
-                    SW3.CheckCount = 0;
+                    StartStopSW.CheckCount = 0;
                     // ------------------------------------------------------------
                     // 立ち下がり処理
                     // ------------------------------------------------------------
                     // SWカウントをクリア
-                    //                        SW3.SWCount = 0;
+                    //                        StartStopSW.SWCount = 0;
                     // SW3のチャタフラグをクリア
-                    SW3.ChattaFlg = 0;
+                    StartStopSW.ChattaFlg = 0;
                     // SW3のIOC割込みフラグをON
-                    IOC_INT_SW3_ENABLE();
+                    SW3_IOCInterruptEnable();
                     // ------------------------------------------------------------
                 }
                 break;
@@ -409,16 +397,16 @@ void TMR2_DefaultInterruptHandler(void) {
             case ONGOING_STATE:
 
                 // SWカウントは250未満か
-                if (SW3.SWCount < 250) {
+                if (StartStopSW.SWCount < 250) {
                     // SWカウントを1増やす
-                    SW3.SWCount++;
+                    StartStopSW.SWCount++;
                 }
 
                 // SW3のポート値は？
-                if (SW3.ReadValue == OFF) {
+                if (StartStopSW.ReadValue == OFF) {
                     // チャタ状態を立ち下がりチャタチェック状態へ
-                    SW3.ChattaState = FALLING_STATE;
-                    SW3.CheckCount++;
+                    StartStopSW.ChattaState = FALLING_STATE;
+                    StartStopSW.CheckCount++;
                 }
                 break;
 
@@ -428,41 +416,40 @@ void TMR2_DefaultInterruptHandler(void) {
             case FALLING_STATE:
 
                 // SWカウントは250未満か
-                if (SW3.SWCount < 250) {
+                if (StartStopSW.SWCount < 250) {
                     // SWカウントを1増やす
-                    SW3.SWCount++;
+                    StartStopSW.SWCount++;
                 }
 
                 // SW3のポート値はOFFか
-                if (SW3.ReadValue == OFF) {
-                    SW3.CheckCount++;
+                if (StartStopSW.ReadValue == OFF) {
+                    StartStopSW.CheckCount++;
 
                     // チェックカウントは3以上か
-                    if (SW3.CheckCount >= 3) {
+                    if (StartStopSW.CheckCount >= 3) {
                         // チャタ状態を立ち上がり時チャタチェック状態へ
-                        SW3.ChattaState = RISING_STATE;
+                        StartStopSW.ChattaState = RISING_STATE;
                         // チェックカウントをクリア
-                        SW3.CheckCount = 0;
+                        StartStopSW.CheckCount = 0;
                         // SW3の状態をOFF
-                        SW3.PushState = OFF;
+                        StartStopSW.PushState = OFF;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
                         // ------------------------------------------------------------
                         // SWカウントをクリア
-                        SW3.SWCount = 0;
+                        StartStopSW.SWCount = 0;
                         // SW3のチャタフラグをクリア
-                        SW3.ChattaFlg = 0;
+                        StartStopSW.ChattaFlg = 0;
                         // SW3のIOC割込みフラグをON
-                        IOC_INT_SW3_ENABLE();
+                        SW3_IOCInterruptEnable();
                         // ------------------------------------------------------------
                     }
                 } else {
-
                     // チャタ状態を継続状態へ
-                    SW3.ChattaState = ONGOING_STATE;
+                    StartStopSW.ChattaState = ONGOING_STATE;
                     // チェックカウントをクリア
-                    SW3.CheckCount = 0;
+                    StartStopSW.CheckCount = 0;
                 }
                 break;
         }
@@ -473,7 +460,6 @@ void TMR2_DefaultInterruptHandler(void) {
     /* -------------------------------------------------- */
 
     //    if ()
-
 }
 
 /**

@@ -4,6 +4,10 @@
         "inputclass.h": "c",
         "mcc.h": "c",
         "common.h": "c",
-        "lcdclass.h": "c"
+        "lcdclass.h": "c",
+        "settingcounttime.h": "c",
+        "countclass.h": "c",
+        "endcountdown.h": "c",
+        "reset.h": "c"
     }
 }
