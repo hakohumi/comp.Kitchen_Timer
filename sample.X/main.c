@@ -40,11 +40,11 @@
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
  */
-#include "mcc_generated_files/mcc.h"
+#include "InputClass.h"
 #include "LCDClass.h"
 #include "common.h"
+#include "mcc_generated_files/mcc.h"
 #include "tmr1.h"
-#include "InputClass.h"
 
 /*
                          Main application
@@ -86,7 +86,7 @@ KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
 void InputProcess(void);
 // 状態遷移処理
 void StateTransferProcess(void);
-// LCD更新・ブザー状態更新
+// LCD更新・ブザー状態更新s
 void OutputProcess(void);
 
 void main(void) {
@@ -116,11 +116,39 @@ void main(void) {
 }
 
 /*
+スイッチ状態検知
+ */
+void InputProcess(void) {
+    // リセットスイッチ同時押し検知
+    DetectResetSW();
+
+    // リセットスイッチの状態
+    // OFF の場合
+    if (!IsPushedResetSW) {
+        // 分スイッチ長押し検知
+        DetectLongPushedSW(&MinuteSW);
+        // 秒スイッチ長押し検知
+        DetectLongPushedSW(&SecondSW);
+    }
+}
+
+/*
 状態遷移処理
 CoutClass
 */
 
-void StateTransferProcess(void) {}
+void StateTransferProcess(void) {
+    switch (KitchenTimerState) {
+        case COUNTTIME_SETTING_STATE:
+            break;
+        case COUNTDOWN_RUNNING_STATE:
+            break;
+        case COUNTDOWN_END_STATE:
+            break;
+        case RESET_STATE:
+            break;
+    }
+}
 
 /*
 LCD更新
