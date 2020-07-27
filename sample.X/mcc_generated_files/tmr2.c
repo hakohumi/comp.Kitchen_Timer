@@ -459,7 +459,39 @@ void TMR2_DefaultInterruptHandler(void) {
     /* 分SWカウントタイミング処理                         */
     /* -------------------------------------------------- */
 
-    //    if ()
+    // 分スイッチタイミングフラグがOFFか
+    if (!MinuteSW.TimingFlag) {
+        // 分スイッチタイミングカウントは25以上か？
+        if (MinuteSW.TimingCount >= 25) {
+            // 分スイッチタイミングフラグをONに
+            MinuteSW.TimingFlag = ON;
+
+            // 分スイッチタイミングカウントを0へ初期化
+            MinuteSW.TimingCount = 0;
+        } else {
+            // 分スイッチタイミングカウントを1増加
+            MinuteSW.TimingCount++;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* 秒SWカウントタイミング処理                         */
+    /* -------------------------------------------------- */
+
+    // 秒スイッチタイミングフラグがOFFか
+    if (!SecondSW.TimingFlag) {
+        // 秒スイッチタイミングカウントは25以上か？
+        if (SecondSW.TimingCount >= 25) {
+            // 秒スイッチタイミングフラグをONに
+            SecondSW.TimingFlag = ON;
+
+            // 秒スイッチタイミングカウントを0へ初期化
+            SecondSW.TimingCount = 0;
+        } else {
+            // 秒スイッチタイミングカウントを1増加
+            SecondSW.TimingCount++;
+        }
+    }
 }
 
 /**
