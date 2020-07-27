@@ -6,6 +6,7 @@ bool IsPushedResetSW = false;
 extern SWState_t SW1;
 extern SWState_t SW2;
 
+<<<<<<< Updated upstream
 /*
 スイッチ状態検知
  */
@@ -23,6 +24,8 @@ void InputProcess(void) {
     }
 }
 
+=======
+>>>>>>> Stashed changes
 // リセットスイッチ同時押し検知
 
 void detectResetSW() {

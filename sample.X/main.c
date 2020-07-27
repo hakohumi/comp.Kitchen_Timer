@@ -86,7 +86,7 @@ KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
 void InputProcess(void);
 // 状態遷移処理
 void StateTransferProcess(void);
-// LCD更新・ブザー状態更新
+// LCD更新・ブザー状態更新s
 void OutputProcess(void);
 
 void main(void) {
@@ -116,11 +116,46 @@ void main(void) {
 }
 
 /*
+<<<<<<< Updated upstream
+=======
+スイッチ状態検知
+ */
+void InputProcess(void) {
+    // リセットスイッチ同時押し検知
+    detectResetSW();
+
+    // リセットスイッチの状態
+    // OFF の場合
+    if (!IsPushedResetSW) {
+        // 分スイッチ長押し検知
+        detectLongPushedSW(&MinuteSW);
+        // 秒スイッチ長押し検知
+        detectLongPushedSW(&SecondSW);
+    }
+}
+
+/*
+>>>>>>> Stashed changes
 状態遷移処理
 CoutClass
 */
 
+<<<<<<< Updated upstream
 void StateTransferProcess(void) {}
+=======
+void StateTransferProcess(void) {
+    switch (KitchenTimerState) {
+        case COUNTTIME_SETTING_STATE:
+            break;
+        case COUNTDOWN_RUNNING_STATE:
+            break;
+        case COUNTDOWN_END_STATE:
+            break;
+        case RESET_STATE:
+            break;
+    }
+}
+>>>>>>> Stashed changes
 
 /*
 LCD更新
