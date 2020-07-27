@@ -57,6 +57,7 @@
 #include <xc.h>
 
 #include "InputClass.h"
+#include "common.h"
 
 /**
   Section: Global Variables Definitions
@@ -180,7 +181,7 @@ void TMR2_DefaultInterruptHandler(void) {
                     // MinuteSWのチャタフラグをクリア
                     MinuteSW.ChattaFlg = 0;
                     // MinuteSWのIOC割込みフラグをON
-                    SW1_IOCIntrruptEnable();
+                    SW1_IOCInterruptEnable();
                     // ------------------------------------------------------------
                 }
                 break;
@@ -233,7 +234,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // MinuteSWのチャタフラグをクリア
                         MinuteSW.ChattaFlg = 0;
                         // MinuteSWのIOC割込みフラグをON
-                        SW1_IOCIntrruptEnable();
+                        SW1_IOCInterruptEnable();
                         // ------------------------------------------------------------
                     }
                 } else {

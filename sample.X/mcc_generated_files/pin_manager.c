@@ -252,7 +252,7 @@ void IOCBF5_DefaultInterruptHandler(void) {
     SecondSW.ChattaFlg = true;
 
     // SW2の割り込み禁止
-    SW2_IOCIntrruptEnable();
+    SW2_IOCInterruptDisable();
 
 }
 

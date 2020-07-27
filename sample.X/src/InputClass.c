@@ -1,7 +1,9 @@
 #include "InputClass.h"
 
 // リセットスイッチ 状態保持変数
-bool IsPushedResetSW = false;
+SW_PUSH_STATE_E IsPushedResetSW = false;
+// スタートストップスイッチ 状態保持変数
+SW_PUSH_STATE_E IsPushedStartStopSW = false;
 
 SWState_t MinuteSW = {
     OFF,           // チャタフラグ
@@ -35,7 +37,7 @@ SWState_t StartStopSW = {
 
 // リセットスイッチ同時押し検知
 
-void DetectResetSW() {
+void DetectResetSW(void) {
     if (MinuteSW.PushState == ON_STATE && SecondSW.PushState == ON_STATE) {
         // リセットの状態をON
         IsPushedResetSW = ON_STATE;

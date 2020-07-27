@@ -1,9 +1,9 @@
 
-#include <mcc.h>
 #include "LCDClass.h"
 
+#include <mcc.h>
 
-bool IsUpdateLCDFlg = OFF;
+static bool IsUpdateLCDFlg = OFF;
 
 // LCDの初期化
 // *** ST7032iに対して、書き込みフォーマット ***
@@ -18,25 +18,14 @@ bool IsUpdateLCDFlg = OFF;
 // ③その後、7bitのデータを送信する
 
 void InitLCD(void) {
-
-    uint8_t l_commandTable[10] = {
-        0x38,
-        0x39,
-        0x14,
-        0x70,
-        0x52,
-        0x6C,
-        0x38,
-        0x0C,
-        0x01
-    };
+    uint8_t l_commandTable[10] = {0x38, 0x39, 0x14, 0x70, 0x52,
+                                  0x6C, 0x38, 0x0C, 0x01};
     uint8_t c;
 
     // 40ms以上待つ
     __delay_ms(40);
 
     for (c = 0; c < 10; c++) {
-
         sendCmdLCD(l_commandTable[c]);
 
         if (c == 5) {
@@ -58,7 +47,6 @@ void InitLCD(void) {
     WriteStringsToRAM(strBuf1, 5);
     SetPosLCD(0x40);
     WriteStringsToRAM(strBuf2, 5);
-
 }
 
 void sendCmdLCD(uint8_t i_data) {
@@ -78,7 +66,7 @@ void WriteCharToRAM(uint8_t i_char) {
 
 // i_str は、8文字分の表示させた文字列が入った uint8_t型の配列
 
-void WriteStringsToRAM(uint8_t * i_str, uint8_t i_len) {
+void WriteStringsToRAM(uint8_t* i_str, uint8_t i_len) {
     // MAX_BUF_SIZE = 9
     uint8_t l_buf[MAX_BUF_SIZE];
     uint8_t c;
@@ -97,3 +85,5 @@ void WriteStringsToRAM(uint8_t * i_str, uint8_t i_len) {
         I2C1_WriteNBytes(LCD_ADDR, l_buf, ++i_len);
     }
 }
+
+void SetUpdateLCDFlgON(void) { IsUpdateLCDFlg = ON; }
