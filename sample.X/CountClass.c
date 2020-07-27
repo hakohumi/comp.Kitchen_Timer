@@ -9,26 +9,6 @@ uint8_t SecondCountTime = 0;
 // カウントダウン終了カウント
 uint8_t CountDownEndCount = 0;
 
-/*
-状態遷移処理
-CoutClass
-*/
-
-void StateTransferProcess(void) {
-    switch (KitchenTimerState) {
-        case COUNTTIME_SETTING_STATE:
-            break;
-        case COUNTDOWN_RUNNING_STATE:
-            break;
-        case COUNTDOWN_END_STATE:
-            break;
-        case RESET_STATE:
-            break;
-    }
-}
-
-
-
 // カウント時間設定
 void SettingCountTime() {
     // 分スイッチ処理
@@ -51,14 +31,12 @@ void SettingCountTime() {
     }
 }
 
-void detectSWState(SWState_t *i_SW){
+void detectSWState(SWState_t *i_SW) {
     // スイッチのタイミングフラグ
-    if(i_SW->TimingFlag == ON){
+    if (i_SW->TimingFlag == ON) {
         // スイッチの状態は？
-        if(i_SW->PushState != ON){
-            
-        }else{
-            if(i_SW->LongPushState == )
-        }
+        if (i_SW->PushState != ON) {
+        } else {
+            if (i_SW->LongPushState ==) }
     }
 }

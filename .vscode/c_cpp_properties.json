@@ -3,7 +3,12 @@
         {
             "name": "Win32",
             "includePath": [
+<<<<<<< HEAD
                 "${workspaceFolder}/**"
+=======
+                "${workspaceFolder}/sample.X/**",
+                "${workspaceFolder}/sample.X/header"
+>>>>>>> master
             ],
             "defines": [
                 "_DEBUG",

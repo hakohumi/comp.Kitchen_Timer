@@ -12,8 +12,12 @@ extern "C" {
 
 typedef enum {
     OFF_STATE,
+<<<<<<< HEAD
     SHORT_PUSH_STATE
     LONG_STG1_STATE,
+=======
+    SHORT_PUSH_STATE LONG_STG1_STATE,
+>>>>>>> master
     LONG_STG2_STATE,
 } SW_PUSH_STATE_E;
 
@@ -35,6 +39,7 @@ typedef struct {
     bool PushState;
 } ResetSWState_t;
 
+<<<<<<< HEAD
 void InputProcess(void);
 // 同時押し検知
 void detectResetSW(void);
@@ -42,10 +47,24 @@ void detectResetSW(void);
 // 長押し検知
 // 分、秒
 void detectLongPushedSW(SWState_t *i_SW);
+=======
+// 同時押し検知
+void DetectResetSW(void);
+
+// 長押し検知
+// 分、秒
+void DetectLongPushedSW(SWState_t *i_SW);
+>>>>>>> master
 
 extern SWState_t MinuteSW;     // RB2
 extern SWState_t SecondSW;     // RB5
 extern SWState_t StartStopSW;  // RB0
+<<<<<<< HEAD
+=======
+
+// リセットスイッチが押されているかを保持する
+extern bool IsPushedResetSW;
+>>>>>>> master
 
 #ifdef __cplusplus
 }
