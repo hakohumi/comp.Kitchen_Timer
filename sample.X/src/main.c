@@ -63,6 +63,11 @@ void InputProcess(void);
 // LCD更新・ブザー状態更新s
 void OutputProcess(void);
 
+void updateLCD(void);
+
+// カウント時間を"00m00s"の形でLCDへ表示させる
+void countTimeToLCD(uint8_t i_minute, uint8_t i_second);
+
 void main(void) {
     // initialize the device
     SYSTEM_Initialize();
@@ -111,9 +116,129 @@ LCD更新
 ブザー状態更新
  */
 
+void updateLED() {
+    LED1 = LED_OFF;
+    LED2 = LED_OFF;
+    LED3 = LED_OFF;
+    LED4 = LED_OFF;
+
+    switch (KitchenTimerState) {
+        case COUNTTIME_SETTING_STATE:
+            LED1 = LED_ON;
+            __delay_ms(200);
+
+            break;
+        case COUNTDOWN_ONGOING_STATE:
+            LED2 = LED_ON;
+            __delay_ms(200);
+
+            break;
+        case COUNTDOWN_END_STATE:
+            LED3 = LED_ON;
+            __delay_ms(200);
+
+            break;
+        case RESET_STATE:
+            LED4 = LED_ON;
+            __delay_ms(200);
+            break;
+    }
+}
+
 void OutputProcess(void) {
-    // UpdateLCD();
+    // updateLCD();
+    updateLED();
     // UpdateBuzzer();
+}
+
+void updateLCD(void) {
+    // 1行目 文字列バッファ
+    uint8_t l_LCDBuf1[8] = "running";
+    // 2行目 文字列バッファ
+    uint8_t l_LCDBuf2[8] = "stt";
+
+    // setting string
+    uint8_t l_LCDstr1[] = "setting";
+    uint8_t l_LCDstr2[] = "state";
+
+    // UpdateLCDフラグがONか
+    if (IsUpdateLCDFlg()) {
+        // キッチンタイマーの状態は？
+        switch (KitchenTimerState) {
+            // カウント時間設定
+            case COUNTTIME_SETTING_STATE:
+                // カウント時間をLCDバッファに格納
+                // 表示テスト
+
+                SetPosLCD(0x00);
+                Write1LineToRAM(l_LCDstr1, 7);
+                SetPosLCD(0x40);
+                Write1LineToRAM(l_LCDstr2, 5);
+
+                break;
+
+                // カウントダウン中
+            case COUNTDOWN_ONGOING_STATE:
+                // カウント時間をLCDバッファに格納
+
+                SetPosLCD(0x00);
+                Write1LineToRAM(l_LCDBuf1, 7);
+                SetPosLCD(0x40);
+                Write1LineToRAM(l_LCDBuf2, 3);
+
+                // 1秒フラグがOFFか
+                if (!Is1sFlg) {
+                    // LCDバッファのmとsの文字を点滅
+                }
+                break;
+
+            // カウントダウン終了
+            case COUNTDOWN_END_STATE:
+                // カウント時間をLCDバッファに格納
+
+                // 1秒フラグがOFFか
+                if (!Is1sFlg) {
+                    // LCDバッファの文字を点滅
+                }
+
+                break;
+
+            // リセット状態 ありえない
+            case RESET_STATE:
+
+                break;
+
+            // その他の状態 ありえない
+            default:
+                break;
+        }
+        // LCDバッファの値をLCDへ表示
+    }
+}
+
+// カウント時間をLCDへ書き込む
+// 2行目の真ん中へ書く
+
+void countTimeToLCD(uint8_t i_minute, uint8_t i_second) {
+    uint8_t i_str[8];
+
+    i_str[3] = 'm';
+    i_str[6] = 's';
+
+    // -------------------------------------------------------
+    // sprintfは容量が大きいため、後に別の方法で実装する
+    // -------------------------------------------------------
+    // 分を変換
+    sprintf((char *)(&i_str[2]), "%d", i_minute);
+    // 秒を変換
+    sprintf((char *)(&i_str[4]), "%d", i_minute);
+
+    // -------------------------------------------------------
+
+    // 書き込み位置を2行目へセット
+    SetPosLineLCD(true);
+    // 1行書き込む
+    Write1LineToRAM(i_str, 8);
 }
 
 // キッチンタイマー状態をリセットへ変更
@@ -126,7 +251,7 @@ void SetKitchenTimerStateToSetting(void) {
 
 // キッチンタイマー状態をカウントダウン中へ変更
 void SetKitchenTimerStateToGoing(void) {
-    KitchenTimerState = COUNTDOWN_RUNNING_STATE;
+    KitchenTimerState = COUNTDOWN_ONGOING_STATE;
 }
 
 // キッチンタイマー状態をカウントダウン終了へ変更

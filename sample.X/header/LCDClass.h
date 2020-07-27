@@ -28,13 +28,19 @@ void InitLCD(void);
 
 void sendCmdLCD(uint8_t i_data);
 
-void SetPosLCD(uint8_t i_pos);
+// LCD上の書き込む位置を指定する
+void SetPosLCD(uint8_t i_pos);   // アドレス指定
+void SetPosLineLCD(bool i_row);  // 1行目か2行目の先頭を指定
 
 void WriteCharToRAM(uint8_t i_char);
 
-void WriteStringsToRAM(uint8_t* i_str, uint8_t i_len);
+void Write1LineToRAM(uint8_t* i_str, uint8_t i_len);
 
+// UpdateLCDフラグをONにする
 void SetUpdateLCDFlgON(void);
+
+// UpdateLCDフラグがONかどうか
+bool IsUpdateLCDFlg(void);
 
 #ifdef __cplusplus
 }

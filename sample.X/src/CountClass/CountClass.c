@@ -33,7 +33,7 @@ void StateTransferProcess(void) {
         case COUNTTIME_SETTING_STATE:
             settingCountTime();
             break;
-        case COUNTDOWN_RUNNING_STATE:
+        case COUNTDOWN_ONGOING_STATE:
             onGoingCountDown();
             break;
         case COUNTDOWN_END_STATE:
