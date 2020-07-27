@@ -26,7 +26,7 @@ void SettingCountTime() {
     }
 
     // リセットスイッチ状態はONか？
-    if (ResetSWState == ON) {
+    if (ResetSWState == ON_STATE) {
         KitchenTimerState = RESET_STATE;
     }
 }
@@ -35,8 +35,14 @@ void detectSWState(SWState_t *i_SW) {
     // スイッチのタイミングフラグ
     if (i_SW->TimingFlag == ON) {
         // スイッチの状態は？
-        if (i_SW->PushState != ON) {
-        } else {
-            if (i_SW->LongPushState ==) }
+        switch (i_SW->PushState) {
+            case OFF_STATE:
+                break;
+            case SHORT_PUSH_STATE:
+                break;
+            case LONG_STG1_STATE:
+                break;
+            case LONG_STG2_STATE:
+                break;
+        }
     }
-}

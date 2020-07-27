@@ -4,94 +4,60 @@
 bool IsPushedResetSW = false;
 
 SWState_t MinuteSW = {
-    OFF,           // ChattaFlg
-    OFF,           // ReadValue
-    RISING_STATE,  // ChattaState
-    0,             // CheckCount
-    OFF_STATE,     // PushState
-    0,             // SWCount
-    false          // TimingFlag
+    OFF,           // チャタフラグ
+    LOW,           // 読み取った値
+    RISING_STATE,  // チャタ状態
+    0,             // チャタチェック用カウント変数
+    OFF_STATE,     // スイッチ状態
+    0,             // スイッチカウント
+    OFF            // スイッチタイミングフラグ
 };
 
 SWState_t SecondSW = {
-    OFF,           // ChattaFlg
-    OFF,           // ReadValue
-    RISING_STATE,  // ChattaState
-    0,             // CheckCount
-    OFF_STATE,     // PushState
-    0,             // SWCount
-    false          // TimingFlag
+    OFF,           // チャタフラグ
+    LOW,           // 読み取った値
+    RISING_STATE,  // チャタ状態
+    0,             // チャタチェック用カウント変数
+    OFF_STATE,     // スイッチ状態
+    0,             // スイッチカウント
+    OFF            // スイッチタイミングフラグ
 };
 
 SWState_t StartStopSW = {
-    OFF,           // ChattaFlg
-    OFF,           // ReadValue
-    RISING_STATE,  // ChattaState
-    0,             // CheckCount
-    OFF_STATE,     // PushState
-    0,             // SWCount
-    false          // TimingFlag
+    OFF,           // チャタフラグ
+    LOW,           // 読み取った値
+    RISING_STATE,  // チャタ状態
+    0,             // チャタチェック用カウント変数
+    OFF_STATE,     // スイッチ状態
+    0,             // スイッチカウント
+    OFF            // スイッチタイミングフラグ
 };
 
-<<<<<<< HEAD
-/*
-スイッチ状態検知
- */
-void InputProcess(void) {
-    // リセットスイッチ同時押し検知
-    detectResetSW();
-
-    // リセットスイッチの状態
-    // OFF の場合
-    if (!IsPushedResetSW) {
-        // 分スイッチ長押し検知
-        detectLongPushedSW(&MinuteSW);
-        // 秒スイッチ長押し検知
-        detectLongPushedSW(&SecondSW);
-    }
-}
-
-// リセットスイッチ同時押し検知
-
-void detectResetSW() {
-    if (MinuteSW.PushState == ON && SecondSW.PushState == ON) {
-=======
 // リセットスイッチ同時押し検知
 
 void DetectResetSW() {
-    if (SW1.PushState == ON && SW2.PushState == ON) {
->>>>>>> master
+    if (MinuteSW.PushState == ON_STATE && SecondSW.PushState == ON_STATE) {
         // リセットの状態をON
-        IsPushedResetSW = ON;
+        IsPushedResetSW = ON_STATE;
     } else {
         // リセットスイッチの状態をOFF
-        IsPushedResetSW = OFF;
+        IsPushedResetSW = OFF_STATE;
     }
 }
 
 // 長押し検知
 // 入力：分、秒スイッチ
 
-<<<<<<< HEAD
-void detectLongPushedSW(SWState_t *i_SW) {
-    if (i_SW->SWCount >= 250) {
-=======
 void DetectLongPushedSW(SWState_t *i_SW) {
-    if (i_SW->SWCount < 100) {
-        // 1秒(100)未満
-        // 長押し状態をOFF
-        i_SW->PushState = OFF_STATE;
-    } else if (i_SW->SWCount < 250) {
-        // 長押し1段階目状態をON
-        i_SW->PushState = STG1_STATE;
-    } else {
->>>>>>> master
+    if (i_SW->SWCount >= 250) {
         // 2.5秒(250)以上
         // 長押し2段階状態をON
         i_SW->PushState = LONG_STG2_STATE;
-    } else if (i_SW - SWCount >= 100) {
+    }
+
+    if (i_SW->SWCount >= 100) {
         // 長押し1段階目状態をON
-        i_SW->PushState = lONG_STG1_STATE;
+        i_SW->PushState = LONG_STG1_STATE;
     } else {
         // SWカウントが0の時
         // 1秒(100)未満の時

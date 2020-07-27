@@ -90,8 +90,6 @@ void main(void) {
 }
 
 /*
-<<<<<<< HEAD
-=======
 スイッチ状態検知
  */
 void InputProcess(void) {
@@ -127,7 +125,6 @@ void StateTransferProcess(void) {
 }
 
 /*
->>>>>>> master
 LCD更新
 ブザー状態更新
 */
