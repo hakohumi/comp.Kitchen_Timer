@@ -1,6 +1,6 @@
 #include "CountClass.h"
 
-#include "InputClass.h "
+#include "InputClass.h"
 #include "LCDClass.h"
 #include "tmr1.h"
 
@@ -21,12 +21,14 @@ static uint8_t SecondCountTime = 0;
 // カウントダウン終了カウント
 uint8_t CountDownEndCount = 0;
 
-void settingCountTime(void);
+static void settingCountTime(void);
 
-uint8_t detectSWState(SWState_t *i_SW);
-void onGoingCountDown(void);
-void reset(void);
-void endCountDown(void);
+static uint8_t detectSWState(SWState_t *i_SW);
+static void onGoingCountDown(void);
+static void endCountDown(void);
+static void reset(void);
+
+static uint8_t detectSWState(SWState_t *i_SW);
 
 /*
 状態遷移処理
@@ -78,15 +80,48 @@ bool SetSecondCount(uint8_t i_second) {
     return true;
 }
 
-uint8_t detectSWState(SWState_t *i_SW);
+// 引数で指定された値を分カウントに加算する
+void AddMinuteCount(uint8_t i_minute) {
+    // もし、入力された値が最大値より大きい場合
+    // 最大値を設定
+    // MINUTE_MAX = 99
+    if (i_minute > MINUTE_MAX) {
+        MinuteCountTime = MINUTE_MAX;
+    } else {
+        // 入力が 99 以下の場合
+
+        // もし、加算後、分カウントが最大値より高い場合
+        // 最大値より増えないようにする
+
+        MinuteCountTime += i_minute;
+
+        if (MinuteCountTime > MINUTE_MAX) {
+            MinuteCountTime = MINUTE_MAX;
+        }
+    }
+}
+
+// 引数で指定された値を秒カウントに加算する
+void AddSecondCount(uint8_t i_second) {
+    // もし、加算後、秒カウントが最大値より高い場合
+    // 最大値より下回るまで、分カウントに繰り上げる
+
+    // 加算
+    SecondCountTime += i_second;
+
+    // 60で割った数分、繰り上げる
+    AddMinuteCount(SecondCountTime / (SECOND_MAX + 1));
+    // 60で割ったあまりを秒カウントへ格納する
+    SecondCountTime %= (SECOND_MAX + 1);
+}
 
 // カウント時間設定
 
-void settingCountTime(void) {
+static void settingCountTime(void) {
     // 分スイッチ処理
-    SetMinuteCount(detectSWState(&MinuteSW));
+    AddMinuteCount(detectSWState(&MinuteSW));
     // 秒スイッチ処理
-    SetSecondCount(detectSWState(&SecondSW));
+    AddSecondCount(detectSWState(&SecondSW));
 
     // スタートストップスイッチ状態はONか
     if (StartStopSW.PushState == ON_STATE) {
@@ -105,7 +140,7 @@ void settingCountTime(void) {
     }
 }
 
-uint8_t detectSWState(SWState_t *i_SW) {
+static uint8_t detectSWState(SWState_t *i_SW) {
     uint8_t l_retval = 0;
 
     // スイッチのタイミングフラグ
@@ -139,7 +174,7 @@ uint8_t detectSWState(SWState_t *i_SW) {
     return l_retval;
 }
 
-void onGoingCountDown(void) {
+static void onGoingCountDown(void) {
     // カウントは00m00sか
     if (MinuteCountTime == 0 && SecondCountTime == 0) {
         // 0.5秒タイマ割込みを禁止
@@ -171,7 +206,7 @@ void onGoingCountDown(void) {
     }
 }
 
-void endCountDown(void) {
+static void endCountDown(void) {
     // カウントダウン終了カウントが10以上か
     if (CountDownEndCount >= 10 || StartStopSW.PushState == ON_STATE) {
         // キッチンタイマー状態をリセット処理へ変更
@@ -179,7 +214,7 @@ void endCountDown(void) {
     }
 }
 
-void reset(void) {
+static void reset(void) {
     // キッチンタイマー状態をカウントダウン設定へ変更
     SetKitchenTimerStateToSetting();
 

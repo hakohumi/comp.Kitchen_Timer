@@ -34,6 +34,11 @@ bool SetMinuteCount(uint8_t i_minute);
 
 bool SetSecondCount(uint8_t i_second);
 
+// 引数で指定された値を分カウントに加算する
+void AddMinuteCount(uint8_t i_minute);
+// 引数で指定された値を秒カウントに加算する
+void AddSecondCount(uint8_t i_second);
+
 
 
 #ifdef __cplusplus

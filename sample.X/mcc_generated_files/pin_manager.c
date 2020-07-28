@@ -127,11 +127,6 @@ void PIN_MANAGER_Initialize(void) {
 }
 
 void PIN_MANAGER_IOC(void) {
-    // IOC同時フラグ検知テスト
-    if (IOCBFbits.IOCBF2 == 1 && IOCBFbits.IOCBF5 == 1) {
-        LED3 = LED_ON;
-    }
-
     // interrupt on change for pin IOCBF0
     if (IOCBFbits.IOCBF0 == 1) {
         IOCBF0_ISR();
