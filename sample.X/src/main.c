@@ -41,7 +41,7 @@
     SOFTWARE.
  */
 #include "../mcc_generated_files/mcc.h"
-#include "CountClass/CountClass.h"
+#include "CountClass.h"
 #include "InputClass.h"
 #include "LCDClass.h"
 #include "common.h"

@@ -56,7 +56,7 @@
 
 #include <xc.h>
 
-#include "CountClass/CountClass.h"
+#include "CountClass.h"
 #include "common.h"
 #include "LCDClass.h"
 

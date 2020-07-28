@@ -11,7 +11,10 @@
 			"mcc.h": "c",
 			"common.h": "c",
 			"lcdclass.h": "c",
-			"countclass.h": "c"
+			"countclass.h": "c",
+			"ongoingcountdown.h": "c",
+			"reset.h": "c",
+			"settingcounttime.h": "c"
 		}
 	}
 }

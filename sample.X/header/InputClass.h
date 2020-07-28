@@ -28,7 +28,7 @@ typedef struct {
     SW_PUSH_STATE_E PushState;   // スイッチ状態
     uint8_t SWCount;             // スイッチカウント
     bool TimingFlag;             // スイッチタイミングフラグ
-    uint8_t TimingCount          // タイミングカウント
+    uint8_t TimingCount;          // タイミングカウント
 } SWState_t;
 
 // ResetSwitch PushState

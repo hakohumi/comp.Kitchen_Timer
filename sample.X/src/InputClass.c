@@ -2,8 +2,6 @@
 
 // リセットスイッチ 状態保持変数
 SW_PUSH_STATE_E IsPushedResetSW = false;
-// スタートストップスイッチ 状態保持変数
-SW_PUSH_STATE_E IsPushedStartStopSW = false;
 
 SWState_t MinuteSW = {
     OFF,           // チャタフラグ
