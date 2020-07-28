@@ -15,7 +15,7 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "pin_manager.h"
+#include "../mcc_generated_files/pin_manager.h"
 
 // -------------------------------------
 

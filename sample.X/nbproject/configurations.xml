@@ -4,13 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="CountClass" displayName="CountClass" projectFiles="true">
-        <itemPath>header/CountClass/CountClass.h</itemPath>
-        <itemPath>header/CountClass/settingCountTime.h</itemPath>
-        <itemPath>header/CountClass/onGoingCountDown.h</itemPath>
-        <itemPath>header/CountClass/endCountDown.h</itemPath>
-        <itemPath>header/CountClass/reset.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
@@ -30,6 +23,7 @@
       <itemPath>header/common.h</itemPath>
       <itemPath>header/LCDClass.h</itemPath>
       <itemPath>header/InputClass.h</itemPath>
+      <itemPath>header/CountClass.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -55,16 +49,10 @@
         <itemPath>mcc_generated_files/interrupt_manager.c</itemPath>
       </logicalFolder>
       <logicalFolder name="src" displayName="src" projectFiles="true">
-        <logicalFolder name="CountClass" displayName="CountClass" projectFiles="true">
-          <itemPath>src/CountClass/CountClass.c</itemPath>
-          <itemPath>src/CountClass/settingCountTime.c</itemPath>
-          <itemPath>src/CountClass/onGoingCountDown.c</itemPath>
-          <itemPath>src/CountClass/endCountDown.c</itemPath>
-          <itemPath>src/CountClass/reset.c</itemPath>
-        </logicalFolder>
         <itemPath>src/InputClass.c</itemPath>
         <itemPath>src/LCDClass.c</itemPath>
         <itemPath>src/main.c</itemPath>
+        <itemPath>src/CountClass.c</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -205,7 +193,6 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -304,7 +291,7 @@
         <property key="default-char-type" value="true"/>
         <property key="define-macros" value=""/>
         <property key="disable-optimizations" value="true"/>
-        <property key="extra-include-directories" value=""/>
+        <property key="extra-include-directories" value="header;mcc_generated_files"/>
         <property key="favor-optimization-for" value="-speed,+space"/>
         <property key="garbage-collect-data" value="true"/>
         <property key="garbage-collect-functions" value="true"/>

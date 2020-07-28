@@ -2,8 +2,6 @@
 
 // リセットスイッチ 状態保持変数
 SW_PUSH_STATE_E IsPushedResetSW = false;
-// スタートストップスイッチ 状態保持変数
-SW_PUSH_STATE_E IsPushedStartStopSW = false;
 
 SWState_t MinuteSW = {
     OFF,           // チャタフラグ
@@ -12,7 +10,8 @@ SWState_t MinuteSW = {
     0,             // チャタチェック用カウント変数
     OFF_STATE,     // スイッチ状態
     0,             // スイッチカウント
-    OFF            // スイッチタイミングフラグ
+    OFF,           // スイッチタイミングフラグ
+    0              // タイミングカウント
 };
 
 SWState_t SecondSW = {
@@ -22,7 +21,8 @@ SWState_t SecondSW = {
     0,             // チャタチェック用カウント変数
     OFF_STATE,     // スイッチ状態
     0,             // スイッチカウント
-    OFF            // スイッチタイミングフラグ
+    OFF,           // スイッチタイミングフラグ
+    0              // タイミングカウント
 };
 
 SWState_t StartStopSW = {
@@ -32,7 +32,8 @@ SWState_t StartStopSW = {
     0,             // チャタチェック用カウント変数
     OFF_STATE,     // スイッチ状態
     0,             // スイッチカウント
-    OFF            // スイッチタイミングフラグ
+    OFF,           // スイッチタイミングフラグ
+    0              //タイミングカウント
 };
 
 // リセットスイッチ同時押し検知
