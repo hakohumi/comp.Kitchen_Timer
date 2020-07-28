@@ -142,7 +142,7 @@ void updateLED() {
 }
 
 void OutputProcess(void) {
-    // updateLCD();
+    updateLCD();
     updateLED();
     // UpdateBuzzer();
 }

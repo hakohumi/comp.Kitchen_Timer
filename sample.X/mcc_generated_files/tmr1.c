@@ -57,8 +57,8 @@
 #include <xc.h>
 
 #include "CountClass.h"
-#include "common.h"
 #include "LCDClass.h"
+#include "common.h"
 
 /**
   Section: Global Variables Definitions
@@ -67,7 +67,7 @@ volatile uint16_t timer1ReloadVal;
 void (*TMR1_InterruptHandler)(void);
 
 // 1秒フラグ
-bool Is1sFlg = OFF;
+bool Is1sFlg = ON;
 
 extern bool Timer500msFlag;
 // カウントダウン終了カウント CountClass.c
@@ -100,11 +100,11 @@ void TMR1_Initialize(void) {
     PIE1bits.TMR1IE = 1;
 
     // Set Default Interrupt Handler
-    TMR1_SetInterruptHandler(TMR1_DefaultInterruptHandler);
+    // TMR1_SetInterruptHandler(TMR1_DefaultInterruptHandler);
 
     // T1CKPS 1:1; T1OSCEN disabled; nT1SYNC synchronize; TMR1CS FOSC/4; TMR1ON
     // enabled;
-    T1CON = 0x01;
+    T1CON = 0x00;
 }
 
 void TMR1_StartTimer(void) {
@@ -167,19 +167,21 @@ void TMR1_ISR(void) {
 
     // ticker function call;
     // ticker is 1 -> Callback function gets called everytime this ISR executes
-    TMR1_CallBack();
+
+    // TMR1_CallBack();
+    TMR1_DefaultInterruptHandler();
 }
 
-void TMR1_CallBack(void) {
-    // Add your custom callback code here
-    if (TMR1_InterruptHandler) {
-        TMR1_InterruptHandler();
-    }
-}
+// void TMR1_CallBack(void) {
+//     // Add your custom callback code here
+//     if (TMR1_InterruptHandler) {
+//         TMR1_InterruptHandler();
+//     }
+// }
 
-void TMR1_SetInterruptHandler(void (*InterruptHandler)(void)) {
-    TMR1_InterruptHandler = InterruptHandler;
-}
+// void TMR1_SetInterruptHandler(void (*InterruptHandler)(void)) {
+//     TMR1_InterruptHandler = InterruptHandler;
+// }
 
 void TMR1_DefaultInterruptHandler(void) {
     // add your TMR1 interrupt custom code
@@ -188,7 +190,7 @@ void TMR1_DefaultInterruptHandler(void) {
     // 1秒フラグ
     if (Is1sFlg == ON) {
         // カウント時間を1秒減少させる
-        
+        CountDown();
 
         //キッチンタイマー状態がカウントダウン終了か？
         if (KitchenTimerState == COUNTDOWN_END_STATE) {
