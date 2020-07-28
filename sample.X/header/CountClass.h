@@ -39,7 +39,12 @@ void AddMinuteCount(uint8_t i_minute);
 // 引数で指定された値を秒カウントに加算する
 void AddSecondCount(uint8_t i_second);
 
+<<<<<<< HEAD:sample.X/header/CountClass.h
 
+=======
+uint8_t GetMinuteCount(void);
+uint8_t GetSecondCount(void);
+>>>>>>> hakohumi/issue24:sample.X/header/CountClass/CountClass.h
 
 #ifdef __cplusplus
 }

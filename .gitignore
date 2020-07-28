@@ -56,7 +56,10 @@ dkms.conf
 *.i
 *.p1
 
-*.production.*
-*.debug.*
+build/
+dist/
+debug/
+nbproject/
+/Sample.X/dist
 
 *.mk

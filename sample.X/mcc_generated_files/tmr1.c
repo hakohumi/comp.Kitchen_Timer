@@ -188,6 +188,7 @@ void TMR1_DefaultInterruptHandler(void) {
     // 1秒フラグ
     if (Is1sFlg == ON) {
         // カウント時間を1秒減少させる
+        
 
         //キッチンタイマー状態がカウントダウン終了か？
         if (KitchenTimerState == COUNTDOWN_END_STATE) {

@@ -40,7 +40,7 @@ void StateTransferProcess(void) {
         case COUNTTIME_SETTING_STATE:
             settingCountTime();
             break;
-        case COUNTDOWN_RUNNING_STATE:
+        case COUNTDOWN_ONGOING_STATE:
             onGoingCountDown();
             break;
         case COUNTDOWN_END_STATE:
@@ -115,6 +115,10 @@ void AddSecondCount(uint8_t i_second) {
     SecondCountTime %= (SECOND_MAX + 1);
 }
 
+uint8_t GetMinuteCount(void) { return MinuteCountTime; }
+
+uint8_t GetSecondCount(void) { return SecondCountTime; }
+
 // カウント時間設定
 
 static void settingCountTime(void) {
@@ -123,16 +127,18 @@ static void settingCountTime(void) {
     // 秒スイッチ処理
     AddSecondCount(detectSWState(&SecondSW));
 
-    // スタートストップスイッチ状態はONか
-    if (StartStopSW.PushState == ON_STATE) {
-        // スタートストップスイッチ状態をOFFにする
-        StartStopSW.PushState = OFF_STATE;
-        // 0.5秒タイマ割込みの許可
-        TMR500MS_TMRInterruptEnable();
-        // キッチンタイマー状態をカウントダウン中へ変更
-        SetKitchenTimerStateToGoing();
+    // カウント時間が00m00sではないか
+    if (!(GetMinuteCount() == (uint8_t)0 && GetSecondCount() == (uint8_t)0)) {
+        // スタートストップスイッチ状態はONか
+        if (StartStopSW.PushState == ON_STATE) {
+            // スタートストップスイッチ状態をOFFにする
+            StartStopSW.PushState = OFF_STATE;
+            // 0.5秒タイマ割込みの許可
+            TMR500MS_TMRInterruptEnable();
+            // キッチンタイマー状態をカウントダウン中へ変更
+            SetKitchenTimerStateToGoing();
+        }
     }
-
     // リセットスイッチ状態はONか？
     if (IsPushedResetSW == ON_STATE) {
         // キッチンタイマー状態をリセットへ変更
@@ -160,6 +166,8 @@ static uint8_t detectSWState(SWState_t *i_SW) {
 
                 // UpdateLCDFlg をON
                 SetUpdateLCDFlgON();
+                // タイミングフラグをOFF
+                i_SW->TimingFlag = OFF;
                 break;
                 // 長押し2段階目
             case LONG_STG2_STATE:
@@ -168,9 +176,11 @@ static uint8_t detectSWState(SWState_t *i_SW) {
 
                 // UpdateLCDFlg をON
                 SetUpdateLCDFlgON();
+<<<<<<< HEAD
+=======
+                // タイミングフラグをOFF
                 break;
         }
-    }
     return l_retval;
 }
 

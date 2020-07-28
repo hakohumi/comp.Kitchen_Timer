@@ -3,7 +3,14 @@
 
 #include <mcc.h>
 
-static bool IsUpdateLCDFlg = OFF;
+static bool updateLCDFlg = OFF;
+
+// ---------------------------------------------
+// 文字リテラル
+// =--------------------------------------------
+static uint8_t Str_SETTING[] = "fafa";
+static uint8_t Str_m = 'm';
+static uint8_t Str_s = 's';
 
 // LCDの初期化
 // *** ST7032iに対して、書き込みフォーマット ***
@@ -38,20 +45,13 @@ void InitLCD(void) {
 
     // 1.08ms以上 待つ
     __delay_ms(2);
-
-    // 表示テスト
-    uint8_t strBuf1[] = {"hello"};
-    uint8_t strBuf2[] = {"world"};
-
-    SetPosLCD(0x00);
-    WriteStringsToRAM(strBuf1, 5);
-    SetPosLCD(0x40);
-    WriteStringsToRAM(strBuf2, 5);
 }
 
 void sendCmdLCD(uint8_t i_data) {
     I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, i_data);
 }
+
+// LCD上の書き込む場所を指定
 
 void SetPosLCD(uint8_t i_pos) {
     // Set DDRAM address DB7 = 1
@@ -60,13 +60,28 @@ void SetPosLCD(uint8_t i_pos) {
     I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, (0x80 | i_pos));
 }
 
+// LCD上の書き込む場所を、
+// 上の行か下の行の先頭を指定する
+// true だと 2行目
+// false だと 1行目
+
+void SetPosLineLCD(bool i_row) {
+    if (i_row) {
+        // true 2行目
+        SetPosLCD(0x40);
+    } else {
+        // false 1行目
+        SetPosLCD(0x00);
+    }
+}
+
 void WriteCharToRAM(uint8_t i_char) {
     I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, i_char);
 }
 
 // i_str は、8文字分の表示させた文字列が入った uint8_t型の配列
 
-void WriteStringsToRAM(uint8_t* i_str, uint8_t i_len) {
+void Write1LineToLCD(uint8_t *i_str, uint8_t i_len) {
     // MAX_BUF_SIZE = 9
     uint8_t l_buf[MAX_BUF_SIZE];
     uint8_t c;
@@ -86,4 +101,46 @@ void WriteStringsToRAM(uint8_t* i_str, uint8_t i_len) {
     }
 }
 
-void SetUpdateLCDFlgON(void) { IsUpdateLCDFlg = ON; }
+void SetUnitChar() {
+    // m表示
+    SetPosLCD(0x43);
+    WriteCharToRAM('m');
+
+    // S表示
+    SetPosLCD(0x46);
+    WriteCharToRAM('s');
+}
+
+void ClrUnitChar() {
+    // m削除
+    SetPosLCD(0x43);
+    WriteCharToRAM(' ');
+
+    // S表示
+    SetPosLCD(0x46);
+    WriteCharToRAM(' ');
+}
+
+void SetUpdateLCDFlgON(void) { updateLCDFlg = ON; }
+void SetUpdateLCDFlgOFF(void) { updateLCDFlg = OFF; }
+
+bool IsUpdateLCDFlg(void) { return (updateLCDFlg); }
+
+char *utoa(unsigned int value, char *s, int radix) {
+    char *s1 = s;
+    char *s2 = s;
+
+    do {
+        *s2++ = "0123456789abcdefghijklmnopqrstuvwxyz"[value % radix];
+        value /= radix;
+    } while (value > 0);
+
+    *s2-- = '\0';
+
+    while (s1 < s2) {
+        char c = *s1;
+        *s1++ = *s2;
+        *s2-- = c;
+    }
+    return s;
+}

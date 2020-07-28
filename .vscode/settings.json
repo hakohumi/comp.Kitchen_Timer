@@ -8,6 +8,7 @@
         "settingcounttime.h": "c",
         "countclass.h": "c",
         "endcountdown.h": "c",
-        "reset.h": "c"
+        "reset.h": "c",
+        "tmr1.h": "c"
     }
 }
