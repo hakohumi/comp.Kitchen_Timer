@@ -3,7 +3,12 @@
 
 #include <mcc.h>
 
-static bool updateLCDFlg = OFF;
+#define LINE_1 0x00
+#define LINE_2 0x40
+#define LINE_DIGITS_MAX 8
+#define LCD_SET_POS_DB7 0x80
+
+bool UpdateLCDFlg = OFF;
 
 // ---------------------------------------------
 // 文字リテラル
@@ -53,11 +58,11 @@ void sendCmdLCD(uint8_t i_data) {
 
 // LCD上の書き込む場所を指定
 
-void SetPosLCD(uint8_t i_pos) {
+inline void SetPosLCD(uint8_t i_pos) {
     // Set DDRAM address DB7 = 1
     // 設定可能ビット DB0 ~ DB6
 
-    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, (0x80 | i_pos));
+    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, (LCD_SET_POS_DB7 | i_pos));
 }
 
 // LCD上の書き込む場所を、
@@ -68,10 +73,10 @@ void SetPosLCD(uint8_t i_pos) {
 void SetPosLineLCD(bool i_row) {
     if (i_row) {
         // true 2行目
-        SetPosLCD(0x40);
+        SetPosLCD(LINE_2);
     } else {
         // false 1行目
-        SetPosLCD(0x00);
+        SetPosLCD(LINE_1);
     }
 }
 
@@ -87,7 +92,7 @@ void Write1LineToLCD(uint8_t *i_str, uint8_t i_len) {
     uint8_t c;
 
     // もし、8文字より多い文字数が入った場合、
-    if (i_len > 8) {
+    if (i_len > LINE_DIGITS_MAX) {
         // 何もしないで抜ける
 
     } else {
@@ -103,28 +108,25 @@ void Write1LineToLCD(uint8_t *i_str, uint8_t i_len) {
 
 void SetUnitChar() {
     // m表示
-    SetPosLCD(0x43);
+    SetPosLCD(LINE_2 + 3);
     WriteCharToRAM('m');
 
     // S表示
-    SetPosLCD(0x46);
+    SetPosLCD(LINE_2 + 6);
     WriteCharToRAM('s');
 }
 
 void ClrUnitChar() {
     // m削除
-    SetPosLCD(0x43);
+    SetPosLCD(LINE_2 + 3);
     WriteCharToRAM(' ');
 
     // S表示
-    SetPosLCD(0x46);
+    SetPosLCD(LINE_2 + 6);
     WriteCharToRAM(' ');
 }
 
-void SetUpdateLCDFlgON(void) { updateLCDFlg = ON; }
-void SetUpdateLCDFlgOFF(void) { updateLCDFlg = OFF; }
-
-bool IsUpdateLCDFlg(void) { return (updateLCDFlg); }
+bool IsUpdateLCDFlg(void) { return (UpdateLCDFlg); }
 
 char *utoa(unsigned int value, char *s, int radix) {
     char *s1 = s;

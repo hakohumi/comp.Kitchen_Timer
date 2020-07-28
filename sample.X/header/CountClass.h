@@ -21,6 +21,8 @@ extern "C" {
 // カウントダウン終了カウント
 extern uint8_t CountDownEndCount;
 
+inline void CountDown(void);
+
 void StateTransferProcess(void);
 
 // 分カウントを設定
