@@ -51,15 +51,14 @@
                          Main application
  */
 
-
 // キッチンタイマー状態 初期値:リセット状態
 KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
 
 // LCD更新・ブザー状態更新
 inline void OutputProcess(void);
 
-void updateLED(void);
-void updateLCD(void);
+inline void updateLED(void);
+inline void updateLCD(void);
 
 // カウント時間を"00m00s"の形でLCDへ表示させる
 void countTimeToLCD(uint8_t i_minute, uint8_t i_second);
@@ -81,7 +80,7 @@ void main(void) {
     // INTERRUPT_PeripheralInterruptDisable();
 
     // LCDの初期化
-    //    InitLCD();
+    InitLCD();
 
     while (1) {
         InputProcess();
@@ -98,12 +97,12 @@ LCD更新
  */
 
 inline void OutputProcess(void) {
-    //    updateLCD();
+    updateLCD();
     updateLED();
     // UpdateBuzzer();
 }
 
-void updateLED() {
+inline void updateLED() {
     LED1 = LED_OFF;
     LED2 = LED_OFF;
     LED3 = LED_OFF;
@@ -124,20 +123,18 @@ void updateLED() {
 
             break;
         case COUNTDOWN_END_STATE:
-            if (Is1sFlg) {
-                LED2 = LED_ON;
-            } else {
-                LED2 = LED_OFF;
-            }
+            LED3 = LED_ON;
 
             break;
         case RESET_STATE:
+            LED1 = LED_ON;
+            LED2 = LED_ON;
             LED3 = LED_ON;
             break;
     }
 }
 
-void updateLCD(void) {
+inline void updateLCD(void) {
     // 1行目 文字列バッファ
     uint8_t l_LCDBuf1[8] = "running";
     // 2行目 文字列バッファ
