@@ -3,6 +3,15 @@
 
 #include <mcc.h>
 
+// (B0111110);
+#define LCD_ADDR (i2c1_address_t)(0x3E)
+// Co = 0, RS = 0, Control byte = 0;
+#define CONTROLE_BYTE (uint8_t)(0x00)
+// RSビットが立っているとき
+#define WR_CONTROLE_BYTE (uint8_t)(0x40)
+// 1つコマンド 8文字表示
+#define MAX_BUF_SIZE 9
+
 #define LINE_1 0x00
 #define LINE_2 0x40
 #define LINE_DIGITS_MAX 8
@@ -16,6 +25,8 @@ bool UpdateLCDFlg = OFF;
 static uint8_t Str_SETTING[] = "fafa";
 static uint8_t Str_m = 'm';
 static uint8_t Str_s = 's';
+
+static void sendCmdLCD(uint8_t i_data);
 
 // LCDの初期化
 // *** ST7032iに対して、書き込みフォーマット ***
@@ -52,7 +63,7 @@ void InitLCD(void) {
     __delay_ms(2);
 }
 
-void sendCmdLCD(uint8_t i_data) {
+static void sendCmdLCD(uint8_t i_data) {
     I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, i_data);
 }
 
@@ -128,7 +139,7 @@ void ClrUnitChar() {
 
 bool IsUpdateLCDFlg(void) { return (UpdateLCDFlg); }
 
-char *utoa(unsigned int value, char *s, int radix) {
+static char *utoa(unsigned int value, char *s, int radix) {
     char *s1 = s;
     char *s2 = s;
 

@@ -157,7 +157,6 @@ void updateLCD(void) {
     uint8_t l_LCDstr1[] = "setting";
     uint8_t l_LCDstr2[] = "state";
 
-
     // UpdateLCDフラグがONか
     if (IsUpdateLCDFlg()) {
         // キッチンタイマーの状態は？
@@ -211,7 +210,6 @@ void updateLCD(void) {
         // UpdateLCDフラグをOFFにする
         SetUpdateLCDFlgOFF();
     }
-
 }
 
 // カウント時間をLCDへ書き込む
@@ -227,9 +225,9 @@ void countTimeToLCD(uint8_t i_minute, uint8_t i_second) {
     // sprintfは容量が大きいため、後に別の方法で実装する
     // -------------------------------------------------------
     // 分を変換
-    utoa(GetMinuteCount(), &i_str[1], 10);
+    utoa(i_minute, &i_str[1], 10);
     // 秒を変換
-    utoa(GetSecondCount(), &i_str[4], 10);
+    utoa(i_second, &i_str[4], 10);
     // -------------------------------------------------------
 
     // 書き込み位置を2行目へセット
@@ -240,9 +238,7 @@ void countTimeToLCD(uint8_t i_minute, uint8_t i_second) {
 
 // キッチンタイマー状態をリセットへ変更
 
-void SetKitchenTimerStateToReset(void) {
-    KitchenTimerState = RESET_STATE;
-}
+void SetKitchenTimerStateToReset(void) { KitchenTimerState = RESET_STATE; }
 
 // キッチンタイマー状態をカウント設定状態へ変更
 

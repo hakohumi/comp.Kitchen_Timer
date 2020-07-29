@@ -16,21 +16,18 @@
 // 秒の最小値
 #define SECOND_MIN 0
 
-// カウント時間(分)
-static uint8_t MinuteCountTime = 0;
-// カウント時間(秒)
-static uint8_t SecondCountTime = 0;
-// カウントダウン終了カウント
-uint8_t CountDownEndCount = 0;
-
 static void settingCountTime(void);
-
 static uint8_t detectSWState(SWState_t *i_SW);
 static void onGoingCountDown(void);
 static void endCountDown(void);
 static void reset(void);
 
-static uint8_t detectSWState(SWState_t *i_SW);
+// カウント時間(分)
+static uint8_t minuteCountTime = 0;
+// カウント時間(秒)
+static uint8_t secondCountTime = 0;
+// カウントダウン終了カウント
+uint8_t CountDownEndCount = 0;
 
 /*
 状態遷移処理
@@ -38,15 +35,15 @@ CoutClass
  */
 
 inline void CountDown(void) {
-    //    assert(MinuteCountTime != 0 || SecondCountTime != 0);
+    //    assert(minuteCountTime != 0 || secondCountTime != 0);
     // 秒が0ではないなら、1減少させる
-    if (SecondCountTime > 0) {
-        SecondCountTime--;
+    if (secondCountTime > 0) {
+        secondCountTime--;
     } else {
         // 分が0ではない、かつ、秒が0の場合、
         // 分を1減少させて、秒を59にする
-        MinuteCountTime--;
-        SecondCountTime = SECOND_MAX;
+        minuteCountTime--;
+        secondCountTime = SECOND_MAX;
     }
 }
 
@@ -72,11 +69,11 @@ void StateTransferProcess(void) {
 // もし、0 ~ 99 以外であれば、エラーとして false を返す
 
 bool SetMinuteCount(uint8_t i_minute) {
-    if ((i_minute < (uint8_t) MINUTE_MIN) || ((uint8_t) MINUTE_MAX < i_minute)) {
+    if ((i_minute < (uint8_t)MINUTE_MIN) || ((uint8_t)MINUTE_MAX < i_minute)) {
         return false;
     }
 
-    MinuteCountTime = i_minute;
+    minuteCountTime = i_minute;
 
     return true;
 }
@@ -86,11 +83,11 @@ bool SetMinuteCount(uint8_t i_minute) {
 // もし、0 ~ 59 以外であれば、エラーとして false を返す
 
 bool SetSecondCount(uint8_t i_second) {
-    if ((i_second < (uint8_t) SECOND_MIN) || ((uint8_t) SECOND_MAX < i_second)) {
+    if ((i_second < (uint8_t)SECOND_MIN) || ((uint8_t)SECOND_MAX < i_second)) {
         return false;
     }
 
-    SecondCountTime = i_second;
+    secondCountTime = i_second;
 
     return true;
 }
@@ -102,17 +99,17 @@ void AddMinuteCount(uint8_t i_minute) {
     // 最大値を設定
     // MINUTE_MAX = 99
     if (i_minute > MINUTE_MAX) {
-        MinuteCountTime = MINUTE_MAX;
+        minuteCountTime = MINUTE_MAX;
     } else {
         // 入力が 99 以下の場合
 
         // もし、加算後、分カウントが最大値より高い場合
         // 最大値より増えないようにする
 
-        MinuteCountTime += i_minute;
+        minuteCountTime += i_minute;
 
-        if (MinuteCountTime > MINUTE_MAX) {
-            MinuteCountTime = MINUTE_MAX;
+        if (minuteCountTime > MINUTE_MAX) {
+            minuteCountTime = MINUTE_MAX;
         }
     }
 }
@@ -124,32 +121,29 @@ void AddSecondCount(uint8_t i_second) {
     // 最大値より下回るまで、分カウントに繰り上げる
 
     // 加算
-    SecondCountTime += i_second;
+    secondCountTime += i_second;
 
     // 60で割った数分、繰り上げる
-    AddMinuteCount(SecondCountTime / (SECOND_MAX + 1));
+    AddMinuteCount(secondCountTime / (SECOND_MAX + 1));
     // 60で割ったあまりを秒カウントへ格納する
-    SecondCountTime %= (SECOND_MAX + 1);
+    secondCountTime %= (SECOND_MAX + 1);
 }
 
-uint8_t GetMinuteCount(void) {
-    return MinuteCountTime;
-}
+uint8_t GetMinuteCount(void) { return minuteCountTime; }
 
-uint8_t GetSecondCount(void) {
-    return SecondCountTime;
-}
+uint8_t GetSecondCount(void) { return secondCountTime; }
 
 // カウント時間設定
 
 static void settingCountTime(void) {
+
     // 分スイッチ処理
     AddMinuteCount(detectSWState(&MinuteSW));
     // 秒スイッチ処理
     AddSecondCount(detectSWState(&SecondSW));
 
     // カウント時間が00m00sではないか
-    if (!(GetMinuteCount() == (uint8_t) 0 && GetSecondCount() == (uint8_t) 0)) {
+    if (!(GetMinuteCount() == (uint8_t)0 && GetSecondCount() == (uint8_t)0)) {
         // スタートストップスイッチ状態はONか
         if (StartStopSW.PushState == ON_STATE) {
             // スタートストップスイッチ状態をOFFにする
@@ -211,7 +205,7 @@ static uint8_t detectSWState(SWState_t *i_SW) {
 
 static void onGoingCountDown(void) {
     // カウントは00m00sか
-    if (MinuteCountTime == 0 && SecondCountTime == 0) {
+    if (minuteCountTime == 0 && secondCountTime == 0) {
         // // 0.5秒タイマ割込みを禁止
         // TMR500MS_TMRInterruptDisable();
         // 0.5秒タイマを停止
