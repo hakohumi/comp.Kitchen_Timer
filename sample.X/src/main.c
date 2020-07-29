@@ -160,7 +160,6 @@ inline void updateLCD(void) {
                 // カウントダウン中
             case COUNTDOWN_ONGOING_STATE:
                 // カウント時間をLCDバッファに格納
-                SetPosLineLCD(false);
                 countTimeToLCD(MinuteCountTime, SecondCountTime);
 
                 // 1秒フラグがOFFか
@@ -175,16 +174,23 @@ inline void updateLCD(void) {
                 // カウントダウン終了
             case COUNTDOWN_END_STATE:
                 // カウント時間をLCDバッファに格納
+                countTimeToLCD(MinuteCountTime, SecondCountTime);
 
                 // 1秒フラグがOFFか
                 if (!Is1sFlg) {
                     // LCDバッファの文字を点滅
+                    ClrUnitChar();
+                } else {
+                    WriteUnitChar();
                 }
 
                 break;
 
-                // リセット状態 ありえない
+                // リセット状態
             case RESET_STATE:
+                WriteUnitChar();
+
+                countTimeToLCD(MinuteCountTime, SecondCountTime);
 
                 break;
 
@@ -204,9 +210,6 @@ inline void updateLCD(void) {
 void countTimeToLCD(uint8_t i_minute, uint8_t i_second) {
     uint8_t i_str[8];
 
-    i_str[3] = 'm';
-    i_str[6] = 's';
-
     // -------------------------------------------------------
     // sprintfは容量が大きいため、後に別の方法で実装する
     // -------------------------------------------------------
@@ -215,6 +218,9 @@ void countTimeToLCD(uint8_t i_minute, uint8_t i_second) {
     // 秒を変換
     utoa(i_second, &i_str[4], 10);
     // -------------------------------------------------------
+
+    i_str[3] = 'm';
+    i_str[6] = 's';
 
     // 書き込み位置を2行目へセット
     SetPosLineLCD(true);

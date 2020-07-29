@@ -179,7 +179,7 @@ void TMR2_DefaultInterruptHandler(void) {
                     // SWカウントをクリア
                     //                        MinuteSW.SWCount = 0;
                     // MinuteSWのチャタフラグをクリア
-                    MinuteSW.ChattaFlg = 0;
+                    MinuteSW.ChattaFlg = OFF;
                     // MinuteSWのIOC割込みフラグをON
                     SW1_IOCInterruptEnable();
                     // ------------------------------------------------------------
@@ -232,7 +232,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SWカウントをクリア
                         MinuteSW.SWCount = 0;
                         // MinuteSWのチャタフラグをクリア
-                        MinuteSW.ChattaFlg = 0;
+                        MinuteSW.ChattaFlg = OFF;
                         // MinuteSWのIOC割込みフラグをON
                         SW1_IOCInterruptEnable();
                         // ------------------------------------------------------------
@@ -283,7 +283,7 @@ void TMR2_DefaultInterruptHandler(void) {
                     // SWカウントをクリア
                     //                        SecondSW.SWCount = 0;
                     // SW2のチャタフラグをクリア
-                    SecondSW.ChattaFlg = 0;
+                    SecondSW.ChattaFlg = OFF;
                     // SW2のIOC割込みフラグをON
                     SW2_IOCInterruptEnable();
                     // ------------------------------------------------------------
@@ -336,7 +336,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SWカウントをクリア
                         SecondSW.SWCount = 0;
                         // SW2のチャタフラグをクリア
-                        SecondSW.ChattaFlg = 0;
+                        SecondSW.ChattaFlg = OFF;
                         // SW2のIOC割込みフラグをON
                         SW2_IOCInterruptEnable();
                         // ------------------------------------------------------------
@@ -387,7 +387,7 @@ void TMR2_DefaultInterruptHandler(void) {
                     // SWカウントをクリア
                     //                        StartStopSW.SWCount = 0;
                     // SW3のチャタフラグをクリア
-                    StartStopSW.ChattaFlg = 0;
+                    StartStopSW.ChattaFlg = OFF;
                     // SW3のIOC割込みフラグをON
                     SW3_IOCInterruptEnable();
                     // ------------------------------------------------------------
@@ -440,7 +440,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // SWカウントをクリア
                         StartStopSW.SWCount = 0;
                         // SW3のチャタフラグをクリア
-                        StartStopSW.ChattaFlg = 0;
+                        StartStopSW.ChattaFlg = OFF;
                         // SW3のIOC割込みフラグをON
                         SW3_IOCInterruptEnable();
                         // ------------------------------------------------------------
