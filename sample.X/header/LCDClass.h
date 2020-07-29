@@ -32,10 +32,8 @@ extern "C" {
 void InitLCD(void);
 
 // LCD上の書き込む位置を指定する
-void SetPosLCD(uint8_t i_pos);  // アドレス指定
-void SetPosLineLCD(bool i_row);        // 1行目か2行目の先頭を指定
-
-void WriteCharToRAM(uint8_t i_char);
+inline void SetPosLCD(uint8_t i_pos);   // アドレス指定
+inline void SetPosLineLCD(bool i_row);  // 1行目か2行目の先頭を指定
 
 void Write1LineToLCD(uint8_t *i_str, uint8_t i_len);
 

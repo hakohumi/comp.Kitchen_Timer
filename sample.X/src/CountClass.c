@@ -16,11 +16,11 @@
 // 秒の最小値
 #define SECOND_MIN 0
 
-static void settingCountTime(void);
-static uint8_t detectSWState(SWState_t *i_SW);
-static void onGoingCountDown(void);
-static void endCountDown(void);
-static void reset(void);
+inline static void settingCountTime(void);
+inline static uint8_t detectSWState(SWState_t *i_SW);
+inline static void onGoingCountDown(void);
+inline static void endCountDown(void);
+inline static void reset(void);
 
 // カウント時間(分)
 uint8_t MinuteCountTime = 0;
@@ -34,7 +34,7 @@ uint8_t CountDownEndCount = 0;
 CoutClass
  */
 
- void CountDown(void) {
+void CountDown(void) {
     //    assert(MinuteCountTime != 0 || SecondCountTime != 0);
     // 秒が0ではないなら、1減少させる
     if (SecondCountTime > 0) {
@@ -131,7 +131,7 @@ void AddSecondCount(uint8_t i_second) {
 
 // カウント時間設定
 
-static void settingCountTime(void) {
+inline static void settingCountTime(void) {
     // 分スイッチ処理
     AddMinuteCount(detectSWState(&MinuteSW));
     // 秒スイッチ処理
@@ -159,7 +159,7 @@ static void settingCountTime(void) {
     }
 }
 
-static uint8_t detectSWState(SWState_t *i_SW) {
+inline static uint8_t detectSWState(SWState_t *i_SW) {
     uint8_t l_retval = 0;
 
     // スイッチのタイミングフラグ
@@ -198,20 +198,8 @@ static uint8_t detectSWState(SWState_t *i_SW) {
     return l_retval;
 }
 
-static void onGoingCountDown(void) {
-    // カウントは00m00sか
-    if (MinuteCountTime == 0 && SecondCountTime == 0) {
-        // // 0.5秒タイマ割込みを禁止
-        // TMR500MS_TMRInterruptDisable();
-        // 0.5秒タイマを停止
-        TMR1_StopTimer();
+inline static void onGoingCountDown(void) {
 
-        // カウントダウン終了カウントを0へ初期化
-        CountDownEndCount = 0;
-
-        // キッチンタイマー状態をカウントダウン終了へ変更
-        SetKitchenTimerStateToEnd();
-    }
 
     // スタートストップスイッチ状態はONか
     if (StartStopSW.PushState == ON_STATE) {
@@ -239,15 +227,19 @@ static void onGoingCountDown(void) {
     }
 }
 
-static void endCountDown(void) {
+inline static void endCountDown(void) {
     // カウントダウン終了カウントが10以上か
     if (CountDownEndCount >= 10 || StartStopSW.PushState == ON_STATE) {
+        // // 0.5秒タイマ割込みを禁止
+        // TMR500MS_TMRInterruptDisable();
+        // 0.5秒タイマを停止
+        TMR1_StopTimer();
         // キッチンタイマー状態をリセット処理へ変更
         SetKitchenTimerStateToReset();
     }
 }
 
-static void reset(void) {
+inline static void reset(void) {
     // キッチンタイマー状態をカウントダウン設定へ変更
     SetKitchenTimerStateToSetting();
 

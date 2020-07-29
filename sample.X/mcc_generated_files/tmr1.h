@@ -439,7 +439,7 @@ uint8_t TMR1_CheckGateValueStatus(void);
   @Returns
     None
  */
- void TMR1_DefaultInterruptHandler(void);
+inline void TMR1_DefaultInterruptHandler(void);
 
 extern bool Is1sFlg;
 

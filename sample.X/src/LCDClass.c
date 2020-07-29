@@ -7,18 +7,12 @@
 
 bool UpdateLCDFlg = OFF;
 
-
-
 // ---------------------------------------------
 // 文字リテラル
 // =--------------------------------------------
 static uint8_t Str_SETTING[] = "fafa";
 static uint8_t Str_m = 'm';
 static uint8_t Str_s = 's';
-
-// ローカル関数 プロトタイプ宣言
-
-static void sendCmdLCD(uint8_t i_data);
 
 // LCDの初期化
 // *** ST7032iに対して、書き込みフォーマット ***
@@ -34,15 +28,15 @@ static void sendCmdLCD(uint8_t i_data);
 
 void InitLCD(void) {
     uint8_t l_commandTable[10] = {0x38, 0x39, 0x14, 0x70, 0x52,
-        0x6C, 0x38, 0x0C, 0x01};
+                                  0x6C, 0x38, 0x0C, 0x01};
     uint8_t c;
 
     // 40ms以上待つ
     __delay_ms(40);
 
     for (c = 0; c < 10; c++) {
-        sendCmdLCD(l_commandTable[c]);
-
+        // コマンドを送信
+        I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, l_commandTable[c]);
         if (c == 5) {
             __delay_ms(200);
         } else {
@@ -55,13 +49,9 @@ void InitLCD(void) {
     __delay_ms(2);
 }
 
-static void sendCmdLCD(uint8_t i_data) {
-    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, i_data);
-}
-
 // LCD上の書き込む場所を指定
 
- void SetPosLCD(uint8_t i_pos) {
+inline void SetPosLCD(uint8_t i_pos) {
     // Set DDRAM address DB7 = 1
     // 設定可能ビット DB0 ~ DB6
 
@@ -73,20 +63,16 @@ static void sendCmdLCD(uint8_t i_data) {
 // true だと 2行目
 // false だと 1行目
 
-void SetPosLineLCD(bool i_row) {
+inline void SetPosLineLCD(bool i_row) {
     if (i_row) {
         // true 2行目
         I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE,
-                (LCD_SET_POS_DB7 | LINE_2));
+                                (LCD_SET_POS_DB7 | LINE_2));
     } else {
         // false 1行目
         I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE,
-                (LCD_SET_POS_DB7 | LINE_1));
+                                (LCD_SET_POS_DB7 | LINE_1));
     }
-}
-
-void WriteCharToRAM(uint8_t i_char) {
-    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, i_char);
 }
 
 // i_str は、8文字分の表示させた文字列が入った uint8_t型の配列
@@ -114,21 +100,21 @@ void Write1LineToLCD(uint8_t *i_str, uint8_t i_len) {
 void WriteUnitChar() {
     // m表示
     SetPosLCD(LINE_2 + 3);
-    WriteCharToRAM('m');
+    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, 'm');
 
     // S表示
     SetPosLCD(LINE_2 + 6);
-    WriteCharToRAM('s');
+    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, 's');
 }
 
 void ClrUnitChar() {
     // m削除
     SetPosLCD(LINE_2 + 3);
-    WriteCharToRAM(' ');
+    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, ' ');
 
     // S表示
     SetPosLCD(LINE_2 + 6);
-    WriteCharToRAM(' ');
+    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, ' ');
 }
 
 char *utoa(unsigned int value, char *s, int radix) {

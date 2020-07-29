@@ -65,8 +65,6 @@
 
 void (*TMR2_InterruptHandler)(void);
 
-extern bool Timer10msFlag;
-
 /**
   Section: TMR2 APIs
  */
@@ -118,7 +116,7 @@ void TMR2_WriteTimer(uint8_t timerVal) {
 
 void TMR2_LoadPeriodRegister(uint8_t periodVal) { PR2 = periodVal; }
 
- void TMR2_ISR(void) {
+void TMR2_ISR(void) {
     // clear the TMR2 interrupt flag
     PIR1bits.TMR2IF = 0;
 
@@ -141,7 +139,7 @@ void TMR2_LoadPeriodRegister(uint8_t periodVal) { PR2 = periodVal; }
 //     TMR2_InterruptHandler = InterruptHandler;
 // }
 
- void TMR2_DefaultInterruptHandler(void) {
+void TMR2_DefaultInterruptHandler(void) {
     // add your TMR2 interrupt custom code
     // or set custom function using TMR2_SetInterruptHandler()
 
