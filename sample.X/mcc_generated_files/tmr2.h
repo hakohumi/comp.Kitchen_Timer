@@ -306,7 +306,7 @@ void TMR2_LoadPeriodRegister(uint8_t periodVal);
   @Returns
     None
  */
- void TMR2_ISR(void);
+// inline void TMR2_ISR(void);
 
 /**
   @Summary
@@ -379,7 +379,7 @@ void TMR2_LoadPeriodRegister(uint8_t periodVal);
   @Returns
     None
  */
- void TMR2_DefaultInterruptHandler(void);
+void TMR2_DefaultInterruptHandler(void);
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 }

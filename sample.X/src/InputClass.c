@@ -39,7 +39,7 @@ SWState_t StartStopSW = {
 /*
 スイッチ状態検知
  */
- void InputProcess(void) {
+void InputProcess(void) {
     // リセットスイッチ同時押し検知
     detectResetSW();
 
@@ -73,9 +73,7 @@ static void detectLongPushedSW(SWState_t *i_SW) {
         // 2.5秒(250)以上
         // 長押し2段階状態をON
         i_SW->PushState = LONG_STG2_STATE;
-    }
-
-    if (i_SW->SWCount >= 100) {
+    } else if (i_SW->SWCount >= 100) {
         // 長押し1段階目状態をON
         i_SW->PushState = LONG_STG1_STATE;
     } else {

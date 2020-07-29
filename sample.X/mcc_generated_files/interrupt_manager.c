@@ -51,22 +51,40 @@
 #include "interrupt_manager.h"
 
 #include "mcc.h"
+#include "tmr1.h"
 
 void __interrupt() INTERRUPT_InterruptManager(void) {
     // interrupt handler
     if (INTCONbits.PEIE == 1) {
         if (PIE1bits.TMR2IE == 1 && PIR1bits.TMR2IF == 1) {
-            TMR2_ISR();
+            // clear the TMR2 interrupt flag
+            PIR1bits.TMR2IF = 0;
+            TMR2_DefaultInterruptHandler();
         }
-        if (PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1) {
-            TMR1_ISR();
-        }
+    }
+    if (PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1) {
+        // Clear the TMR1 interrupt flag
+        PIR1bits.TMR1IF = 0;
+        TMR1_Reload();
+        TMR1_DefaultInterruptHandler();
     }
 
     if (INTCONbits.IOCIE == 1 && INTCONbits.IOCIF == 1) {
-        PIN_MANAGER_IOC();
+        // interrupt on change for pin IOCBF0
+        if (IOCBFbits.IOCBF0 == 1) {
+            IOCBF0_ISR();
+        }
+        // interrupt on change for pin IOCBF2
+        if (IOCBFbits.IOCBF2 == 1) {
+            IOCBF2_ISR();
+        }
+        // interrupt on change for pin IOCBF5
+        if (IOCBFbits.IOCBF5 == 1) {
+            IOCBF5_ISR();
+        }
     }
 }
+
 /**
  End of File
 */
