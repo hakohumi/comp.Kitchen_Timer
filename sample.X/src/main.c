@@ -51,14 +51,12 @@
                          Main application
  */
 
-bool Timer500msFlag;
-bool Timer10msFlag;
 
 // キッチンタイマー状態 初期値:リセット状態
 KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
 
-// LCD更新・ブザー状態更新s
-void OutputProcess(void);
+// LCD更新・ブザー状態更新
+inline void OutputProcess(void);
 
 void updateLED(void);
 void updateLCD(void);
@@ -83,7 +81,7 @@ void main(void) {
     // INTERRUPT_PeripheralInterruptDisable();
 
     // LCDの初期化
-    InitLCD();
+    //    InitLCD();
 
     while (1) {
         InputProcess();
@@ -99,8 +97,8 @@ LCD更新
 ブザー状態更新
  */
 
-void OutputProcess(void) {
-    updateLCD();
+inline void OutputProcess(void) {
+    //    updateLCD();
     updateLED();
     // UpdateBuzzer();
 }
@@ -109,7 +107,12 @@ void updateLED() {
     LED1 = LED_OFF;
     LED2 = LED_OFF;
     LED3 = LED_OFF;
-    LED4 = LED_OFF;
+
+    if (Is1sFlg) {
+        LED4 = LED_ON;
+    } else {
+        LED4 = LED_OFF;
+    }
 
     switch (KitchenTimerState) {
         case COUNTTIME_SETTING_STATE:
@@ -121,11 +124,15 @@ void updateLED() {
 
             break;
         case COUNTDOWN_END_STATE:
-            LED3 = LED_ON;
+            if (Is1sFlg) {
+                LED2 = LED_ON;
+            } else {
+                LED2 = LED_OFF;
+            }
 
             break;
         case RESET_STATE:
-            LED4 = LED_ON;
+            LED3 = LED_ON;
             break;
     }
 }
@@ -157,7 +164,6 @@ void updateLCD(void) {
             case COUNTDOWN_ONGOING_STATE:
                 // カウント時間をLCDバッファに格納
                 SetPosLineLCD(false);
-                WriteCharToRAM('r');
                 countTimeToLCD(MinuteCountTime, SecondCountTime);
 
                 // 1秒フラグがOFFか

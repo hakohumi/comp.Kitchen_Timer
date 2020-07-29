@@ -50,6 +50,9 @@ void InputProcess(void);
 static void detectResetSW(void);
 static void detectLongPushedSW(SWState_t *i_SW);
 
+// リセットスイッチが押されているかを保持する
+extern bool IsPushedResetSW;
+
 #ifdef __cplusplus
 }
 #endif

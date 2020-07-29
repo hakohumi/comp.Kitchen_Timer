@@ -69,7 +69,6 @@ void (*TMR1_InterruptHandler)(void);
 // 1秒フラグ
 bool Is1sFlg = ON;
 
-extern bool Timer500msFlag;
 // カウントダウン終了カウント CountClass.c
 extern uint8_t CountDownEndCount;
 
@@ -154,7 +153,7 @@ void TMR1_StartSinglePulseAcquisition(void) { T1GCONbits.T1GGO = 1; }
 
 uint8_t TMR1_CheckGateValueStatus(void) { return (T1GCONbits.T1GVAL); }
 
- void TMR1_ISR(void) {
+void TMR1_ISR(void) {
     // Clear the TMR1 interrupt flag
     PIR1bits.TMR1IF = 0;
     TMR1_WriteTimer(timer1ReloadVal);
@@ -177,19 +176,30 @@ uint8_t TMR1_CheckGateValueStatus(void) { return (T1GCONbits.T1GVAL); }
 //     TMR1_InterruptHandler = InterruptHandler;
 // }
 
- void TMR1_DefaultInterruptHandler(void) {
+inline void TMR1_DefaultInterruptHandler(void) {
     // add your TMR1 interrupt custom code
     // or set custom function using TMR1_SetInterruptHandler()
 
     // 1秒フラグ
     if (Is1sFlg == ON) {
-        // カウント時間を1秒減少させる
-        CountDown();
+        
+        if (KitchenTimerState == COUNTDOWN_ONGOING_STATE) {
+            // カウントは00m00sか
+            if (MinuteCountTime == 0 && SecondCountTime == 0) {
+                // カウントダウン終了カウントを0へ初期化
+                CountDownEndCount = 0;
 
-        //キッチンタイマー状態がカウントダウン終了か？
-        if (KitchenTimerState == COUNTDOWN_END_STATE) {
+                // キッチンタイマー状態をカウントダウン終了へ変更
+                SetKitchenTimerStateToEnd();
+            } else {
+                // カウント時間を1秒減少させる
+                CountDown();
+            }
+            //キッチンタイマー状態がカウントダウン終了か？
+        } else if (KitchenTimerState == COUNTDOWN_END_STATE) {
             // カウントダウン終了カウントを1増加
             CountDownEndCount++;
+            // キッチンタイマー状態はカウントダウン中か？
         }
 
         // 1秒フラグをOFF
