@@ -3,21 +3,11 @@
 
 #include <mcc.h>
 
-// (B0111110);
-#define LCD_ADDR (i2c1_address_t)(0x3E)
-// Co = 0, RS = 0, Control byte = 0;
-#define CONTROLE_BYTE (uint8_t)(0x00)
-// RSビットが立っているとき
-#define WR_CONTROLE_BYTE (uint8_t)(0x40)
-// 1つコマンド 8文字表示
-#define MAX_BUF_SIZE 9
-
-#define LINE_1 0x00
-#define LINE_2 0x40
-#define LINE_DIGITS_MAX 8
-#define LCD_SET_POS_DB7 0x80
+#include "examples/i2c1_master_example.h"
 
 bool UpdateLCDFlg = OFF;
+
+
 
 // ---------------------------------------------
 // 文字リテラル
@@ -25,6 +15,8 @@ bool UpdateLCDFlg = OFF;
 static uint8_t Str_SETTING[] = "fafa";
 static uint8_t Str_m = 'm';
 static uint8_t Str_s = 's';
+
+// ローカル関数 プロトタイプ宣言
 
 static void sendCmdLCD(uint8_t i_data);
 
@@ -42,7 +34,7 @@ static void sendCmdLCD(uint8_t i_data);
 
 void InitLCD(void) {
     uint8_t l_commandTable[10] = {0x38, 0x39, 0x14, 0x70, 0x52,
-                                  0x6C, 0x38, 0x0C, 0x01};
+        0x6C, 0x38, 0x0C, 0x01};
     uint8_t c;
 
     // 40ms以上待つ
@@ -69,7 +61,7 @@ static void sendCmdLCD(uint8_t i_data) {
 
 // LCD上の書き込む場所を指定
 
-inline void SetPosLCD(uint8_t i_pos) {
+ void SetPosLCD(uint8_t i_pos) {
     // Set DDRAM address DB7 = 1
     // 設定可能ビット DB0 ~ DB6
 
@@ -84,10 +76,12 @@ inline void SetPosLCD(uint8_t i_pos) {
 void SetPosLineLCD(bool i_row) {
     if (i_row) {
         // true 2行目
-        SetPosLCD(LINE_2);
+        I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE,
+                (LCD_SET_POS_DB7 | LINE_2));
     } else {
         // false 1行目
-        SetPosLCD(LINE_1);
+        I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE,
+                (LCD_SET_POS_DB7 | LINE_1));
     }
 }
 
@@ -117,7 +111,7 @@ void Write1LineToLCD(uint8_t *i_str, uint8_t i_len) {
     }
 }
 
-void SetUnitChar() {
+void WriteUnitChar() {
     // m表示
     SetPosLCD(LINE_2 + 3);
     WriteCharToRAM('m');
@@ -137,9 +131,7 @@ void ClrUnitChar() {
     WriteCharToRAM(' ');
 }
 
-bool IsUpdateLCDFlg(void) { return (UpdateLCDFlg); }
-
-static char *utoa(unsigned int value, char *s, int radix) {
+char *utoa(unsigned int value, char *s, int radix) {
     char *s1 = s;
     char *s2 = s;
 

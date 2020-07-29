@@ -8,7 +8,8 @@
     i2c1_master_example.h
 
   @Summary
-    This is the generated header file for the I2C1 driver example using PIC10 / PIC12 / PIC16 / PIC18 MCUs
+    This is the generated header file for the I2C1 driver example using PIC10 /
+  PIC12 / PIC16 / PIC18 MCUs
 
   @Description
     This header file provides APIs for driver for I2C1.
@@ -22,25 +23,26 @@
  */
 
 /*
-    (c) 2018 Microchip Technology Inc. and its subsidiaries. 
-    
-    Subject to your compliance with these terms, you may use Microchip software and any 
-    derivatives exclusively with Microchip products. It is your responsibility to comply with third party 
-    license terms applicable to your use of third party software (including open source software) that 
-    may accompany Microchip software.
-    
-    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
-    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY 
-    IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS 
+    (c) 2018 Microchip Technology Inc. and its subsidiaries.
+
+    Subject to your compliance with these terms, you may use Microchip software
+   and any derivatives exclusively with Microchip products. It is your
+   responsibility to comply with third party license terms applicable to your
+   use of third party software (including open source software) that may
+   accompany Microchip software.
+
+    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY
+    IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS
     FOR A PARTICULAR PURPOSE.
-    
-    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
-    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP 
-    HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO 
-    THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL 
-    CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
-    OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
+
+    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP
+    HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO
+    THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL
+    CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT
+    OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
  */
 
@@ -49,17 +51,15 @@
 
 #include <stdint.h>
 #include <stdio.h>
+
 #include "../i2c1_master.h"
 
-uint8_t I2C1_Read1ByteRegister(i2c1_address_t address, uint8_t reg);
-uint16_t I2C1_Read2ByteRegister(i2c1_address_t address, uint8_t reg);
 // address = 7bit address + 1bit R/W bit
 // reg = 1 word Control byte
 // data = 1 word Data byte
-void I2C1_Write1ByteRegister(i2c1_address_t address, uint8_t reg, uint8_t data);
-void I2C1_Write2ByteRegister(i2c1_address_t address, uint8_t reg, uint16_t data);
-void I2C1_WriteNBytes(i2c1_address_t address, uint8_t *data, size_t len);
-void I2C1_ReadNBytes(i2c1_address_t address, uint8_t *data, size_t len);
-void I2C1_ReadDataBlock(i2c1_address_t address, uint8_t reg, uint8_t *data, size_t len);
+inline void I2C1_Write1ByteRegister(i2c1_address_t address, uint8_t reg, uint8_t data);
+inline void I2C1_Write2ByteRegister(i2c1_address_t address, uint8_t reg,
+                             uint16_t data);
+inline void I2C1_WriteNBytes(i2c1_address_t address, uint8_t *data, size_t len);
 
 #endif /* I2C1_MASTER_EXAMPLE_H */

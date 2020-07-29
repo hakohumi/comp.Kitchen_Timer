@@ -28,7 +28,7 @@ typedef struct {
     SW_PUSH_STATE_E PushState;   // スイッチ状態
     uint8_t SWCount;             // スイッチカウント
     bool TimingFlag;             // スイッチタイミングフラグ
-    uint8_t TimingCount;          // タイミングカウント
+    uint8_t TimingCount;         // タイミングカウント
 } SWState_t;
 
 // ResetSwitch PushState
@@ -45,8 +45,10 @@ extern SWState_t StartStopSW;  // RB0
 // リセットスイッチが押されているかを保持する
 extern SW_PUSH_STATE_E IsPushedResetSW;
 
-void DetectResetSW(void);
-void DetectLongPushedSW(SWState_t *i_SW);
+void InputProcess(void);
+
+static void detectResetSW(void);
+static void detectLongPushedSW(SWState_t *i_SW);
 
 #ifdef __cplusplus
 }

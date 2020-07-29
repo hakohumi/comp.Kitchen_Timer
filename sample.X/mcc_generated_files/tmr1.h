@@ -367,7 +367,7 @@ uint8_t TMR1_CheckGateValueStatus(void);
   @Returns
     None
  */
-void TMR1_ISR(void);
+ void TMR1_ISR(void);
 /**
   @Summary
     CallBack function.
@@ -384,7 +384,7 @@ void TMR1_ISR(void);
   @Returns
     None
  */
-void TMR1_CallBack(void);
+// void TMR1_CallBack(void);
 
 /**
   @Summary
@@ -402,7 +402,7 @@ void TMR1_CallBack(void);
   @Returns
     None
  */
-void TMR1_SetInterruptHandler(void (*InterruptHandler)(void));
+// void TMR1_SetInterruptHandler(void (*InterruptHandler)(void));
 
 /**
   @Summary
@@ -421,7 +421,7 @@ void TMR1_SetInterruptHandler(void (*InterruptHandler)(void));
   @Returns
     None
  */
-extern void (*TMR1_InterruptHandler)(void);
+// extern void (*TMR1_InterruptHandler)(void);
 
 /**
   @Summary
@@ -439,20 +439,20 @@ extern void (*TMR1_InterruptHandler)(void);
   @Returns
     None
  */
-void TMR1_DefaultInterruptHandler(void);
+ void TMR1_DefaultInterruptHandler(void);
 
 extern bool Is1sFlg;
 
 // 500msタイマ 割込み許可
 #define TMR500MS_TMRInterruptEnable() \
-    do {                      \
-        PIE1bits.TMR1IE = 1;  \
+    do {                              \
+        PIE1bits.TMR1IE = 1;          \
     } while (0)
 
 // 500msタイマ 割り込み禁止
 #define TMR500MS_TMRInterruptDisable() \
-    do {                       \
-        PIE1bits.TMR1IE = 0;   \
+    do {                               \
+        PIE1bits.TMR1IE = 0;           \
     } while (0)
 
 #ifdef __cplusplus  // Provide C++ Compatibility

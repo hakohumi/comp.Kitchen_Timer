@@ -57,12 +57,10 @@ bool Timer10msFlag;
 // キッチンタイマー状態 初期値:リセット状態
 KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
 
-// スイッチ状態検知
-void InputProcess(void);
-
 // LCD更新・ブザー状態更新s
 void OutputProcess(void);
 
+void updateLED(void);
 void updateLCD(void);
 
 // カウント時間を"00m00s"の形でLCDへ表示させる
@@ -91,23 +89,8 @@ void main(void) {
         InputProcess();
         StateTransferProcess();
         OutputProcess();
-    }
-}
-
-/*
-スイッチ状態検知
- */
-void InputProcess(void) {
-    // リセットスイッチ同時押し検知
-    DetectResetSW();
-
-    // リセットスイッチの状態
-    // OFF の場合
-    if (!IsPushedResetSW) {
-        // 分スイッチ長押し検知
-        DetectLongPushedSW(&MinuteSW);
-        // 秒スイッチ長押し検知
-        DetectLongPushedSW(&SecondSW);
+        // updateLED();
+        // updateLCD();
     }
 }
 
@@ -115,6 +98,12 @@ void InputProcess(void) {
 LCD更新
 ブザー状態更新
  */
+
+void OutputProcess(void) {
+    updateLCD();
+    updateLED();
+    // UpdateBuzzer();
+}
 
 void updateLED() {
     LED1 = LED_OFF;
@@ -141,12 +130,6 @@ void updateLED() {
     }
 }
 
-void OutputProcess(void) {
-    updateLCD();
-    updateLED();
-    // UpdateBuzzer();
-}
-
 void updateLCD(void) {
     // 1行目 文字列バッファ
     uint8_t l_LCDBuf1[8] = "running";
@@ -158,15 +141,15 @@ void updateLCD(void) {
     uint8_t l_LCDstr2[] = "state";
 
     // UpdateLCDフラグがONか
-    if (IsUpdateLCDFlg()) {
+    if (UpdateLCDFlg == ON) {
         // キッチンタイマーの状態は？
         switch (KitchenTimerState) {
                 // カウント時間設定
             case COUNTTIME_SETTING_STATE:
 
-                SetUnitChar();
+                WriteUnitChar();
 
-                countTimeToLCD(GetMinuteCount(), GetSecondCount());
+                countTimeToLCD(MinuteCountTime, SecondCountTime);
 
                 break;
 
@@ -175,14 +158,14 @@ void updateLCD(void) {
                 // カウント時間をLCDバッファに格納
                 SetPosLineLCD(false);
                 WriteCharToRAM('r');
-                countTimeToLCD(GetMinuteCount(), GetSecondCount());
+                countTimeToLCD(MinuteCountTime, SecondCountTime);
 
                 // 1秒フラグがOFFか
                 if (!Is1sFlg) {
                     // LCDバッファのmとsの文字を点滅
                     ClrUnitChar();
                 } else {
-                    SetUnitChar();
+                    WriteUnitChar();
                 }
                 break;
 

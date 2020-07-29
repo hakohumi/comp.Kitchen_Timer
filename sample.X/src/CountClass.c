@@ -23,9 +23,9 @@ static void endCountDown(void);
 static void reset(void);
 
 // カウント時間(分)
-static uint8_t minuteCountTime = 0;
+uint8_t MinuteCountTime = 0;
 // カウント時間(秒)
-static uint8_t secondCountTime = 0;
+uint8_t SecondCountTime = 0;
 // カウントダウン終了カウント
 uint8_t CountDownEndCount = 0;
 
@@ -34,16 +34,16 @@ uint8_t CountDownEndCount = 0;
 CoutClass
  */
 
-inline void CountDown(void) {
-    //    assert(minuteCountTime != 0 || secondCountTime != 0);
+ void CountDown(void) {
+    //    assert(MinuteCountTime != 0 || SecondCountTime != 0);
     // 秒が0ではないなら、1減少させる
-    if (secondCountTime > 0) {
-        secondCountTime--;
+    if (SecondCountTime > 0) {
+        SecondCountTime--;
     } else {
         // 分が0ではない、かつ、秒が0の場合、
         // 分を1減少させて、秒を59にする
-        minuteCountTime--;
-        secondCountTime = SECOND_MAX;
+        MinuteCountTime--;
+        SecondCountTime = SECOND_MAX;
     }
 }
 
@@ -73,7 +73,7 @@ bool SetMinuteCount(uint8_t i_minute) {
         return false;
     }
 
-    minuteCountTime = i_minute;
+    MinuteCountTime = i_minute;
 
     return true;
 }
@@ -87,7 +87,7 @@ bool SetSecondCount(uint8_t i_second) {
         return false;
     }
 
-    secondCountTime = i_second;
+    SecondCountTime = i_second;
 
     return true;
 }
@@ -99,17 +99,17 @@ void AddMinuteCount(uint8_t i_minute) {
     // 最大値を設定
     // MINUTE_MAX = 99
     if (i_minute > MINUTE_MAX) {
-        minuteCountTime = MINUTE_MAX;
+        MinuteCountTime = MINUTE_MAX;
     } else {
         // 入力が 99 以下の場合
 
         // もし、加算後、分カウントが最大値より高い場合
         // 最大値より増えないようにする
 
-        minuteCountTime += i_minute;
+        MinuteCountTime += i_minute;
 
-        if (minuteCountTime > MINUTE_MAX) {
-            minuteCountTime = MINUTE_MAX;
+        if (MinuteCountTime > MINUTE_MAX) {
+            MinuteCountTime = MINUTE_MAX;
         }
     }
 }
@@ -121,29 +121,24 @@ void AddSecondCount(uint8_t i_second) {
     // 最大値より下回るまで、分カウントに繰り上げる
 
     // 加算
-    secondCountTime += i_second;
+    SecondCountTime += i_second;
 
     // 60で割った数分、繰り上げる
-    AddMinuteCount(secondCountTime / (SECOND_MAX + 1));
+    AddMinuteCount(SecondCountTime / (SECOND_MAX + 1));
     // 60で割ったあまりを秒カウントへ格納する
-    secondCountTime %= (SECOND_MAX + 1);
+    SecondCountTime %= (SECOND_MAX + 1);
 }
-
-uint8_t GetMinuteCount(void) { return minuteCountTime; }
-
-uint8_t GetSecondCount(void) { return secondCountTime; }
 
 // カウント時間設定
 
 static void settingCountTime(void) {
-
     // 分スイッチ処理
     AddMinuteCount(detectSWState(&MinuteSW));
     // 秒スイッチ処理
     AddSecondCount(detectSWState(&SecondSW));
 
     // カウント時間が00m00sではないか
-    if (!(GetMinuteCount() == (uint8_t)0 && GetSecondCount() == (uint8_t)0)) {
+    if (!(MinuteCountTime == (uint8_t)0 && SecondCountTime == (uint8_t)0)) {
         // スタートストップスイッチ状態はONか
         if (StartStopSW.PushState == ON_STATE) {
             // スタートストップスイッチ状態をOFFにする
@@ -205,7 +200,7 @@ static uint8_t detectSWState(SWState_t *i_SW) {
 
 static void onGoingCountDown(void) {
     // カウントは00m00sか
-    if (minuteCountTime == 0 && secondCountTime == 0) {
+    if (MinuteCountTime == 0 && SecondCountTime == 0) {
         // // 0.5秒タイマ割込みを禁止
         // TMR500MS_TMRInterruptDisable();
         // 0.5秒タイマを停止

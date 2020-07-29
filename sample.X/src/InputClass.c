@@ -36,9 +36,26 @@ SWState_t StartStopSW = {
     0              //タイミングカウント
 };
 
+/*
+スイッチ状態検知
+ */
+ void InputProcess(void) {
+    // リセットスイッチ同時押し検知
+    detectResetSW();
+
+    // リセットスイッチの状態
+    // OFF の場合
+    if (!IsPushedResetSW) {
+        // 分スイッチ長押し検知
+        detectLongPushedSW(&MinuteSW);
+        // 秒スイッチ長押し検知
+        detectLongPushedSW(&SecondSW);
+    }
+}
+
 // リセットスイッチ同時押し検知
 
-void DetectResetSW(void) {
+static void detectResetSW(void) {
     if (MinuteSW.PushState == ON_STATE && SecondSW.PushState == ON_STATE) {
         // リセットの状態をON
         IsPushedResetSW = ON_STATE;
@@ -51,7 +68,7 @@ void DetectResetSW(void) {
 // 長押し検知
 // 入力：分、秒スイッチ
 
-void DetectLongPushedSW(SWState_t *i_SW) {
+static void detectLongPushedSW(SWState_t *i_SW) {
     if (i_SW->SWCount >= 250) {
         // 2.5秒(250)以上
         // 長押し2段階状態をON

@@ -94,7 +94,7 @@ void TMR1_Initialize(void) {
     PIR1bits.TMR1IF = 0;
 
     // Load the TMR value to reload variable
-    timer1ReloadVal = (uint16_t) ((TMR1H << 8) | TMR1L);
+    timer1ReloadVal = (uint16_t)((TMR1H << 8) | TMR1L);
 
     // Enabling TMR1 interrupt.
     PIE1bits.TMR1IE = 1;
@@ -125,7 +125,7 @@ uint16_t TMR1_ReadTimer(void) {
     readValLow = TMR1L;
     readValHigh = TMR1H;
 
-    readVal = ((uint16_t) readValHigh << 8) | readValLow;
+    readVal = ((uint16_t)readValHigh << 8) | readValLow;
 
     return readVal;
 }
@@ -148,19 +148,13 @@ void TMR1_WriteTimer(uint16_t timerVal) {
     }
 }
 
-void TMR1_Reload(void) {
-    TMR1_WriteTimer(timer1ReloadVal);
-}
+void TMR1_Reload(void) { TMR1_WriteTimer(timer1ReloadVal); }
 
-void TMR1_StartSinglePulseAcquisition(void) {
-    T1GCONbits.T1GGO = 1;
-}
+void TMR1_StartSinglePulseAcquisition(void) { T1GCONbits.T1GGO = 1; }
 
-uint8_t TMR1_CheckGateValueStatus(void) {
-    return (T1GCONbits.T1GVAL);
-}
+uint8_t TMR1_CheckGateValueStatus(void) { return (T1GCONbits.T1GVAL); }
 
-void TMR1_ISR(void) {
+ void TMR1_ISR(void) {
     // Clear the TMR1 interrupt flag
     PIR1bits.TMR1IF = 0;
     TMR1_WriteTimer(timer1ReloadVal);
@@ -183,7 +177,7 @@ void TMR1_ISR(void) {
 //     TMR1_InterruptHandler = InterruptHandler;
 // }
 
-void TMR1_DefaultInterruptHandler(void) {
+ void TMR1_DefaultInterruptHandler(void) {
     // add your TMR1 interrupt custom code
     // or set custom function using TMR1_SetInterruptHandler()
 

@@ -14,7 +14,10 @@
 			"countclass.h": "c",
 			"ongoingcountdown.h": "c",
 			"reset.h": "c",
-			"settingcounttime.h": "c"
+			"settingcounttime.h": "c",
+			"i2c1_master.h": "c",
+			"device_config.h": "c",
+			"interrupt_manager.h": "c"
 		}
 	}
 }

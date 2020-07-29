@@ -21,7 +21,7 @@ extern "C" {
 // カウントダウン終了カウント
 extern uint8_t CountDownEndCount;
 
-inline void CountDown(void);
+void CountDown(void);
 
 void StateTransferProcess(void);
 
@@ -41,8 +41,9 @@ void AddMinuteCount(uint8_t i_minute);
 // 引数で指定された値を秒カウントに加算する
 void AddSecondCount(uint8_t i_second);
 
-uint8_t GetMinuteCount(void);
-uint8_t GetSecondCount(void);
+
+extern uint8_t MinuteCountTime;
+extern uint8_t SecondCountTime;
 
 #ifdef __cplusplus
 }
