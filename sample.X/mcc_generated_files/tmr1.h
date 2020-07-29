@@ -271,7 +271,7 @@ void TMR1_WriteTimer(uint16_t timerVal);
     }
     </code>
  */
-void TMR1_Reload(void);
+inline void TMR1_Reload(void);
 
 /**
   @Summary
@@ -367,7 +367,7 @@ uint8_t TMR1_CheckGateValueStatus(void);
   @Returns
     None
  */
- void TMR1_ISR(void);
+// inline void TMR1_ISR(void);
 /**
   @Summary
     CallBack function.

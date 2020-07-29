@@ -123,10 +123,21 @@ void AddSecondCount(uint8_t i_second) {
     // 加算
     SecondCountTime += i_second;
 
-    // 60で割った数分、繰り上げる
-    AddMinuteCount(SecondCountTime / (SECOND_MAX + 1));
-    // 60で割ったあまりを秒カウントへ格納する
-    SecondCountTime %= (SECOND_MAX + 1);
+    // 秒が最大値を超えている間
+    while (SecondCountTime > SECOND_MAX) {
+        // もし、分カウントが最大値だったら
+        if (MinuteCountTime == MINUTE_MAX) {
+            // 秒カウントは最大値に固定する
+            SecondCountTime = SECOND_MAX;
+
+        } else {
+            // 分カウントが最大値でなければ、
+            // 分カウントに繰り上げる
+            AddMinuteCount(1);
+            // 秒カウントから、60秒を引く
+            SecondCountTime -= (SECOND_MAX + 1);
+        }
+    }
 }
 
 // カウント時間設定
@@ -199,8 +210,6 @@ inline static uint8_t detectSWState(SWState_t *i_SW) {
 }
 
 inline static void onGoingCountDown(void) {
-
-
     // スタートストップスイッチ状態はONか
     if (StartStopSW.PushState == ON_STATE) {
         // // 0.5秒タイマ割込みを禁止
