@@ -39,7 +39,6 @@ SWState_t StartStopSW = {
 /*
 スイッチ状態検知
  */
-
 void InputProcess(void) {
     // リセットスイッチ同時押し検知
     detectResetSW();

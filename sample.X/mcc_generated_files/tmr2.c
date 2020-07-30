@@ -116,16 +116,17 @@ void TMR2_WriteTimer(uint8_t timerVal) {
 
 void TMR2_LoadPeriodRegister(uint8_t periodVal) { PR2 = periodVal; }
 
-void TMR2_ISR(void) {
-    // clear the TMR2 interrupt flag
-    PIR1bits.TMR2IF = 0;
+// inline void TMR2_ISR(void) {
+//     // clear the TMR2 interrupt flag
+//     PIR1bits.TMR2IF = 0;
 
-    // ticker function call;
-    // ticker is 1 -> Callback function gets called everytime this ISR executes
+//     // ticker function call;
+//     // ticker is 1 -> Callback function gets called everytime this ISR
+//     executes
 
-    // TMR2_CallBack();
-    TMR2_DefaultInterruptHandler();
-}
+//     // TMR2_CallBack();
+//     TMR2_DefaultInterruptHandler();
+// }
 
 // void TMR2_CallBack(void) {
 //     // Add your custom callback code here

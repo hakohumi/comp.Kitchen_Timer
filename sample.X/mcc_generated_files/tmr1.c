@@ -147,23 +147,24 @@ void TMR1_WriteTimer(uint16_t timerVal) {
     }
 }
 
-void TMR1_Reload(void) { TMR1_WriteTimer(timer1ReloadVal); }
+inline void TMR1_Reload(void) { TMR1_WriteTimer(timer1ReloadVal); }
 
 void TMR1_StartSinglePulseAcquisition(void) { T1GCONbits.T1GGO = 1; }
 
 uint8_t TMR1_CheckGateValueStatus(void) { return (T1GCONbits.T1GVAL); }
 
-void TMR1_ISR(void) {
-    // Clear the TMR1 interrupt flag
-    PIR1bits.TMR1IF = 0;
-    TMR1_WriteTimer(timer1ReloadVal);
+// inline void TMR1_ISR(void) {
+//     // Clear the TMR1 interrupt flag
+//     // PIR1bits.TMR1IF = 0;
+//     // TMR1_WriteTimer(timer1ReloadVal);
 
-    // ticker function call;
-    // ticker is 1 -> Callback function gets called everytime this ISR executes
+//     // // ticker function call;
+//     // // ticker is 1 -> Callback function gets called everytime this ISR
+//     // executes
 
-    // TMR1_CallBack();
-    TMR1_DefaultInterruptHandler();
-}
+//     // // TMR1_CallBack();
+//     // TMR1_DefaultInterruptHandler();
+// }
 
 // void TMR1_CallBack(void) {
 //     // Add your custom callback code here
@@ -182,7 +183,6 @@ inline void TMR1_DefaultInterruptHandler(void) {
 
     // 1秒フラグ
     if (Is1sFlg == ON) {
-        
         if (KitchenTimerState == COUNTDOWN_ONGOING_STATE) {
             // カウントは00m00sか
             if (MinuteCountTime == 0 && SecondCountTime == 0) {
