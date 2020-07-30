@@ -46,6 +46,8 @@
 #include "LCDClass.h"
 #include "common.h"
 #include "tmr1.h"
+// TMR4_StartTimer(), TMR4_StopTimer() を使用するため
+#include "tmr4.h"
 
 /*
                          Main application
@@ -62,6 +64,9 @@ inline void updateLCD(void);
 
 // LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
 static bool LCDResetFlg = OFF;
+
+uint8_t BuzzerTimingCount = 0;
+uint8_t BuzzerTimingFlg = OFF;
 
 void main(void) {
     // initialize the device
@@ -82,8 +87,6 @@ void main(void) {
     // LCDの初期化
     InitLCD();
 
-    ClrDisplay();
-
     while (1) {
         InputProcess();
         StateTransferProcess();
@@ -101,10 +104,20 @@ LCD更新
 inline void OutputProcess(void) {
     updateLCD();
     updateLED();
-    // UpdateBuzzer();
+    updateBuzzer();
 }
 
-inline void updateLED() {
+inline void updateBuzzer(void) {
+    if (KitchenTimerState == COUNTDOWN_END_STATE) {
+        if (BuzzerTimingFlg == ON) {
+            TMR4_StartTimer();
+        } else {
+            TMR4_StopTimer();
+        }
+    }
+}
+
+inline void updateLED(void) {
     LED1 = LED_OFF;
     LED2 = LED_OFF;
     LED3 = LED_OFF;

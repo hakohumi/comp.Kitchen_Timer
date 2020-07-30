@@ -22,7 +22,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.20 and above or later
         MPLAB 	          :  MPLAB X 5.40
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries.
@@ -46,7 +46,7 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
-*/
+ */
 
 #include "interrupt_manager.h"
 
@@ -61,30 +61,38 @@ void __interrupt() INTERRUPT_InterruptManager(void) {
             PIR1bits.TMR2IF = 0;
             TMR2_DefaultInterruptHandler();
         }
-    }
-    if (PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1) {
-        // Clear the TMR1 interrupt flag
-        PIR1bits.TMR1IF = 0;
-        TMR1_Reload();
-        TMR1_DefaultInterruptHandler();
+
+        if (PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1) {
+            // Clear the TMR1 interrupt flag
+            PIR1bits.TMR1IF = 0;
+            TMR1_Reload();
+            TMR1_DefaultInterruptHandler();
+        }
+        
+//        if (PIE3bits.TMR4IE == 1 && PIR3bits.TMR4IF == 1) {
+//            TMR4_ISR();
+//        }
     }
 
     if (INTCONbits.IOCIE == 1 && INTCONbits.IOCIF == 1) {
         // interrupt on change for pin IOCBF0
         if (IOCBFbits.IOCBF0 == 1) {
-            IOCBF0_ISR();
+            IOCBF0_DefaultInterruptHandler();
+            IOCBFbits.IOCBF0 = 0;
         }
         // interrupt on change for pin IOCBF2
         if (IOCBFbits.IOCBF2 == 1) {
-            IOCBF2_ISR();
+            IOCBF2_DefaultInterruptHandler();
+            IOCBFbits.IOCBF2 = 0;
         }
         // interrupt on change for pin IOCBF5
         if (IOCBFbits.IOCBF5 == 1) {
-            IOCBF5_ISR();
+            IOCBF5_DefaultInterruptHandler();
+            IOCBFbits.IOCBF5 = 0;
         }
     }
 }
 
 /**
  End of File
-*/
+ */

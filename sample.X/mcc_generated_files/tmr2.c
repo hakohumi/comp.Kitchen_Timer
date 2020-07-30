@@ -493,6 +493,16 @@ void TMR2_DefaultInterruptHandler(void) {
             SecondSW.TimingCount++;
         }
     }
+
+    /* -------------------------------------------------- */
+    /* ブザータイミング用                         */
+    /* -------------------------------------------------- */
+    if (KitchenTimerState == COUNTDOWN_END_STATE) {
+        if (++BuzzerTimingCount > 20) {
+            BuzzerTimingCount = 0;
+            BuzzerTimingFlg = ON;
+        }
+    }
 }
 
 /**
