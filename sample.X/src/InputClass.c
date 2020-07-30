@@ -65,6 +65,8 @@ static void detectResetSW(void) {
     }
 }
 
+inline void ClrResetSW(void) { IsPushedResetSW = false; }
+
 // 長押し検知
 // 入力：分、秒スイッチ
 

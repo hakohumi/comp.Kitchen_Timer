@@ -249,16 +249,39 @@ inline static void endCountDown(void) {
 }
 
 inline static void reset(void) {
-    // キッチンタイマー状態をカウントダウン設定へ変更
-    SetKitchenTimerStateToSetting();
+    // 1回リセットされるとONになる
+    static bool l_resetFlg = OFF;
 
-    // カウント時間を00m00sへ設定
-    SetMinuteCount(0);
-    SetSecondCount(0);
+    // 1回だけ処理させる
+    if (l_resetFlg == OFF) {
+        // カウント時間を00m00sへ設定
+        SetMinuteCount(0);
+        SetSecondCount(0);
 
-    // UpdateLCDフラグをON
-    SetUpdateLCDFlgON();
+        // UpdateLCDフラグをON
+        SetUpdateLCDFlgON();
 
-    // タイマレジスタのクリア
-    TMR1_Reload();
+        // タイマレジスタのクリア
+        TMR1_Reload();
+
+        // フラグの更新
+        l_resetFlg = ON;
+    } else if (l_resetFlg == ON) {
+        // スイッチを押し続けて2回目以降のループ
+        // まだ2つのスイッチのいずれかが押され続けている場合
+
+        if (MinuteSW.PushState != OFF_STATE ||
+            SecondSW.PushState != OFF_STATE) {
+            // 何もしない
+        } else {
+            // ボタンが離されたら
+
+            // リセットスイッチの状態をクリア
+            ClrResetSW();
+            // リセットフラグをクリア
+            l_resetFlg = OFF_STATE;
+            // キッチンタイマー状態をカウントダウン設定へ変更
+            SetKitchenTimerStateToSetting();
+        }
+    }
 }
