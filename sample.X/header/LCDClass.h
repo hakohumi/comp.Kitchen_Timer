@@ -24,13 +24,31 @@ extern "C" {
 // 1つコマンド 8文字表示
 #define MAX_BUF_SIZE 9
 
-#define LINE_1 0x00
-#define LINE_2 0x40
+#define LINE_FIRST 0x00
+#define LINE_SECOND 0x40
 #define LINE_DIGITS_MAX 8
 #define LCD_SET_POS_DB7 0x80
 
 // 10進数の最大の数
 #define DECIMAL_MAX 9
+// ClearDisplay コマンドのデータ部
+#define CMD_LCD_CLR_DISPLAY 0x01
+
+// Display ON コマンドのデータ部
+#define CMD_LCD_DISPLAY_ON 0x0C
+
+// Display OFF コマンドのデータ部
+#define CMD_LCD_DISPLAY_OFF 0x08
+
+// UpdateLCDフラグをONにする
+#define SetUpdateLCDFlg()  \
+    do {                   \
+        UpdateLCDFlg = ON; \
+    } while (0)
+#define ClrUpdateLCDFlg()   \
+    do {                    \
+        UpdateLCDFlg = OFF; \
+    } while (0)
 
 void InitLCD(void);
 
@@ -40,26 +58,23 @@ inline void SetPosLineLCD(bool i_row);  // 1行目か2行目の先頭を指定
 
 void Write1LineToLCD(uint8_t *i_str, uint8_t i_len);
 
+// カウント時間を"00m00s"の形でLCDへ表示させる
+void CountTimeToLCD();
+
 // mとsを表示
 void WriteUnitChar(void);
 // mとsをクリア
 void ClrUnitChar(void);
 
-// UpdateLCDフラグをONにする
-#define SetUpdateLCDFlgON() \
-    do {                    \
-        UpdateLCDFlg = ON;  \
-    } while (0)
-#define SetUpdateLCDFlgOFF() \
-    do {                     \
-        UpdateLCDFlg = OFF;  \
-    } while (0)
+void ClrDisplay(void);
 
-extern bool UpdateLCDFlg;
+void DisplayON(void);
+void DisplayOFF(void);
 
 char *utoa(unsigned int value, char *s, int radix);
 
 uint8_t Itochar(uint8_t value);
+extern bool UpdateLCDFlg;
 
 #ifdef __cplusplus
 }

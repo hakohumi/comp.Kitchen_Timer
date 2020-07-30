@@ -7,14 +7,14 @@
 #include "tmr1.h"
 
 // 分の最大値
-#define MINUTE_MAX 99
+#define MINUTE_MAX (uint8_t)99
 // 分の最低値
-#define MINUTE_MIN 0
+#define MINUTE_MIN (uint8_t)0
 
 // 秒の最大値
-#define SECOND_MAX 59
+#define SECOND_MAX (uint8_t)59
 // 秒の最小値
-#define SECOND_MIN 0
+#define SECOND_MIN (uint8_t)0
 
 inline static void settingCountTime(void);
 inline static uint8_t detectSWState(SWState_t *i_SW);
@@ -65,31 +65,27 @@ void StateTransferProcess(void) {
 }
 
 // 分カウントを設定
-// 正常であれば、trueを返す
-// もし、0 ~ 99 以外であれば、エラーとして false を返す
+// MINUTE_MAX より上であれば、MINUTE_MAX を格納
+// MINUTE_MAX = 99
 
-bool SetMinuteCount(uint8_t i_minute) {
-    if ((i_minute < (uint8_t)MINUTE_MIN) || ((uint8_t)MINUTE_MAX < i_minute)) {
-        return false;
+void SetMinuteCount(uint8_t i_minute) {
+    if (MINUTE_MAX < i_minute) {
+        MinuteCountTime = MINUTE_MAX;
+    } else {
+        MinuteCountTime = i_minute;
     }
-
-    MinuteCountTime = i_minute;
-
-    return true;
 }
 
 // 秒カウントを設定
-// 正常であれば、trueを返す
-// もし、0 ~ 59 以外であれば、エラーとして false を返す
+// SECOND_MAXより上であれば、SECOND_MAX を格納
+// SECOND_MAX = 59
 
-bool SetSecondCount(uint8_t i_second) {
-    if ((i_second < (uint8_t)SECOND_MIN) || ((uint8_t)SECOND_MAX < i_second)) {
-        return false;
+void SetSecondCount(uint8_t i_second) {
+    if (SECOND_MAX < i_second) {
+        SecondCountTime = SECOND_MAX;
+    } else {
+        SecondCountTime = i_second;
     }
-
-    SecondCountTime = i_second;
-
-    return true;
 }
 
 // 引数で指定された値を分カウントに加算する
@@ -189,7 +185,7 @@ inline static uint8_t detectSWState(SWState_t *i_SW) {
                 l_retval = 1;
 
                 // UpdateLCDFlg をON
-                SetUpdateLCDFlgON();
+                SetUpdateLCDFlg();
                 // タイミングフラグをOFF
                 i_SW->TimingFlag = OFF;
                 break;
@@ -199,7 +195,7 @@ inline static uint8_t detectSWState(SWState_t *i_SW) {
                 l_retval = 10;
 
                 // UpdateLCDFlg をON
-                SetUpdateLCDFlgON();
+                SetUpdateLCDFlg();
 
                 // タイミングフラグをOFF
                 i_SW->TimingFlag = OFF;
@@ -249,17 +245,20 @@ inline static void endCountDown(void) {
 }
 
 inline static void reset(void) {
-    // 1回リセットされるとONになる
+    // 1回リセット処理を行うとONになる
     static bool l_resetFlg = OFF;
 
     // 1回だけ処理させる
     if (l_resetFlg == OFF) {
+        // LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
+        SetLCDResetFlg();
+
         // カウント時間を00m00sへ設定
         SetMinuteCount(0);
         SetSecondCount(0);
 
         // UpdateLCDフラグをON
-        SetUpdateLCDFlgON();
+        SetUpdateLCDFlg();
 
         // タイマレジスタのクリア
         TMR1_Reload();
@@ -276,8 +275,6 @@ inline static void reset(void) {
         } else {
             // ボタンが離されたら
 
-            // リセットスイッチの状態をクリア
-            ClrResetSW();
             // リセットフラグをクリア
             l_resetFlg = OFF_STATE;
             // キッチンタイマー状態をカウントダウン設定へ変更
