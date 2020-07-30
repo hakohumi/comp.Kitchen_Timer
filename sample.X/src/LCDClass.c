@@ -10,9 +10,10 @@ bool UpdateLCDFlg = OFF;
 // ---------------------------------------------
 // 文字リテラル
 // =--------------------------------------------
-static uint8_t Str_SETTING[] = "fafa";
-static uint8_t Str_m = 'm';
-static uint8_t Str_s = 's';
+static uint8_t STR_SETTING[] = "fafa";
+static uint8_t STR_m = 'm';
+static uint8_t STR_s = 's';
+static uint8_t *STR_BLANK = "        ";
 
 // LCDの初期化
 // *** ST7032iに対して、書き込みフォーマット ***
@@ -67,11 +68,11 @@ inline void SetPosLineLCD(bool i_row) {
     if (i_row) {
         // true 2行目
         I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE,
-                                (LCD_SET_POS_DB7 | LINE_2));
+                                (LCD_SET_POS_DB7 | LINE_SECOND));
     } else {
         // false 1行目
         I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE,
-                                (LCD_SET_POS_DB7 | LINE_1));
+                                (LCD_SET_POS_DB7 | LINE_FIRST));
     }
 }
 
@@ -97,24 +98,66 @@ void Write1LineToLCD(uint8_t *i_str, uint8_t i_len) {
     }
 }
 
+// カウント時間をLCDへ書き込む
+// 2行目の真ん中へ書く
+
+void CountTimeToLCD(uint8_t i_minute, uint8_t i_second) {
+    uint8_t i_str[8];
+
+    // -------------------------------------------------------
+    // sprintfは容量が大きいため、後に別の方法で実装する
+    // -------------------------------------------------------
+    // 分を変換
+    utoa(i_minute, &i_str[1], 10);
+    // 秒を変換
+    utoa(i_second, &i_str[4], 10);
+    // -------------------------------------------------------
+
+    i_str[3] = 'm';
+    i_str[6] = 's';
+
+    // 書き込み位置を2行目へセット
+    SetPosLineLCD(true);
+    // 1行書き込む
+    Write1LineToLCD(i_str, 8);
+}
+
 void WriteUnitChar() {
     // m表示
-    SetPosLCD(LINE_2 + 3);
+    SetPosLCD(LINE_SECOND + 3);
     I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, 'm');
 
     // S表示
-    SetPosLCD(LINE_2 + 6);
+    SetPosLCD(LINE_SECOND + 6);
     I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, 's');
 }
 
 void ClrUnitChar() {
     // m削除
-    SetPosLCD(LINE_2 + 3);
+    SetPosLCD(LINE_SECOND + 3);
     I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, ' ');
 
     // S表示
-    SetPosLCD(LINE_2 + 6);
+    SetPosLCD(LINE_SECOND + 6);
     I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, ' ');
+}
+
+// ClearDisplay
+
+void ClrDisplay(void) {
+    // SetPosLCD(LINE_FIRST);
+    // Write1LineToLCD(STR_BLANK, 8);
+    SetPosLCD(LINE_SECOND);
+    Write1LineToLCD(STR_BLANK, 8);
+}
+
+// Display ON
+void DisplayON(void) {
+    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, CMD_LCD_DISPLAY_ON);
+}
+// Display OFF
+void DisplayOFF(void) {
+    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, CMD_LCD_DISPLAY_OFF);
 }
 
 char *utoa(unsigned int value, char *s, int radix) {

@@ -28,13 +28,13 @@ void StateTransferProcess(void);
 // 分カウントを設定
 // 正常であれば、trueを返す
 // もし、0 ~ 99 以外であれば、エラーとして false を返す
-bool SetMinuteCount(uint8_t i_minute);
+void SetMinuteCount(uint8_t i_minute);
 
 // 秒カウントを設定
 // 正常であれば、trueを返す
 // もし、0 ~ 59 以外であれば、エラーとして false を返す
 
-bool SetSecondCount(uint8_t i_second);
+void SetSecondCount(uint8_t i_second);
 
 // 引数で指定された値を分カウントに加算する
 void AddMinuteCount(uint8_t i_minute);
