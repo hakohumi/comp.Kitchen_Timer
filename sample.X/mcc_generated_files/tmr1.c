@@ -210,9 +210,8 @@ inline void TMR1_DefaultInterruptHandler(void) {
         // 1秒フラグをONへ
         Is1sFlg = ON;
     }
-
     // UpdateLCDフラグをON
-    SetUpdateLCDFlgON();
+    SetUpdateLCDFlg();
 }
 
 /**

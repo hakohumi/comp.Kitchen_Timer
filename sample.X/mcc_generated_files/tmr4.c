@@ -19,7 +19,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.20 and above
         MPLAB 	          :  MPLAB X 5.40
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -42,25 +42,24 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 /**
   Section: Included Files
-*/
+ */
 
 #include <xc.h>
 #include "tmr4.h"
 
 /**
   Section: Global Variables Definitions
-*/
+ */
 
 /**
   Section: TMR4 APIs
-*/
+ */
 
-void TMR4_Initialize(void)
-{
+void TMR4_Initialize(void) {
     // Set TMR4 to the options selected in the User Interface
 
     // PR4 141; 
@@ -76,20 +75,17 @@ void TMR4_Initialize(void)
     T4CON = 0x04;
 }
 
-void TMR4_StartTimer(void)
-{
+void TMR4_StartTimer(void) {
     // Start the Timer by writing to TMRxON bit
     T4CONbits.TMR4ON = 1;
 }
 
-void TMR4_StopTimer(void)
-{
+void TMR4_StopTimer(void) {
     // Stop the Timer by writing to TMRxON bit
     T4CONbits.TMR4ON = 0;
 }
 
-uint8_t TMR4_ReadTimer(void)
-{
+uint8_t TMR4_ReadTimer(void) {
     uint8_t readVal;
 
     readVal = TMR4;
@@ -97,23 +93,19 @@ uint8_t TMR4_ReadTimer(void)
     return readVal;
 }
 
-void TMR4_WriteTimer(uint8_t timerVal)
-{
+void TMR4_WriteTimer(uint8_t timerVal) {
     // Write to the Timer4 register
     TMR4 = timerVal;
 }
 
-void TMR4_LoadPeriodRegister(uint8_t periodVal)
-{
-   PR4 = periodVal;
+void TMR4_LoadPeriodRegister(uint8_t periodVal) {
+    PR4 = periodVal;
 }
 
-bool TMR4_HasOverflowOccured(void)
-{
+bool TMR4_HasOverflowOccured(void) {
     // check if  overflow has occurred by checking the TMRIF bit
     bool status = PIR3bits.TMR4IF;
-    if(status)
-    {
+    if (status) {
         // Clearing IF flag.
         PIR3bits.TMR4IF = 0;
     }
@@ -121,4 +113,4 @@ bool TMR4_HasOverflowOccured(void)
 }
 /**
   End of File
-*/
+ */
