@@ -82,6 +82,8 @@ void main(void) {
     // LCDの初期化
     InitLCD();
 
+    ClrDisplay();
+
     while (1) {
         InputProcess();
         StateTransferProcess();
@@ -153,14 +155,14 @@ inline void updateLCD(void) {
 
                 WriteUnitChar();
 
-                CountTimeToLCD(MinuteCountTime, SecondCountTime);
+                CountTimeToLCD();
 
                 break;
 
                 // カウントダウン中
             case COUNTDOWN_ONGOING_STATE:
                 // カウント時間をLCDバッファに格納
-                CountTimeToLCD(MinuteCountTime, SecondCountTime);
+                CountTimeToLCD();
 
                 // 1秒フラグがOFFか
                 if (!Is1sFlg) {
@@ -174,16 +176,16 @@ inline void updateLCD(void) {
                 // カウントダウン終了
             case COUNTDOWN_END_STATE:
                 // カウント時間をLCDバッファに格納
-                CountTimeToLCD(MinuteCountTime, SecondCountTime);
+                CountTimeToLCD();
 
                 // 1秒フラグがOFFか
                 if (!Is1sFlg) {
                     // LCDバッファの文字を点滅
                     // ディスプレイをクリアする
-                    ClrDisplay();
+                    ClrLineDisplay();
                 } else {
                     // カウント時間を表示
-                    CountTimeToLCD(MinuteCountTime, SecondCountTime);
+                    CountTimeToLCD();
                 }
 
                 break;
@@ -194,8 +196,9 @@ inline void updateLCD(void) {
                 if (LCDResetFlg == ON) {
                     // ディスプレイをクリアする
                     ClrDisplay();
+                    // ClrLineDisplay();
                     // カウント時間を表示
-                    CountTimeToLCD(MinuteCountTime, SecondCountTime);
+                    CountTimeToLCD();
                     // フラグクリア
                     LCDResetFlg = OFF;
                 }
@@ -219,7 +222,6 @@ inline void updateLCD(void) {
         ClrUpdateLCDFlg();
     }
 }
-
 inline void SetLCDResetFlg(void) { LCDResetFlg = ON; }
 
 // inline void ClrLCDResetFlg(void) { LCDResetFLg = OFF; }

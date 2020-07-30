@@ -29,6 +29,8 @@ extern "C" {
 #define LINE_DIGITS_MAX 8
 #define LCD_SET_POS_DB7 0x80
 
+// 10進数の最大の数
+#define DECIMAL_MAX 9
 // ClearDisplay コマンドのデータ部
 #define CMD_LCD_CLR_DISPLAY 0x01
 
@@ -57,13 +59,14 @@ inline void SetPosLineLCD(bool i_row);  // 1行目か2行目の先頭を指定
 void Write1LineToLCD(uint8_t *i_str, uint8_t i_len);
 
 // カウント時間を"00m00s"の形でLCDへ表示させる
-void CountTimeToLCD(uint8_t i_minute, uint8_t i_second);
+void CountTimeToLCD();
 
 // mとsを表示
 void WriteUnitChar(void);
 // mとsをクリア
 void ClrUnitChar(void);
 
+void ClrLineDisplay(void);
 void ClrDisplay(void);
 
 void DisplayON(void);
@@ -71,6 +74,7 @@ void DisplayOFF(void);
 
 char *utoa(unsigned int value, char *s, int radix);
 
+uint8_t Itochar(uint8_t value);
 extern bool UpdateLCDFlg;
 
 #ifdef __cplusplus

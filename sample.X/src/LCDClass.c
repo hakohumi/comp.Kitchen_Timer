@@ -3,6 +3,7 @@
 
 #include <mcc.h>
 
+#include "CountClass.h"
 #include "examples/i2c1_master_example.h"
 
 bool UpdateLCDFlg = OFF;
@@ -101,16 +102,35 @@ void Write1LineToLCD(uint8_t *i_str, uint8_t i_len) {
 // カウント時間をLCDへ書き込む
 // 2行目の真ん中へ書く
 
-void CountTimeToLCD(uint8_t i_minute, uint8_t i_second) {
-    uint8_t i_str[8];
+void CountTimeToLCD() {
+    uint8_t i_str[8] = "        ";
 
     // -------------------------------------------------------
     // sprintfは容量が大きいため、後に別の方法で実装する
     // -------------------------------------------------------
     // 分を変換
-    utoa(i_minute, &i_str[1], 10);
+
+    // 2桁だったら
+    if (MinuteCountTime > 9) {
+        i_str[1] = Itochar(MinuteCountTime / 10);
+        i_str[2] = Itochar(MinuteCountTime % 10);
+    } else {
+        // ひと桁だったら
+        i_str[1] = '0';
+        i_str[2] = Itochar(MinuteCountTime);
+    }
+
     // 秒を変換
-    utoa(i_second, &i_str[4], 10);
+
+    // 2桁だったら
+    if (SecondCountTime > 9) {
+        i_str[4] = Itochar(SecondCountTime / 10);
+        i_str[5] = Itochar(SecondCountTime % 10);
+    } else {
+        // ひと桁だったら
+        i_str[4] = '0';
+        i_str[5] = Itochar(SecondCountTime);
+    }
     // -------------------------------------------------------
 
     i_str[3] = 'm';
@@ -144,11 +164,15 @@ void ClrUnitChar() {
 
 // ClearDisplay
 
-void ClrDisplay(void) {
+void ClrLineDisplay(void) {
     // SetPosLCD(LINE_FIRST);
     // Write1LineToLCD(STR_BLANK, 8);
     SetPosLCD(LINE_SECOND);
     Write1LineToLCD(STR_BLANK, 8);
+}
+
+void ClrDisplay(void) {
+    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, CMD_LCD_CLR_DISPLAY);
 }
 
 // Display ON
@@ -177,4 +201,12 @@ char *utoa(unsigned int value, char *s, int radix) {
         *s2-- = c;
     }
     return s;
+}
+
+// 数値一文字をchar型へ変換
+uint8_t Itochar(uint8_t value) {
+    if (value > DECIMAL_MAX) {
+        return ' ';
+    }
+    return "0123456789"[value];
 }
