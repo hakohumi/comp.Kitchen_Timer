@@ -61,12 +61,13 @@ inline void OutputProcess(void);
 
 inline void updateLED(void);
 inline void updateLCD(void);
+inline void updateBuzzer(void);
 
 // LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
 static bool LCDResetFlg = OFF;
 
 uint8_t BuzzerTimingCount = 0;
-uint8_t BuzzerTimingFlg = OFF;
+bool BuzzerTimingFlg = OFF;
 
 void main(void) {
     // initialize the device
@@ -108,10 +109,18 @@ inline void OutputProcess(void) {
 }
 
 inline void updateBuzzer(void) {
+    // 今、鳴っているかどうかを判断する
+    static bool BuzzerState = OFF;
+
     if (KitchenTimerState == COUNTDOWN_END_STATE) {
         if (BuzzerTimingFlg == ON) {
             TMR4_StartTimer();
         } else {
+            TMR4_StopTimer();
+        }
+    } else {
+        // 要らないときはならないようにする
+        if (BuzzerState == ON) {
             TMR4_StopTimer();
         }
     }
@@ -235,13 +244,18 @@ inline void updateLCD(void) {
         ClrUpdateLCDFlg();
     }
 }
-inline void SetLCDResetFlg(void) { LCDResetFlg = ON; }
+
+inline void SetLCDResetFlg(void) {
+    LCDResetFlg = ON;
+}
 
 // inline void ClrLCDResetFlg(void) { LCDResetFLg = OFF; }
 
 // キッチンタイマー状態をリセットへ変更
 
-void SetKitchenTimerStateToReset(void) { KitchenTimerState = RESET_STATE; }
+void SetKitchenTimerStateToReset(void) {
+    KitchenTimerState = RESET_STATE;
+}
 
 // キッチンタイマー状態をカウント設定状態へ変更
 
