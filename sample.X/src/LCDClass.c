@@ -14,6 +14,8 @@ static uint8_t Str_SETTING[] = "fafa";
 static uint8_t Str_m = 'm';
 static uint8_t Str_s = 's';
 
+
+
 // LCDの初期化
 // *** ST7032iに対して、書き込みフォーマット ***
 // ①まず、7bitのスレーブアドレス(B0111110)と、
@@ -134,4 +136,12 @@ char *utoa(unsigned int value, char *s, int radix) {
         *s2-- = c;
     }
     return s;
+}
+
+// 数値一文字をchar型へ変換
+uint8_t Itochar(uint8_t value) {
+    if (value > DECIMAL_MAX) {
+        return ' ';
+    }
+    return "0123456789"[value];
 }

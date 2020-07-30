@@ -61,7 +61,7 @@ inline void updateLED(void);
 inline void updateLCD(void);
 
 // カウント時間を"00m00s"の形でLCDへ表示させる
-void countTimeToLCD(uint8_t i_minute, uint8_t i_second);
+void countTimeToLCD(void);
 
 void main(void) {
     // initialize the device
@@ -153,14 +153,14 @@ inline void updateLCD(void) {
 
                 WriteUnitChar();
 
-                countTimeToLCD(MinuteCountTime, SecondCountTime);
+                countTimeToLCD();
 
                 break;
 
                 // カウントダウン中
             case COUNTDOWN_ONGOING_STATE:
                 // カウント時間をLCDバッファに格納
-                countTimeToLCD(MinuteCountTime, SecondCountTime);
+                countTimeToLCD();
 
                 // 1秒フラグがOFFか
                 if (!Is1sFlg) {
@@ -174,7 +174,7 @@ inline void updateLCD(void) {
                 // カウントダウン終了
             case COUNTDOWN_END_STATE:
                 // カウント時間をLCDバッファに格納
-                countTimeToLCD(MinuteCountTime, SecondCountTime);
+                countTimeToLCD();
 
                 // 1秒フラグがOFFか
                 if (!Is1sFlg) {
@@ -190,7 +190,7 @@ inline void updateLCD(void) {
             case RESET_STATE:
                 WriteUnitChar();
 
-                countTimeToLCD(MinuteCountTime, SecondCountTime);
+                countTimeToLCD();
 
                 break;
 
@@ -207,16 +207,35 @@ inline void updateLCD(void) {
 // カウント時間をLCDへ書き込む
 // 2行目の真ん中へ書く
 
-void countTimeToLCD(uint8_t i_minute, uint8_t i_second) {
+void countTimeToLCD() {
     uint8_t i_str[8];
 
     // -------------------------------------------------------
     // sprintfは容量が大きいため、後に別の方法で実装する
     // -------------------------------------------------------
     // 分を変換
-    utoa(i_minute, &i_str[1], 10);
+
+    // 2桁だったら
+    if (MinuteCountTime > 9) {
+        i_str[1] = Itochar(MinuteCountTime / 10);
+        i_str[2] = Itochar(MinuteCountTime % 10);
+    } else {
+        // ひと桁だったら
+        i_str[1] = '0';
+        i_str[2] = Itochar(MinuteCountTime);
+    }
+
     // 秒を変換
-    utoa(i_second, &i_str[4], 10);
+
+    // 2桁だったら
+    if (SecondCountTime > 9) {
+        i_str[4] = Itochar(SecondCountTime / 10);
+        i_str[5] = Itochar(SecondCountTime % 10);
+    } else {
+        // ひと桁だったら
+        i_str[4] = '0';
+        i_str[5] = Itochar(SecondCountTime);
+    }
     // -------------------------------------------------------
 
     i_str[3] = 'm';

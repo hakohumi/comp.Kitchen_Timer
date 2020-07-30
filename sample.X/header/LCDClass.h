@@ -29,6 +29,9 @@ extern "C" {
 #define LINE_DIGITS_MAX 8
 #define LCD_SET_POS_DB7 0x80
 
+// 10進数の最大の数
+#define DECIMAL_MAX 9
+
 void InitLCD(void);
 
 // LCD上の書き込む位置を指定する
@@ -55,6 +58,8 @@ void ClrUnitChar(void);
 extern bool UpdateLCDFlg;
 
 char *utoa(unsigned int value, char *s, int radix);
+
+uint8_t Itochar(uint8_t value);
 
 #ifdef __cplusplus
 }
