@@ -66,6 +66,7 @@ void WriteUnitChar(void);
 // mとsをクリア
 void ClrUnitChar(void);
 
+void ClrLineDisplay(void);
 void ClrDisplay(void);
 
 void DisplayON(void);

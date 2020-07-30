@@ -82,6 +82,8 @@ void main(void) {
     // LCDの初期化
     InitLCD();
 
+    ClrDisplay();
+
     while (1) {
         InputProcess();
         StateTransferProcess();
@@ -180,7 +182,7 @@ inline void updateLCD(void) {
                 if (!Is1sFlg) {
                     // LCDバッファの文字を点滅
                     // ディスプレイをクリアする
-                    ClrDisplay();
+                    ClrLineDisplay();
                 } else {
                     // カウント時間を表示
                     CountTimeToLCD();
@@ -194,6 +196,7 @@ inline void updateLCD(void) {
                 if (LCDResetFlg == ON) {
                     // ディスプレイをクリアする
                     ClrDisplay();
+                    // ClrLineDisplay();
                     // カウント時間を表示
                     CountTimeToLCD();
                     // フラグクリア
