@@ -57,7 +57,7 @@
 #include <xc.h>
 
 #include "InputClass.h"
-#include "common.h"
+#include "BuzzerClass.h"
 
 /**
   Section: Global Variables Definitions

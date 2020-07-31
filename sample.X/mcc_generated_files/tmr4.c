@@ -85,7 +85,7 @@ void TMR4_Initialize(void) {
     // Set Default Interrupt Handler
     //    TMR4_SetInterruptHandler(TMR4_DefaultInterruptHandler);
 
-    // T4CKPS 1:1; T4OUTPS 1:1; TMR4ON on;
+    // T4CKPS 1:1; T4OUTPS 1:1;
     T4CON = 0x00;
 }
 
@@ -116,12 +116,10 @@ void TMR4_LoadPeriodRegister(uint8_t periodVal) {
     PR4 = periodVal;
 }
 
-bool TMR4_HasOverflowOccured(void)
-{
+bool TMR4_HasOverflowOccured(void) {
     // check if  overflow has occurred by checking the TMRIF bit
     bool status = PIR3bits.TMR4IF;
-    if(status)
-    {
+    if (status) {
         // Clearing IF flag.
         PIR3bits.TMR4IF = 0;
     }

@@ -94,9 +94,6 @@ void SetKitchenTimerStateToEnd(void);
 inline void SetLCDResetFlg(void);  // ON
 // inline void ClrLCDResetFlg(void);  // OFF
 
-extern uint8_t BuzzerTimingCount;
-extern bool BuzzerTimingFlg;
-
 #ifdef __cplusplus
 }
 #endif
