@@ -52,6 +52,8 @@ extern "C" {
 
 void InitLCD(void);
 
+void UpdateLCD(void);
+
 // LCD上の書き込む位置を指定する
 inline void SetPosLCD(uint8_t i_pos);   // アドレス指定
 inline void SetPosLineLCD(bool i_row);  // 1行目か2行目の先頭を指定
@@ -75,7 +77,10 @@ void DisplayOFF(void);
 char *utoa(unsigned int value, char *s, int radix);
 
 uint8_t Itochar(uint8_t value);
+
 extern bool UpdateLCDFlg;
+// LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
+extern bool LCDResetFlg;
 
 #ifdef __cplusplus
 }

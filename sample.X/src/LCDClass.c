@@ -7,6 +7,8 @@
 #include "examples/i2c1_master_example.h"
 
 bool UpdateLCDFlg = OFF;
+// LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
+bool LCDResetFlg = OFF;
 
 // ---------------------------------------------
 // 文字リテラル
@@ -49,6 +51,84 @@ void InitLCD(void) {
 
     // 1.08ms以上 待つ
     __delay_ms(2);
+}
+
+void UpdateLCD(void) {
+    // UpdateLCDフラグがONか
+    if (UpdateLCDFlg == ON) {
+        // キッチンタイマーの状態は？
+        switch (KitchenTimerState) {
+                // カウント時間設定
+            case COUNTTIME_SETTING_STATE:
+
+                WriteUnitChar();
+
+                CountTimeToLCD();
+
+                break;
+
+                // カウントダウン中
+            case COUNTDOWN_ONGOING_STATE:
+                // カウント時間をLCDバッファに格納
+                CountTimeToLCD();
+
+                // 1秒フラグがOFFか
+                if (!Is1sFlg) {
+                    // LCDバッファのmとsの文字を点滅
+                    ClrUnitChar();
+                } else {
+                    WriteUnitChar();
+                }
+                break;
+
+                // カウントダウン終了
+            case COUNTDOWN_END_STATE:
+                // カウント時間をLCDバッファに格納
+                CountTimeToLCD();
+
+                // 1秒フラグがOFFか
+                if (!Is1sFlg) {
+                    // LCDバッファの文字を点滅
+                    // ディスプレイをクリアする
+                    ClrLineDisplay();
+                } else {
+                    // カウント時間を表示
+                    CountTimeToLCD();
+                }
+
+                break;
+
+                // リセット状態
+            case RESET_STATE:
+                // 1回だけ実行させる
+                if (LCDResetFlg == ON) {
+                    // ディスプレイをクリアする
+                    ClrDisplay();
+                    // ClrLineDisplay();
+                    // カウント時間を表示
+                    CountTimeToLCD();
+                    // フラグクリア
+                    LCDResetFlg = OFF;
+                }
+                break;
+
+                // その他の状態 ありえない
+            default:
+
+                while (1) {
+                    LED1 ^= 1;
+                    LED2 ^= 1;
+                    LED3 ^= 1;
+                    LED4 ^= 1;
+                    __delay_ms(500);
+                }
+
+                break;
+        }
+        // LCDバッファの値をLCDへ表示
+        // UpdateLCDフラグをOFFにする
+        ClrUpdateLCDFlg();
+    }
 }
 
 // LCD上の書き込む場所を指定

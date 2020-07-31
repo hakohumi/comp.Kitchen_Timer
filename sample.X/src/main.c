@@ -59,10 +59,8 @@ KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
 inline void OutputProcess(void);
 
 inline void updateLED(void);
-inline void updateLCD(void);
 
-// LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
-static bool LCDResetFlg = OFF;
+
 
 void main(void) {
     // initialize the device
@@ -98,7 +96,7 @@ LCD更新
  */
 
 inline void OutputProcess(void) {
-    updateLCD();
+    UpdateLCD();
     // updateLED(); // デバッグ用
     UpdateBuzzer();
 }
@@ -135,92 +133,6 @@ inline void updateLED(void) {
     }
 }
 
-inline void updateLCD(void) {
-    // 1行目 文字列バッファ
-    uint8_t l_LCDBuf1[8] = "running";
-    // 2行目 文字列バッファ
-    uint8_t l_LCDBuf2[8] = "stt";
-
-    // setting string
-    uint8_t l_LCDstr1[] = "setting";
-    uint8_t l_LCDstr2[] = "state";
-
-    // UpdateLCDフラグがONか
-    if (UpdateLCDFlg == ON) {
-        // キッチンタイマーの状態は？
-        switch (KitchenTimerState) {
-                // カウント時間設定
-            case COUNTTIME_SETTING_STATE:
-
-                WriteUnitChar();
-
-                CountTimeToLCD();
-
-                break;
-
-                // カウントダウン中
-            case COUNTDOWN_ONGOING_STATE:
-                // カウント時間をLCDバッファに格納
-                CountTimeToLCD();
-
-                // 1秒フラグがOFFか
-                if (!Is1sFlg) {
-                    // LCDバッファのmとsの文字を点滅
-                    ClrUnitChar();
-                } else {
-                    WriteUnitChar();
-                }
-                break;
-
-                // カウントダウン終了
-            case COUNTDOWN_END_STATE:
-                // カウント時間をLCDバッファに格納
-                CountTimeToLCD();
-
-                // 1秒フラグがOFFか
-                if (!Is1sFlg) {
-                    // LCDバッファの文字を点滅
-                    // ディスプレイをクリアする
-                    ClrLineDisplay();
-                } else {
-                    // カウント時間を表示
-                    CountTimeToLCD();
-                }
-
-                break;
-
-                // リセット状態
-            case RESET_STATE:
-                // 1回だけ実行させる
-                if (LCDResetFlg == ON) {
-                    // ディスプレイをクリアする
-                    ClrDisplay();
-                    // ClrLineDisplay();
-                    // カウント時間を表示
-                    CountTimeToLCD();
-                    // フラグクリア
-                    LCDResetFlg = OFF;
-                }
-                break;
-
-                // その他の状態 ありえない
-            default:
-
-                while (1) {
-                    LED1 ^= 1;
-                    LED2 ^= 1;
-                    LED3 ^= 1;
-                    LED4 ^= 1;
-                    __delay_ms(500);
-                }
-
-                break;
-        }
-        // LCDバッファの値をLCDへ表示
-        // UpdateLCDフラグをOFFにする
-        ClrUpdateLCDFlg();
-    }
-}
 
 inline void SetLCDResetFlg(void) { LCDResetFlg = ON; }
 
