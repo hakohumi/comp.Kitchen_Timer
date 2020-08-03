@@ -19,6 +19,7 @@ extern "C" {
 #include "common.h"
 
 void UpdateBuzzer(void);
+void ClrBuzzerCunt(void);
 
 extern uint8_t BuzzerTimingCount;
 extern bool BuzzerTimingFlg;

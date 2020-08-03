@@ -1,20 +1,18 @@
 #include "CountClass.h"
 
-#include <assert.h>
-
 #include "InputClass.h"
 #include "LCDClass.h"
 #include "tmr1.h"
 
 // 分の最大値
-#define MINUTE_MAX (uint8_t)99
+#define MINUTE_MAX 99
 // 分の最低値
-#define MINUTE_MIN (uint8_t)0
+#define MINUTE_MIN 0
 
 // 秒の最大値
-#define SECOND_MAX (uint8_t)59
+#define SECOND_MAX 59
 // 秒の最小値
-#define SECOND_MIN (uint8_t)0
+#define SECOND_MIN 0
 
 inline static void settingCountTime(void);
 inline static uint8_t detectSWState(SWState_t *i_SW);
@@ -28,6 +26,9 @@ uint8_t MinuteCountTime = 0;
 uint8_t SecondCountTime = 0;
 // カウントダウン終了カウント
 uint8_t CountDownEndCount = 0;
+
+// 1回リセット処理を行うとONになる
+static bool resetFlg = OFF;
 
 /*
 状態遷移処理
@@ -60,6 +61,9 @@ void StateTransferProcess(void) {
             break;
         case RESET_STATE:
             reset();
+            break;
+        default:
+            // ありえない
             break;
     }
 }
@@ -94,13 +98,15 @@ void AddMinuteCount(uint8_t i_minute) {
     // もし、入力された値が最大値より大きい場合
     // 最大値を設定
     // MINUTE_MAX = 99
-    if (i_minute > MINUTE_MAX) {
+    if (i_minute >= MINUTE_MAX) {
         MinuteCountTime = MINUTE_MAX;
     } else {
-        // 入力が 99 以下の場合
+        /*
+         入力が 99 以下の場合
 
-        // もし、加算後、分カウントが最大値より高い場合
-        // 最大値より増えないようにする
+         もし、加算後、分カウントが最大値より高い場合
+         最大値より増えないようにする
+         */
 
         MinuteCountTime += i_minute;
 
@@ -113,8 +119,10 @@ void AddMinuteCount(uint8_t i_minute) {
 // 引数で指定された値を秒カウントに加算する
 
 void AddSecondCount(uint8_t i_second) {
-    // もし、加算後、秒カウントが最大値より高い場合
-    // 最大値より下回るまで、分カウントに繰り上げる
+    /*
+     もし、加算後、秒カウントが最大値より高い場合
+     最大値より下回るまで、分カウントに繰り上げる
+     */
 
     // 加算
     SecondCountTime += i_second;
@@ -139,19 +147,22 @@ void AddSecondCount(uint8_t i_second) {
 // カウント時間設定
 
 inline static void settingCountTime(void) {
-    // 分スイッチ処理
-    AddMinuteCount(detectSWState(&MinuteSW));
-    // 秒スイッチ処理
-    AddSecondCount(detectSWState(&SecondSW));
+    uint8_t l_addCountTime = 0;
 
-    // カウント時間が00m00sではないか
-    if (!(MinuteCountTime == (uint8_t)0 && SecondCountTime == (uint8_t)0)) {
+    // 分スイッチ処理
+    l_addCountTime = detectSWState(&MinuteSW);
+    AddMinuteCount(l_addCountTime);
+    // 秒スイッチ処理
+    l_addCountTime = detectSWState(&SecondSW);
+    AddSecondCount(l_addCountTime);
+
+    // カウント時間が00m00sではない場合、スタートさせない
+    if (!(MinuteCountTime == 0 && SecondCountTime == 0)) {
         // スタートストップスイッチ状態はONか
         if (StartStopSW.PushState == ON_STATE) {
             // スタートストップスイッチ状態をOFFにする
             StartStopSW.PushState = OFF_STATE;
-            // // 0.5秒タイマ割込みの許可
-            // TMR500MS_TMRInterruptEnable();
+
             // 0.5秒タイマを起動
             TMR1_StartTimer();
 
@@ -173,13 +184,12 @@ inline static uint8_t detectSWState(SWState_t *i_SW) {
     if (i_SW->TimingFlag == ON) {
         // スイッチの状態は？
         switch (i_SW->PushState) {
-                // 押されていない
             case OFF_STATE:
                 // なにもしない
                 break;
 
-                // 短押しと長押し1段階目
-            case SHORT_PUSH_STATE:
+            // 短押しと長押し1段階目
+            case ON_STATE:
             case LONG_STG1_STATE:
                 // 1分増やす
                 l_retval = 1;
@@ -200,6 +210,11 @@ inline static uint8_t detectSWState(SWState_t *i_SW) {
                 // タイミングフラグをOFF
                 i_SW->TimingFlag = OFF;
                 break;
+            default:
+                /* スルー */
+
+                // 押されていない
+                break;
         }
     }
     return l_retval;
@@ -208,22 +223,17 @@ inline static uint8_t detectSWState(SWState_t *i_SW) {
 inline static void onGoingCountDown(void) {
     // スタートストップスイッチ状態はONか
     if (StartStopSW.PushState == ON_STATE) {
-        // // 0.5秒タイマ割込みを禁止
-        // TMR500MS_TMRInterruptDisable();
+        // スタートストップスイッチ状態をOFFにする
+        StartStopSW.PushState = OFF_STATE;
         // 0.5秒タイマを停止
         TMR1_StopTimer();
 
-        // スタートストップスイッチ状態をOFFにする
-        StartStopSW.PushState = OFF_STATE;
         // キッチンタイマー状態をカウント時間設定へ変更
         SetKitchenTimerStateToSetting();
     }
 
     // リセットスイッチ状態はONか？
     if (IsPushedResetSW == ON_STATE) {
-        // // 0.5秒タイマ割込み禁止
-        // TMR500MS_TMRInterruptDisable();
-
         // 0.5秒タイマを停止
         TMR1_StopTimer();
 
@@ -235,21 +245,17 @@ inline static void onGoingCountDown(void) {
 inline static void endCountDown(void) {
     // カウントダウン終了カウントが10以上か
     if (CountDownEndCount >= 10 || StartStopSW.PushState == ON_STATE) {
-        // // 0.5秒タイマ割込みを禁止
-        // TMR500MS_TMRInterruptDisable();
         // 0.5秒タイマを停止
         TMR1_StopTimer();
+
         // キッチンタイマー状態をリセット処理へ変更
         SetKitchenTimerStateToReset();
     }
 }
 
 inline static void reset(void) {
-    // 1回リセット処理を行うとONになる
-    static bool l_resetFlg = OFF;
-
     // 1回だけ処理させる
-    if (l_resetFlg == OFF) {
+    if (resetFlg == OFF) {
         // LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
         SetLCDResetFlg();
 
@@ -264,19 +270,18 @@ inline static void reset(void) {
         TMR1_Reload();
 
         // フラグの更新
-        l_resetFlg = ON;
-    } else if (l_resetFlg == ON) {
+        resetFlg = ON;
+    } else if (resetFlg == ON) {
         // スイッチを押し続けて2回目以降のループ
         // まだ2つのスイッチのいずれかが押され続けている場合
 
-        if (MinuteSW.PushState != OFF_STATE ||
-            SecondSW.PushState != OFF_STATE) {
+        if (MinuteSW.PushState != OFF_STATE || SecondSW.PushState != OFF_STATE) {
             // 何もしない
         } else {
-            // ボタンが離されたら
+            /* ボタンが離されたら */
 
             // リセットフラグをクリア
-            l_resetFlg = OFF_STATE;
+            resetFlg = OFF_STATE;
             // キッチンタイマー状態をカウントダウン設定へ変更
             SetKitchenTimerStateToSetting();
         }

@@ -58,8 +58,7 @@
 // reg = 1 word Control byte
 // data = 1 word Data byte
 inline void I2C1_Write1ByteRegister(i2c1_address_t address, uint8_t reg, uint8_t data);
-inline void I2C1_Write2ByteRegister(i2c1_address_t address, uint8_t reg,
-                             uint16_t data);
+// inline void I2C1_Write2ByteRegister(i2c1_address_t address, uint8_t reg, uint16_t data);
 inline void I2C1_WriteNBytes(i2c1_address_t address, uint8_t *data, size_t len);
 
 #endif /* I2C1_MASTER_EXAMPLE_H */

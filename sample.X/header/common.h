@@ -8,10 +8,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -19,14 +15,11 @@ extern "C" {
 
 // -------------------------------------
 
-typedef enum { RISING_STATE, ONGOING_STATE, FALLING_STATE } CHATTA_STATE_E;
+// ChattaStateType
+enum { RISING_STATE, ONGOING_STATE, FALLING_STATE };
 
-typedef enum {
-    COUNTTIME_SETTING_STATE,
-    COUNTDOWN_ONGOING_STATE,
-    COUNTDOWN_END_STATE,
-    RESET_STATE
-} KITCHEN_TIMER_STATE_E;
+// KitchenTimerStateType
+enum { COUNTTIME_SETTING_STATE, COUNTDOWN_ONGOING_STATE, COUNTDOWN_END_STATE, RESET_STATE };
 
 #define ON true
 #define OFF false
@@ -78,7 +71,7 @@ typedef enum {
 #define LED3 IO_RA2_LAT
 #define LED4 IO_RA4_LAT
 
-extern KITCHEN_TIMER_STATE_E KitchenTimerState;
+extern uint8_t KitchenTimerState;
 
 // キッチンタイマー状態をリセットへ変更
 void SetKitchenTimerStateToReset(void);
@@ -88,14 +81,5 @@ void SetKitchenTimerStateToSetting(void);
 void SetKitchenTimerStateToGoing(void);
 // キッチンタイマー状態をカウントダウン終了へ変更
 void SetKitchenTimerStateToEnd(void);
-
-// LCDResetFlg
-// LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
-inline void SetLCDResetFlg(void);  // ON
-// inline void ClrLCDResetFlg(void);  // OFF
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* COMMON_H */

@@ -1,7 +1,7 @@
 #include "InputClass.h"
 
 // リセットスイッチ 状態保持変数
-SW_PUSH_STATE_E IsPushedResetSW = false;
+uint8_t IsPushedResetSW = OFF_STATE;
 
 SWState_t MinuteSW = {
     OFF,           // チャタフラグ
@@ -65,7 +65,9 @@ static void detectResetSW(void) {
     }
 }
 
-inline void ClrResetSW(void) { IsPushedResetSW = false; }
+// inline void ClrResetSW(void) {
+//     IsPushedResetSW = false;
+// }
 
 // 長押し検知
 // 入力：分、秒スイッチ
