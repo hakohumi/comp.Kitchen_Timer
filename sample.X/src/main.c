@@ -40,7 +40,8 @@
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
  */
-// #define DEBUG
+#define DEBUG
+// #define SIMULATER
 #include "../mcc_generated_files/mcc.h"
 #include "BuzzerClass.h"
 #include "CountClass.h"
@@ -75,28 +76,28 @@ void main(void) {
     // Disable the Peripheral Interrupts
     // INTERRUPT_PeripheralInterruptDisable();
 
-    // #ifndef SIMULATER
+#ifndef SIMULATER
     // LCDの初期化
     InitLCD();
-    // #endif
+#endif
 
     while (1) {
         InputProcess();
         StateTransferProcess();
 
-        // #ifndef SIMULATER
+#ifndef SIMULATER
         UpdateLCD();
-        // #endif
+#endif
 
         UpdateBuzzer();
 
-        // #ifdef DEBUG
+#ifdef DEBUG
         updateLED();  // デバッグ用
-                      // #endif
+#endif
     }
 }
 
-// #ifdef DEBUG
+#ifdef DEBUG
 
 inline void updateLED(void) {
     LED1 = LED_OFF;
@@ -131,7 +132,7 @@ inline void updateLED(void) {
             break;
     }
 }
-// #endif
+#endif
 // キッチンタイマー状態をリセットへ変更
 
 void SetKitchenTimerStateToReset(void) {

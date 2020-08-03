@@ -67,7 +67,7 @@ volatile uint16_t timer1ReloadVal;
 void (*TMR1_InterruptHandler)(void);
 
 // 1秒フラグ
-bool Is1sFlg = ON;
+bool Is1sFlg = OFF;
 
 // カウントダウン終了カウント CountClass.c
 extern uint8_t CountDownEndCount;

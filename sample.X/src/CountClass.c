@@ -163,6 +163,9 @@ inline static void settingCountTime(void) {
             // スタートストップスイッチ状態をOFFにする
             StartStopSW.PushState = OFF_STATE;
 
+            // UpdateLCDフラグをON
+            SetUpdateLCDFlg();
+
             // 0.5秒タイマを起動
             TMR1_StartTimer();
 
@@ -227,6 +230,9 @@ inline static void onGoingCountDown(void) {
         StartStopSW.PushState = OFF_STATE;
         // 0.5秒タイマを停止
         TMR1_StopTimer();
+
+        // UpdateLCDフラグをON
+        SetUpdateLCDFlg();
 
         // キッチンタイマー状態をカウント時間設定へ変更
         SetKitchenTimerStateToSetting();
