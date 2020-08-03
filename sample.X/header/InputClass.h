@@ -1,59 +1,43 @@
 #ifndef INPUTCLASS_H
 #define INPUTCLASS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdbool.h>
 #include <stdint.h>
 
 #include "common.h"
 
-    typedef enum {
-        OFF_STATE,
-        ON_STATE,
-        SHORT_PUSH_STATE = 1,
-        LONG_STG1_STATE,
-        LONG_STG2_STATE,
-    } SW_PUSH_STATE_E;
+// SW PushState
+enum {
+    OFF_STATE,
+    ON_STATE,
+    LONG_STG1_STATE,
+    LONG_STG2_STATE,
+};
 
-    // SW PushState
+typedef struct {
+    bool ChattaFlg;       // チャタフラグ
+    bool ReadValue;       // 読み取った値
+    uint8_t ChattaState;  // チャタ状態
+    uint8_t CheckCount;   // チャタチェック用カウント変数
+    uint8_t PushState;    // スイッチ状態
+    uint8_t SWCount;      // スイッチカウント
+    bool TimingFlag;      // スイッチタイミングフラグ
+    uint8_t TimingCount;  // タイミングカウント
+} SWState_t;
 
-    typedef struct {
-        bool ChattaFlg; // チャタフラグ
-        bool ReadValue; // 読み取った値
-        CHATTA_STATE_E ChattaState; // チャタ状態
-        uint8_t CheckCount; // チャタチェック用カウント変数
-        SW_PUSH_STATE_E PushState; // スイッチ状態
-        uint8_t SWCount; // スイッチカウント
-        bool TimingFlag; // スイッチタイミングフラグ
-        uint8_t TimingCount; // タイミングカウント
-    } SWState_t;
+// 各スイッチの状態保持用
+extern SWState_t MinuteSW;
+extern SWState_t SecondSW;
+extern SWState_t StartStopSW;  // RB0
 
-    // ResetSwitch PushState
+// リセットスイッチが押されているかを保持する
+extern uint8_t IsPushedResetSW;
 
-    typedef struct {
-        SW_PUSH_STATE_E PushState;
-    } ResetSWState_t;
+void InputProcess(void);
 
-    // 各スイッチの状態保持用
-    extern SWState_t MinuteSW;
-    extern SWState_t SecondSW;
-    extern SWState_t StartStopSW; // RB0
+static void detectResetSW(void);
+static void detectLongPushedSW(SWState_t *i_SW);
 
-    // リセットスイッチが押されているかを保持する
-    extern SW_PUSH_STATE_E IsPushedResetSW;
-
-    void InputProcess(void);
-
-    static void detectResetSW(void);
-    static void detectLongPushedSW(SWState_t *i_SW);
-
-    inline void ClrResetSW(void);
-
-#ifdef __cplusplus
-}
-#endif
+// inline void ClrResetSW(void);
 
 #endif /* INPUTCLASS_H */

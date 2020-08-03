@@ -56,8 +56,8 @@
 
 #include <xc.h>
 
+#include "BuzzerClass.h"
 #include "InputClass.h"
-#include "common.h"
 
 /**
   Section: Global Variables Definitions
@@ -114,7 +114,9 @@ void TMR2_WriteTimer(uint8_t timerVal) {
     TMR2 = timerVal;
 }
 
-void TMR2_LoadPeriodRegister(uint8_t periodVal) { PR2 = periodVal; }
+void TMR2_LoadPeriodRegister(uint8_t periodVal) {
+    PR2 = periodVal;
+}
 
 // inline void TMR2_ISR(void) {
 //     // clear the TMR2 interrupt flag
@@ -165,7 +167,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // チャタ状態を継続状態へ
                         MinuteSW.ChattaState = ONGOING_STATE;
                         // MinuteSWの状態をONへ
-                        MinuteSW.PushState = ON;
+                        MinuteSW.PushState = ON_STATE;
                         // チェックカウントをクリア
                         MinuteSW.CheckCount = 0;
                     }
@@ -225,7 +227,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // チェックカウントをクリア
                         MinuteSW.CheckCount = 0;
                         // MinuteSWの状態をOFF
-                        MinuteSW.PushState = OFF;
+                        MinuteSW.PushState = OFF_STATE;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
@@ -244,6 +246,9 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントをクリア
                     MinuteSW.CheckCount = 0;
                 }
+                break;
+            default:
+                // スルー
                 break;
         }
     }
@@ -269,7 +274,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // チャタ状態を継続状態へ
                         SecondSW.ChattaState = ONGOING_STATE;
                         // SW2の状態をONへ
-                        SecondSW.PushState = ON;
+                        SecondSW.PushState = ON_STATE;
                         // チェックカウントをクリア
                         SecondSW.CheckCount = 0;
                     }
@@ -329,7 +334,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // チェックカウントをクリア
                         SecondSW.CheckCount = 0;
                         // SW2の状態をOFF
-                        SecondSW.PushState = OFF;
+                        SecondSW.PushState = OFF_STATE;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
@@ -348,6 +353,9 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントをクリア
                     SecondSW.CheckCount = 0;
                 }
+                break;
+            default:
+                // スルー
                 break;
         }
     }
@@ -373,7 +381,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // チャタ状態を継続状態へ
                         StartStopSW.ChattaState = ONGOING_STATE;
                         // SW3の状態をONへ
-                        StartStopSW.PushState = ON;
+                        StartStopSW.PushState = ON_STATE;
                         // チェックカウントをクリア
                         StartStopSW.CheckCount = 0;
                     }
@@ -433,7 +441,7 @@ void TMR2_DefaultInterruptHandler(void) {
                         // チェックカウントをクリア
                         StartStopSW.CheckCount = 0;
                         // SW3の状態をOFF
-                        StartStopSW.PushState = OFF;
+                        StartStopSW.PushState = OFF_STATE;
 
                         // ------------------------------------------------------------
                         // 立ち下がり処理
@@ -452,6 +460,9 @@ void TMR2_DefaultInterruptHandler(void) {
                     // チェックカウントをクリア
                     StartStopSW.CheckCount = 0;
                 }
+                break;
+            default:
+                // スルー
                 break;
         }
     }
@@ -491,6 +502,16 @@ void TMR2_DefaultInterruptHandler(void) {
         } else {
             // 秒スイッチタイミングカウントを1増加
             SecondSW.TimingCount++;
+        }
+    }
+
+    /* -------------------------------------------------- */
+    /* ブザータイミング用                         */
+    /* -------------------------------------------------- */
+    if (KitchenTimerState == COUNTDOWN_END_STATE) {
+        if (++BuzzerTimingCount > 10) {
+            BuzzerTimingFlg = ON;
+            BuzzerTimingCount = 0;
         }
     }
 }

@@ -52,6 +52,8 @@ extern "C" {
 
 void InitLCD(void);
 
+void UpdateLCD(void);
+
 // LCD上の書き込む位置を指定する
 inline void SetPosLCD(uint8_t i_pos);   // アドレス指定
 inline void SetPosLineLCD(bool i_row);  // 1行目か2行目の先頭を指定
@@ -59,23 +61,33 @@ inline void SetPosLineLCD(bool i_row);  // 1行目か2行目の先頭を指定
 void Write1LineToLCD(uint8_t *i_str, uint8_t i_len);
 
 // カウント時間を"00m00s"の形でLCDへ表示させる
-void CountTimeToLCD();
+void CountTimeToLCD(void);
 
 // mとsを表示
 void WriteUnitChar(void);
 // mとsをクリア
 void ClrUnitChar(void);
 
-void ClrLineDisplay(void);
+void ClrLineDisplay(uint8_t i_line);
 void ClrDisplay(void);
+
+// LCDResetFlg
+// LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
+inline void SetLCDResetFlg(void);  // ON
+// inline void ClrLCDResetFlg(void);  // OFF
+uint8_t Itochar(uint8_t value);
+
+#ifdef DEBUG
+char *utoa(unsigned int value, char *s, int radix);
 
 void DisplayON(void);
 void DisplayOFF(void);
 
-char *utoa(unsigned int value, char *s, int radix);
+#endif
 
-uint8_t Itochar(uint8_t value);
 extern bool UpdateLCDFlg;
+// LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
+extern bool LCDResetFlg;
 
 #ifdef __cplusplus
 }

@@ -147,11 +147,17 @@ void TMR1_WriteTimer(uint16_t timerVal) {
     }
 }
 
-inline void TMR1_Reload(void) { TMR1_WriteTimer(timer1ReloadVal); }
+inline void TMR1_Reload(void) {
+    TMR1_WriteTimer(timer1ReloadVal);
+}
 
-void TMR1_StartSinglePulseAcquisition(void) { T1GCONbits.T1GGO = 1; }
+void TMR1_StartSinglePulseAcquisition(void) {
+    T1GCONbits.T1GGO = 1;
+}
 
-uint8_t TMR1_CheckGateValueStatus(void) { return (T1GCONbits.T1GVAL); }
+uint8_t TMR1_CheckGateValueStatus(void) {
+    return (T1GCONbits.T1GVAL);
+}
 
 // inline void TMR1_ISR(void) {
 //     // Clear the TMR1 interrupt flag
@@ -186,9 +192,6 @@ inline void TMR1_DefaultInterruptHandler(void) {
         if (KitchenTimerState == COUNTDOWN_ONGOING_STATE) {
             // カウントは00m00sか
             if (MinuteCountTime == 0 && SecondCountTime == 0) {
-                // カウントダウン終了カウントを0へ初期化
-                CountDownEndCount = 0;
-
                 // キッチンタイマー状態をカウントダウン終了へ変更
                 SetKitchenTimerStateToEnd();
             } else {

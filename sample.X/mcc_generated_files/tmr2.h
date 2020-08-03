@@ -381,6 +381,8 @@ void TMR2_LoadPeriodRegister(uint8_t periodVal);
  */
 void TMR2_DefaultInterruptHandler(void);
 
+extern uint8_t BuzzerTimingCount;
+
 #ifdef __cplusplus  // Provide C++ Compatibility
 }
 

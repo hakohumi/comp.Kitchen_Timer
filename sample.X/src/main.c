@@ -40,28 +40,24 @@
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
  */
+// #define DEBUG
 #include "../mcc_generated_files/mcc.h"
+#include "BuzzerClass.h"
 #include "CountClass.h"
 #include "InputClass.h"
 #include "LCDClass.h"
 #include "common.h"
 #include "tmr1.h"
+#include "tmr2.h"
 
 /*
                          Main application
  */
 
 // キッチンタイマー状態 初期値:リセット状態
-KITCHEN_TIMER_STATE_E KitchenTimerState = RESET_STATE;
-
-// LCD更新・ブザー状態更新
-inline void OutputProcess(void);
+uint8_t KitchenTimerState = RESET_STATE;
 
 inline void updateLED(void);
-inline void updateLCD(void);
-
-// LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
-static bool LCDResetFlg = OFF;
 
 void main(void) {
     // initialize the device
@@ -79,32 +75,30 @@ void main(void) {
     // Disable the Peripheral Interrupts
     // INTERRUPT_PeripheralInterruptDisable();
 
+    // #ifndef SIMULATER
     // LCDの初期化
     InitLCD();
-
-    ClrDisplay();
+    // #endif
 
     while (1) {
         InputProcess();
         StateTransferProcess();
-        OutputProcess();
-        // updateLED();
-        // updateLCD();
+
+        // #ifndef SIMULATER
+        UpdateLCD();
+        // #endif
+
+        UpdateBuzzer();
+
+        // #ifdef DEBUG
+        updateLED();  // デバッグ用
+                      // #endif
     }
 }
 
-/*
-LCD更新
-ブザー状態更新
- */
+// #ifdef DEBUG
 
-inline void OutputProcess(void) {
-    updateLCD();
-    updateLED();
-    // UpdateBuzzer();
-}
-
-inline void updateLED() {
+inline void updateLED(void) {
     LED1 = LED_OFF;
     LED2 = LED_OFF;
     LED3 = LED_OFF;
@@ -133,102 +127,16 @@ inline void updateLED() {
             LED2 = LED_ON;
             LED3 = LED_ON;
             break;
+        default:
+            break;
     }
 }
-
-inline void updateLCD(void) {
-    // 1行目 文字列バッファ
-    uint8_t l_LCDBuf1[8] = "running";
-    // 2行目 文字列バッファ
-    uint8_t l_LCDBuf2[8] = "stt";
-
-    // setting string
-    uint8_t l_LCDstr1[] = "setting";
-    uint8_t l_LCDstr2[] = "state";
-
-    // UpdateLCDフラグがONか
-    if (UpdateLCDFlg == ON) {
-        // キッチンタイマーの状態は？
-        switch (KitchenTimerState) {
-                // カウント時間設定
-            case COUNTTIME_SETTING_STATE:
-
-                WriteUnitChar();
-
-                CountTimeToLCD();
-
-                break;
-
-                // カウントダウン中
-            case COUNTDOWN_ONGOING_STATE:
-                // カウント時間をLCDバッファに格納
-                CountTimeToLCD();
-
-                // 1秒フラグがOFFか
-                if (!Is1sFlg) {
-                    // LCDバッファのmとsの文字を点滅
-                    ClrUnitChar();
-                } else {
-                    WriteUnitChar();
-                }
-                break;
-
-                // カウントダウン終了
-            case COUNTDOWN_END_STATE:
-                // カウント時間をLCDバッファに格納
-                CountTimeToLCD();
-
-                // 1秒フラグがOFFか
-                if (!Is1sFlg) {
-                    // LCDバッファの文字を点滅
-                    // ディスプレイをクリアする
-                    ClrLineDisplay();
-                } else {
-                    // カウント時間を表示
-                    CountTimeToLCD();
-                }
-
-                break;
-
-                // リセット状態
-            case RESET_STATE:
-                // 1回だけ実行させる
-                if (LCDResetFlg == ON) {
-                    // ディスプレイをクリアする
-                    ClrDisplay();
-                    // ClrLineDisplay();
-                    // カウント時間を表示
-                    CountTimeToLCD();
-                    // フラグクリア
-                    LCDResetFlg = OFF;
-                }
-                break;
-
-                // その他の状態 ありえない
-            default:
-
-                while (1) {
-                    LED1 ^= 1;
-                    LED2 ^= 1;
-                    LED3 ^= 1;
-                    LED4 ^= 1;
-                    __delay_ms(500);
-                }
-
-                break;
-        }
-        // LCDバッファの値をLCDへ表示
-        // UpdateLCDフラグをOFFにする
-        ClrUpdateLCDFlg();
-    }
-}
-inline void SetLCDResetFlg(void) { LCDResetFlg = ON; }
-
-// inline void ClrLCDResetFlg(void) { LCDResetFLg = OFF; }
-
+// #endif
 // キッチンタイマー状態をリセットへ変更
 
-void SetKitchenTimerStateToReset(void) { KitchenTimerState = RESET_STATE; }
+void SetKitchenTimerStateToReset(void) {
+    KitchenTimerState = RESET_STATE;
+}
 
 // キッチンタイマー状態をカウント設定状態へ変更
 
@@ -245,6 +153,12 @@ void SetKitchenTimerStateToGoing(void) {
 // キッチンタイマー状態をカウントダウン終了へ変更
 
 void SetKitchenTimerStateToEnd(void) {
+    // カウントダウン終了カウントを0へ初期化
+    CountDownEndCount = 0;
+    // ブザーカウントの初期化
+    ClrBuzzerCunt();
+    // ブザータイミングカウントの初期化
+    BuzzerTimingCount = 0;
     KitchenTimerState = COUNTDOWN_END_STATE;
 }
 

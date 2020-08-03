@@ -7,14 +7,16 @@
 #include "examples/i2c1_master_example.h"
 
 bool UpdateLCDFlg = OFF;
+// LCDのリセット処理を、このリセット処理が終わってから行うようにするためのフラグ
+bool LCDResetFlg = OFF;
 
 // ---------------------------------------------
 // 文字リテラル
 // =--------------------------------------------
-static uint8_t STR_SETTING[] = "fafa";
-static uint8_t STR_m = 'm';
-static uint8_t STR_s = 's';
-static uint8_t *STR_BLANK = "        ";
+static uint8_t char_m = 'm';
+static uint8_t char_s = 's';
+static uint8_t char_blank = ' ';
+static uint8_t str_blank[8] = "        ";
 
 // LCDの初期化
 // *** ST7032iに対して、書き込みフォーマット ***
@@ -29,8 +31,7 @@ static uint8_t *STR_BLANK = "        ";
 // ③その後、7bitのデータを送信する
 
 void InitLCD(void) {
-    uint8_t l_commandTable[10] = {0x38, 0x39, 0x14, 0x70, 0x52,
-                                  0x6C, 0x38, 0x0C, 0x01};
+    uint8_t l_commandTable[10] = {0x38, 0x39, 0x14, 0x70, 0x52, 0x6C, 0x38, 0x0C, 0x01};
     uint8_t c;
 
     // 40ms以上待つ
@@ -51,6 +52,82 @@ void InitLCD(void) {
     __delay_ms(2);
 }
 
+void UpdateLCD(void) {
+    // UpdateLCDフラグがONか
+    if (UpdateLCDFlg == ON) {
+        // キッチンタイマーの状態は？
+        switch (KitchenTimerState) {
+                // カウント時間設定
+            case COUNTTIME_SETTING_STATE:
+
+                CountTimeToLCD();
+
+                break;
+
+                // カウントダウン中
+            case COUNTDOWN_ONGOING_STATE:
+                // カウント時間をLCDバッファに格納
+                CountTimeToLCD();
+
+                // 1秒フラグがOFFか
+                if (!Is1sFlg) {
+                    // LCDバッファのmとsの文字を点滅
+                    ClrUnitChar();
+                } else {
+                    WriteUnitChar();
+                }
+                break;
+
+                // カウントダウン終了
+            case COUNTDOWN_END_STATE:
+                // カウント時間をLCDバッファに格納
+                CountTimeToLCD();
+
+                // 1秒フラグがOFFか
+                if (!Is1sFlg) {
+                    // LCDバッファの文字を点滅
+                    // ディスプレイをクリアする
+                    ClrLineDisplay(LINE_SECOND);
+                } else {
+                    // カウント時間を表示
+                    CountTimeToLCD();
+                }
+
+                break;
+
+                // リセット状態
+            case RESET_STATE:
+                // 1回だけ実行させる
+                if (LCDResetFlg == ON) {
+                    // ディスプレイをクリアする
+                    ClrDisplay();
+                    // ClrLineDisplay();
+                    // カウント時間を表示
+                    CountTimeToLCD();
+                    // フラグクリア
+                    LCDResetFlg = OFF;
+                }
+                break;
+
+                // その他の状態 ありえない
+            default:
+
+                while (1) {
+                    LED1 ^= 1;
+                    LED2 ^= 1;
+                    LED3 ^= 1;
+                    LED4 ^= 1;
+                    __delay_ms(500);
+                }
+
+                break;
+        }
+        // LCDバッファの値をLCDへ表示
+        // UpdateLCDフラグをOFFにする
+        ClrUpdateLCDFlg();
+    }
+}
+
 // LCD上の書き込む場所を指定
 
 inline void SetPosLCD(uint8_t i_pos) {
@@ -68,12 +145,10 @@ inline void SetPosLCD(uint8_t i_pos) {
 inline void SetPosLineLCD(bool i_row) {
     if (i_row) {
         // true 2行目
-        I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE,
-                                (LCD_SET_POS_DB7 | LINE_SECOND));
+        I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, (LCD_SET_POS_DB7 | LINE_SECOND));
     } else {
         // false 1行目
-        I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE,
-                                (LCD_SET_POS_DB7 | LINE_FIRST));
+        I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, (LCD_SET_POS_DB7 | LINE_FIRST));
     }
 }
 
@@ -133,8 +208,8 @@ void CountTimeToLCD() {
     }
     // -------------------------------------------------------
 
-    i_str[3] = 'm';
-    i_str[6] = 's';
+    i_str[3] = char_m;
+    i_str[6] = char_s;
 
     // 書き込み位置を2行目へセット
     SetPosLineLCD(true);
@@ -145,44 +220,49 @@ void CountTimeToLCD() {
 void WriteUnitChar() {
     // m表示
     SetPosLCD(LINE_SECOND + 3);
-    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, 'm');
+    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, char_m);
 
     // S表示
     SetPosLCD(LINE_SECOND + 6);
-    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, 's');
+    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, char_s);
 }
 
 void ClrUnitChar() {
     // m削除
     SetPosLCD(LINE_SECOND + 3);
-    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, ' ');
+    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, char_blank);
 
     // S表示
     SetPosLCD(LINE_SECOND + 6);
-    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, ' ');
+    I2C1_Write1ByteRegister(LCD_ADDR, WR_CONTROLE_BYTE, char_blank);
 }
 
 // ClearDisplay
 
-void ClrLineDisplay(void) {
-    // SetPosLCD(LINE_FIRST);
-    // Write1LineToLCD(STR_BLANK, 8);
-    SetPosLCD(LINE_SECOND);
-    Write1LineToLCD(STR_BLANK, 8);
+void ClrLineDisplay(uint8_t i_line) {
+    SetPosLCD(i_line);
+    Write1LineToLCD(str_blank, 8);
 }
 
 void ClrDisplay(void) {
     I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, CMD_LCD_CLR_DISPLAY);
 }
 
-// Display ON
-void DisplayON(void) {
-    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, CMD_LCD_DISPLAY_ON);
+inline void SetLCDResetFlg(void) {
+    LCDResetFlg = ON;
 }
-// Display OFF
-void DisplayOFF(void) {
-    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, CMD_LCD_DISPLAY_OFF);
+
+// inline void ClrLCDResetFlg(void) { LCDResetFLg = OFF; }
+
+// 数値一文字をchar型へ変換
+uint8_t Itochar(uint8_t value) {
+    if (value > DECIMAL_MAX) {
+        return char_blank;
+    }
+    return "0123456789"[value];
 }
+
+#ifdef DEBUG
 
 char *utoa(unsigned int value, char *s, int radix) {
     char *s1 = s;
@@ -203,10 +283,12 @@ char *utoa(unsigned int value, char *s, int radix) {
     return s;
 }
 
-// 数値一文字をchar型へ変換
-uint8_t Itochar(uint8_t value) {
-    if (value > DECIMAL_MAX) {
-        return ' ';
-    }
-    return "0123456789"[value];
+// Display ON
+void DisplayON(void) {
+    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, CMD_LCD_DISPLAY_ON);
 }
+// Display OFF
+void DisplayOFF(void) {
+    I2C1_Write1ByteRegister(LCD_ADDR, CONTROLE_BYTE, CMD_LCD_DISPLAY_OFF);
+}
+#endif
