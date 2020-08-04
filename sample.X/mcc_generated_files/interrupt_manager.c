@@ -55,24 +55,26 @@
 
 void __interrupt() INTERRUPT_InterruptManager(void) {
     // interrupt handler
-    if (INTCONbits.PEIE == 1) {
-        if (PIE1bits.TMR2IE == 1 && PIR1bits.TMR2IF == 1) {
-            // clear the TMR2 interrupt flag
-            PIR1bits.TMR2IF = 0;
-            TMR2_DefaultInterruptHandler();
-        }
-
-        if (PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1) {
-            // Clear the TMR1 interrupt flag
-            PIR1bits.TMR1IF = 0;
-            TMR1_Reload();
-            TMR1_DefaultInterruptHandler();
-        }
-        
-//        if (PIE3bits.TMR4IE == 1 && PIR3bits.TMR4IF == 1) {
-//            TMR4_ISR();
-//        }
+    if (PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1) {
+        // Clear the TMR1 interrupt flag
+        // 割込み入ってここまで 6サイクル x 8us = 48us
+        PIR1bits.TMR1IF = 0;
+        TMR1_Reload();
+        // 上からここまで 25サイクル x 8us = 200us
+        TMR1_DefaultInterruptHandler();
     }
+
+    if (PIE1bits.TMR2IE == 1 && PIR1bits.TMR2IF == 1) {
+        // clear the TMR2 interrupt flag
+        PIR1bits.TMR2IF = 0;
+        TMR2_DefaultInterruptHandler();
+    }
+
+
+    //        if (PIE3bits.TMR4IE == 1 && PIR3bits.TMR4IF == 1) {
+    //            TMR4_ISR();
+    //        }
+
 
     if (INTCONbits.IOCIE == 1 && INTCONbits.IOCIF == 1) {
         // interrupt on change for pin IOCBF0

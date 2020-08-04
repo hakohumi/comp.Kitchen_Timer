@@ -235,7 +235,7 @@ uint16_t TMR1_ReadTimer(void);
     }
     </code>
  */
-void TMR1_WriteTimer(uint16_t timerVal);
+inline void TMR1_WriteTimer(uint16_t timerVal);
 
 /**
   @Summary

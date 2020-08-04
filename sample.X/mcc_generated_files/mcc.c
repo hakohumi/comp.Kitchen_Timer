@@ -47,9 +47,9 @@
 #include "mcc.h"
 
 void SYSTEM_Initialize(void) {
-     #ifndef SIMULATER
+#ifndef SIMULATER
     I2C1_Initialize();
-     #endif
+#endif
     PIN_MANAGER_Initialize();
     OSCILLATOR_Initialize();
     WDT_Initialize();

@@ -86,8 +86,8 @@ void TMR1_Initialize(void) {
     // TMR1H 11;
     TMR1H = 0x0B;
 
-    // TMR1L 220;
-    TMR1L = 0xDC;
+    //TMR1L 251; 
+    TMR1L = 0xFB;
 
     // Clearing IF flag before enabling the interrupt.
     PIR1bits.TMR1IF = 0;
@@ -129,7 +129,7 @@ uint16_t TMR1_ReadTimer(void) {
     return readVal;
 }
 
-void TMR1_WriteTimer(uint16_t timerVal) {
+inline void TMR1_WriteTimer(uint16_t timerVal) {
     if (T1CONbits.nT1SYNC == 1) {
         // Stop the Timer by writing to TMRxON bit
         T1CONbits.TMR1ON = 0;
@@ -184,19 +184,22 @@ uint8_t TMR1_CheckGateValueStatus(void) {
 // }
 
 inline void TMR1_DefaultInterruptHandler(void) {
+#ifdef DEBUG
+    LED1 = LED_ON;
+#endif
     // add your TMR1 interrupt custom code
     // or set custom function using TMR1_SetInterruptHandler()
 
     // 1秒フラグ
     if (Is1sFlg == ON) {
+
         if (KitchenTimerState == COUNTDOWN_ONGOING_STATE) {
+            // カウント時間を1秒減少させる
+            CountDown();
             // カウントは00m00sか
             if (MinuteCountTime == 0 && SecondCountTime == 0) {
                 // キッチンタイマー状態をカウントダウン終了へ変更
                 SetKitchenTimerStateToEnd();
-            } else {
-                // カウント時間を1秒減少させる
-                CountDown();
             }
             //キッチンタイマー状態がカウントダウン終了か？
         } else if (KitchenTimerState == COUNTDOWN_END_STATE) {
@@ -215,6 +218,10 @@ inline void TMR1_DefaultInterruptHandler(void) {
     }
     // UpdateLCDフラグをON
     SetUpdateLCDFlg();
+
+#ifdef DEBUG
+    LED1 = LED_OFF;
+#endif
 }
 
 /**
