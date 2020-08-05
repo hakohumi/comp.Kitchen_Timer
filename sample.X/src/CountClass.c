@@ -231,6 +231,12 @@ inline static void onGoingCountDown(void) {
         // 0.5秒タイマを停止
         TMR1_StopTimer();
 
+        // 1秒フラグをOFF
+        Is1sFlg = OFF;
+
+        // タイマレジスタのクリア
+        TMR1_Reload();
+
         // UpdateLCDフラグをON
         SetUpdateLCDFlg();
 
@@ -243,6 +249,12 @@ inline static void onGoingCountDown(void) {
         // 0.5秒タイマを停止
         TMR1_StopTimer();
 
+        // 1秒フラグをOFF
+        Is1sFlg = OFF;
+
+        // タイマレジスタのクリア
+        TMR1_Reload();
+
         // キッチンタイマー状態をリセット処理へ変更
         SetKitchenTimerStateToReset();
     }
@@ -253,6 +265,12 @@ inline static void endCountDown(void) {
     if (CountDownEndCount >= 10 || StartStopSW.PushState == ON_STATE) {
         // 0.5秒タイマを停止
         TMR1_StopTimer();
+
+        // 1秒フラグをOFF
+        Is1sFlg = OFF;
+
+        // タイマレジスタのクリア
+        TMR1_Reload();
 
         // キッチンタイマー状態をリセット処理へ変更
         SetKitchenTimerStateToReset();
@@ -271,6 +289,9 @@ inline static void reset(void) {
 
         // UpdateLCDフラグをON
         SetUpdateLCDFlg();
+
+        // 1秒フラグをOFF
+        Is1sFlg = OFF;
 
         // タイマレジスタのクリア
         TMR1_Reload();

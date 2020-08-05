@@ -40,7 +40,7 @@
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS
     SOFTWARE.
  */
-#define DEBUG
+
 // #define SIMULATER
 #include "../mcc_generated_files/mcc.h"
 #include "BuzzerClass.h"

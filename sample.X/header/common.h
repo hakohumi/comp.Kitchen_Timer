@@ -15,11 +15,19 @@
 
 // -------------------------------------
 
+//#define DEBUG
+
 // ChattaStateType
-enum { RISING_STATE, ONGOING_STATE, FALLING_STATE };
+
+enum {
+    RISING_STATE, ONGOING_STATE, FALLING_STATE
+};
 
 // KitchenTimerStateType
-enum { COUNTTIME_SETTING_STATE, COUNTDOWN_ONGOING_STATE, COUNTDOWN_END_STATE, RESET_STATE };
+
+enum {
+    COUNTTIME_SETTING_STATE, COUNTDOWN_ONGOING_STATE, COUNTDOWN_END_STATE, RESET_STATE
+};
 
 #define ON true
 #define OFF false
