@@ -41,7 +41,7 @@
     SOFTWARE.
  */
 
-// #define SIMULATER
+
 #include "../mcc_generated_files/mcc.h"
 #include "BuzzerClass.h"
 #include "CountClass.h"
