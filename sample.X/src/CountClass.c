@@ -275,6 +275,8 @@ inline static void endCountDown(void) {
 
         // タイマレジスタのクリア
         TMR1_Reload();
+        // スタートストップスイッチ状態をOFFにする
+        StartStopSW.PushState = OFF_STATE;
 
         // キッチンタイマー状態をリセット処理へ変更
         SetKitchenTimerStateToReset();
