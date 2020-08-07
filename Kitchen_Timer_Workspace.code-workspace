@@ -19,7 +19,8 @@
 			"device_config.h": "c",
 			"interrupt_manager.h": "c",
 			"tmr1.h": "c",
-			"buzzerclass.h": "c"
+			"buzzerclass.h": "c",
+			"stdbool.h": "c"
 		}
 	}
 }
