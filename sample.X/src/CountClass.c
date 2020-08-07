@@ -151,10 +151,14 @@ inline static void settingCountTime(void) {
 
     // 分スイッチ処理
     l_addCountTime = detectSWState(&MinuteSW);
-    AddMinuteCount(l_addCountTime);
+    if (l_addCountTime > 0) {
+        AddMinuteCount(l_addCountTime);
+    }
     // 秒スイッチ処理
     l_addCountTime = detectSWState(&SecondSW);
-    AddSecondCount(l_addCountTime);
+    if (l_addCountTime > 0) {
+        AddSecondCount(l_addCountTime);
+    }
 
     // カウント時間が00m00sではない場合、スタートさせない
     if (!(MinuteCountTime == 0 && SecondCountTime == 0)) {

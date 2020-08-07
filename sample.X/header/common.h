@@ -16,9 +16,9 @@
 // -------------------------------------
 
 //#define DEBUG
+// #define SIMULATER
 
 // ChattaStateType
-
 enum {
     RISING_STATE, ONGOING_STATE, FALLING_STATE
 };

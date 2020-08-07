@@ -36,6 +36,9 @@ SWState_t StartStopSW = {
     0              //タイミングカウント
 };
 
+static void detectResetSW(void);
+static void detectLongPushedSW(SWState_t *i_SW);
+
 /*
 スイッチ状態検知
  */
@@ -56,7 +59,7 @@ void InputProcess(void) {
 // リセットスイッチ同時押し検知
 
 static void detectResetSW(void) {
-    if (MinuteSW.PushState == ON_STATE && SecondSW.PushState == ON_STATE) {
+    if (MinuteSW.PushState >= ON_STATE && SecondSW.PushState >= ON_STATE) {
         // リセットの状態をON
         IsPushedResetSW = ON_STATE;
     } else {
